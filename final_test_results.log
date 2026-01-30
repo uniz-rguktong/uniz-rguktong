@@ -1,0 +1,129 @@
+=== UNIZ API FLOW TEST ===
+
+1. Student Login (o210008)
+✓ Logged in, token: null...
+
+2. Get Student Profile
+{
+  "username": null,
+  "name": null,
+  "branch": null,
+  "year": null
+}
+
+3. Update Profile
+null
+
+4. Request OTP for password reset
+{
+  "success": true,
+  "message": "OTP sent"
+}
+
+5. Extract OTP from logs
+✓ OTP extracted: 682089
+
+6. Reset password to sree@2006
+{
+  "success": true,
+  "message": "Password updated"
+}
+
+7. Login with new password
+✓ Re-logged in with new password
+
+8. Send first outpass request
+{
+  "success": true,
+  "data": {
+    "id": "1d0a7bc5-f24c-4ac5-901a-c969bbb151ae",
+    "studentId": "ec6c002d-4c57-44e0-99a8-6c5b59d394e7",
+    "studentGender": "M",
+    "reason": "Going home for festival",
+    "fromDay": "2026-02-01T00:00:00.000Z",
+    "toDay": "2026-02-05T00:00:00.000Z",
+    "days": 0,
+    "requestedTime": "2026-01-30T11:09:08.705Z",
+    "isExpired": false,
+    "isApproved": false,
+    "isRejected": false,
+    "issuedBy": "none",
+    "issuedTime": "2026-01-30T11:09:08.705Z",
+    "message": null,
+    "rejectedBy": "none",
+    "rejectedTime": "2026-01-30T11:09:08.705Z",
+    "inTime": "2026-01-30T11:09:08.705Z",
+    "currentLevel": "caretaker",
+    "approvalLogs": []
+  }
+}
+✓ Outpass ID: 1d0a7bc5-f24c-4ac5-901a-c969bbb151ae
+
+9. Try second outpass request (should fail)
+{
+  "code": "RESOURCE_ALREADY_EXISTS",
+  "message": "already in pending request"
+}
+✓ Correctly prevented duplicate request
+
+10. Caretaker approves (transfers to warden)
+{
+  "currentLevel": "warden",
+  "isApproved": false
+}
+
+11. Warden approves (transfers to SWO)
+{
+  "currentLevel": "swo",
+  "isApproved": false
+}
+
+12. SWO gives final approval
+{
+  "currentLevel": "swo",
+  "isApproved": true,
+  "issuedBy": "swo_admin"
+}
+
+13. Student checks outpass status
+{
+  "type": "outpass",
+  "is_approved": true,
+  "requested_time": "2026-01-30T11:09:08.705Z"
+}
+
+14. Warden updates student presence (back in campus)
+{
+  "username": "o210008",
+  "is_in_campus": true
+}
+
+15. Student views grades
+0
+
+16. Student views attendance
+0
+
+17. Director searches for student o210008
+{
+  "username": "O210008",
+  "name": "DESU SREECHARAN",
+  "branch": "CSE"
+}
+
+18. Webmaster adds new student o220002
+{
+  "username": null,
+  "role": null
+}
+
+19. Webmaster publishes banner
+{
+  "title": "Important Announcement",
+  "isPublished": true
+}
+
+20. Get all banners
+3
+
+=== ALL TESTS COMPLETED SUCCESSFULLY ===

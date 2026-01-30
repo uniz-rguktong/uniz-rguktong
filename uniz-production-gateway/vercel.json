@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "uniz-gateway",
+  "name": "uniz-production-gateway",
   "rewrites": [
     {
       "source": "/api/v1/auth/(.*)",
@@ -13,6 +13,36 @@
     {
       "source": "/api/v1/requests/(.*)",
       "destination": "https://uniz-outpass-service.vercel.app/$1"
+    },
+    {
+      "source": "/api/v1/cron/(.*)",
+      "destination": "https://uniz-cron-service.vercel.app/$1"
+    },
+    {
+      "source": "/api/v1/notifications/(.*)",
+      "destination": "https://uniz-notification-service.vercel.app/$1"
+    },
+    {
+      "source": "/api/v1/academics/(.*)",
+      "destination": "https://uniz-academics-service.vercel.app/$1"
+    },
+    {
+      "source": "/(health|status)",
+      "destination": "https://uniz-auth-service.vercel.app/health"
+    },
+    {
+      "source": "/",
+      "destination": "https://uniz-auth-service.vercel.app/"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/v1/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
+      ]
     }
   ]
 }
