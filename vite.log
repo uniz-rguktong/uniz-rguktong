@@ -1,0 +1,92 @@
+
+> uniz@0.0.0 dev
+> vite --port 5173 --host 0.0.0.0
+
+
+  VITE v7.3.0  ready in 213 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.48.13:5173/
+11:35:18 AM [vite] (client) hmr update /src/index.css
+11:35:25 AM [vite] (client) hmr update /src/index.css
+11:35:31 AM [vite] (client) hmr update /src/index.css
+11:35:48 AM [vite] (client) hmr update /src/index.css
+11:36:19 AM [vite] (client) hmr update /src/index.css
+11:39:44 AM [vite] (client) hmr update /src/index.css, /src/components/Navbar.tsx, /src/pages/auth/CommonSignin.tsx
+11:39:57 AM [vite] (client) hmr update /src/index.css, /src/components/Navbar.tsx, /src/pages/auth/CommonSignin.tsx
+11:40:04 AM [vite] (client) hmr update /src/index.css
+11:54:35 AM [vite] (client) hmr update /src/index.css, /src/components/Navbar.tsx, /src/pages/auth/CommonSignin.tsx
+11:54:58 AM [vite] (client) hmr update /src/index.css, /src/components/Navbar.tsx, /src/pages/auth/CommonSignin.tsx
+11:55:06 AM [vite] (client) hmr update /src/index.css, /src/components/Navbar.tsx, /src/pages/auth/CommonSignin.tsx
+12:09:51 PM [vite] changed tsconfig file detected: /Users/sreecharandesu/Projects/uniz-rguktong/uniz-client/tsconfig.app.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+12:09:51 PM [vite] changed tsconfig file detected: /Users/sreecharandesu/Projects/uniz-rguktong/uniz-client/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+12:09:51 PM [vite] vite.config.ts changed, restarting server...
+12:09:51 PM [vite] .env changed, restarting server...
+12:09:51 PM [vite] (client) page reload index.html
+12:09:51 PM [vite] (client) hmr update /src/App.css
+12:09:51 PM [vite] (client) page reload src/App.tsx
+12:09:51 PM [vite] (client) page reload src/api/endpoints.ts
+12:09:51 PM [vite] (client) page reload src/components/Button.tsx
+12:09:51 PM [vite] (client) page reload src/components/ConfirmPopup.tsx
+12:09:51 PM [vite] (client) page reload src/components/Footer.tsx
+12:09:51 PM [vite] (client) page reload src/components/Input.tsx
+12:09:51 PM [vite] (client) page reload src/components/Modal.tsx
+12:09:51 PM [vite] (client) page reload src/components/Navbar.tsx
+12:09:51 PM [vite] (client) page reload src/components/Pagination.tsx
+12:09:51 PM [vite] (client) page reload src/components/PushNotification.tsx
+12:09:51 PM [vite] (client) page reload src/components/RequestCard.tsx
+12:09:51 PM [vite] (client) page reload src/components/Sidebar.tsx
+12:09:51 PM [vite] (client) page reload src/components/Transition.tsx
+12:09:51 PM [vite] (client) page reload src/components/UpdateStudentStatus.tsx
+12:09:51 PM [vite] (client) page reload src/components/ui/sidebar.tsx
+12:09:51 PM [vite] (client) page reload src/hooks/adminname.ts
+12:09:51 PM [vite] (client) page reload src/hooks/getoutings.ts
+12:09:51 PM [vite] (client) page reload src/hooks/getoutpassess.ts
+12:09:51 PM [vite] (client) page reload src/hooks/is_authenticated.ts
+12:09:51 PM [vite] (client) page reload src/hooks/outsidecampus.ts
+12:09:51 PM [vite] (client) page reload src/hooks/student_info.ts
+12:09:51 PM [vite] (client) page reload src/hooks/useDebounce.ts
+12:09:51 PM [vite] (client) page reload src/hooks/useOutsideCampus.ts
+12:09:51 PM [vite] (client) page reload src/hooks/useWebSocket.ts
+12:09:51 PM [vite] (client) hmr update /src/index.css
+12:09:51 PM [vite] (client) page reload src/layout.tsx
+12:09:51 PM [vite] (client) page reload src/main.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/AddFaculty.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/AddGrades.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/AddStudents.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/BannerManager.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/CSVUploader.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/Curriculum.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/EmailNotification.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/ProtectedRoute.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/RoleManagement.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/Settings.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/approve-comp.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/index.tsx
+12:09:51 PM [vite] (client) page reload src/pages/admin/searchstudents.tsx
+12:09:51 PM [vite] (client) page reload src/pages/attendance/AddAttendance.tsx
+12:09:51 PM [vite] (client) page reload src/pages/attendance/Attendance.tsx
+12:09:51 PM [vite] (client) page reload src/pages/auth/CommonSignin.tsx
+12:09:51 PM [vite] (client) page reload src/pages/faculty/dashboard.tsx
+12:09:51 PM [vite] (client) page reload src/pages/home.tsx
+12:09:51 PM [vite] (client) page reload src/pages/promotions/CampusHub.tsx
+12:09:51 PM [vite] (client) page reload src/pages/promotions/GradeHub.tsx
+12:09:51 PM [vite] (client) page reload src/pages/promotions/StudySpace.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/components/AcademicRecord.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/components/InfoCard.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/outpass&outing.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/request-component.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/resetpass.tsx
+12:09:51 PM [vite] (client) page reload src/pages/student/student.tsx
+12:09:51 PM [vite] (client) page reload src/store/atoms.ts
+12:09:51 PM [vite] (client) page reload src/store/index.ts
+12:09:51 PM [vite] (client) page reload src/types/index.ts
+12:09:51 PM [vite] (client) page reload src/utils/cn.ts
+12:09:51 PM [vite] (client) page reload src/utils/cropImage.ts
+12:09:51 PM [vite] (client) page reload src/utils/csvUtils.ts
+12:09:51 PM [vite] (client) page reload src/utils/polling.ts
+12:09:51 PM [vite] (client) page reload src/utils/security.ts
+12:09:51 PM [vite] (client) page reload src/utils/timeUtils.ts
+12:09:51 PM [vite] (client) page reload src/vite-env.d.ts
+12:09:51 PM [vite] (client) hmr update /node_modules/react-toastify/dist/ReactToastify.css
+12:09:51 PM [vite] server restarted.
