@@ -540,7 +540,26 @@
                             "variable": [{ "key": "bannerId", "value": "ban-123" }]
 						}
 					}
-				}
+				},
+                {
+                    "name": "Publish Results (Email)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Authorization", "value": "Bearer {{WEBMASTER_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"semesterId\": \"SEM-1\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/academics/grades/publish-email",
+                            "host": ["{{BASE_URL}}"],
+                            "path": ["academics", "grades", "publish-email"]
+                        }
+                    }
+                }
             ]
         }
 	],
