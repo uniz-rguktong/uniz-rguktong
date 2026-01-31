@@ -28,6 +28,7 @@ async function testVercelSpeed() {
         const gradesEnd = Date.now();
         console.log(`✅ Fetched ${gradesRes.data.grades.length} Grade Records.`);
         console.log(`⏱️ Grade Fetch Speed: ${gradesEnd - gradesStart}ms`);
+        console.log(`📡 Cache Status: ${gradesRes.headers['x-vercel-cache'] || gradesRes.headers['x-cache'] || 'MISS/BYPASS'}`);
 
         const totalTime = Date.now() - startTime;
         console.log(`\n🏁 Total Test Duration: ${totalTime}ms`);
