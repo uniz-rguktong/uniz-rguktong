@@ -422,3 +422,74 @@ All admins (Director, Dean, Wardens, Caretakers, Security) use the **same Login 
 ### 22. Publish/Unpublish Banner
 **Endpoint:** `POST /profile/admin/banners/:id/publish`
 **Request Body:** `{"publish": true}`
+
+---
+
+## 🛡️ Security Guard Specific Features
+
+### 23. Check-In / Check-Out Student
+**Endpoint:** `PUT /profile/student/status`
+**Auth Required:** Yes (Security/Warden/Director)
+**Use Case:** Security guard scans QR code or enters ID when student enters/leaves.
+
+**Request Body:**
+```json
+{
+  "username": "O210008",
+  "isPresent": false  // Set to false when leaving, true when entering
+}
+```
+
+### 24. View All Students Currently OUT
+**Endpoint:** `POST /profile/student/search`
+**Auth Required:** Yes (Security/Director)
+**Use Case:** Generate a report of all students who have not reported back.
+
+**Request Body:**
+```json
+{
+  "isPresentInCampus": false,
+  "limit": 50 // Fetch large batch
+}
+```
+
+---
+
+## 👥 Role & Responsibility Overview
+
+### 1. Student (`student`)
+*   **Capabilities**: Login, View Profile, View Grades, Apply for Outpass/Outing, View History.
+*   **Restrictions**: Cannot approve any request, cannot see other students' data.
+
+### 2. Caretaker (`caretaker_male` / `caretaker_female`)
+*   **Primary Duty**: First level of verification. Checks if parents are informed.
+*   **Capabilities**: 
+    *   Approve Outpass (Moves request to Warden).
+    *   View all pending requests for their gender.
+    *   **Cannot** give final approval for long leaves (Outpass).
+
+### 3. Warden (`warden_male` / `warden_female`)
+*   **Primary Duty**: Second level of verification. Checks academic schedule/disciplinary issues.
+*   **Capabilities**:
+    *   Approve Outpass (Moves request to SWO/Director).
+    *   **Can** give final approval for certain request types (if configured).
+
+### 4. Security (`security`)
+*   **Primary Duty**: Gate keeping. Verifies valid outpass before allowing exit.
+*   **Capabilities**:
+    *   **View All Approved Outings/Outpasses**: To verify the student standing at the gate.
+    *   **Check-In/Check-Out**: Mark student status in the system.
+    *   **Track "Out" Students**: See list of students currently outside.
+
+### 5. Director / Dean (`director` / `dean`)
+*   **Primary Duty**: Final Authority.
+*   **Capabilities**:
+    *   **Super Search**: Can search and view ANY student profile.
+    *   **Final Approval**: Their approval instantly grants the Outpass.
+    *   **Override**: Change student status manually if needed.
+
+### 6. Webmaster (`webmaster`)
+*   **Primary Duty**: Application Maintenance.
+*   **Capabilities**:
+    *   Create and Publish **Banners**.
+    *   Manage technical configurations.
