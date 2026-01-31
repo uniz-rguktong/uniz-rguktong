@@ -1,0 +1,5 @@
+{
+    "AUTH": "https://uniz-auth-service.vercel.app",
+    "USER": "https://uniz-user-service.vercel.app",
+    "ACADEMICS": "https://uniz-academics-service.vercel.app"
+}

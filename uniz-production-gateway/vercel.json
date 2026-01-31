@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "uniz-production-gateway",
+  "regions": ["sin1"],
   "rewrites": [
     {
       "source": "/api/v1/auth/(.*)",
