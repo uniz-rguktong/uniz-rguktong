@@ -1,150 +1,205 @@
-# UniZ API Documentation v4.0
+# 🎓 UniZ Student API Documentation (Production v1)
 
-**Project**: UniZ Microservices Backend  
-**Version**: 4.0 (EXHAUSTIVE AUDIT)  
-**Gateway URL**: `https://uniz-production-gateway.vercel.app/api/v1`
+**Base URL (Production Gateway):**
+`https://uniz-production-gateway.vercel.app/api/v1`
 
 ---
 
-## Standard Protocol
+## 🔐 Authentication & Profile
 
-### Request Headers
-- **JSON**: `Content-Type: application/json`
-- **Uploads**: `Content-Type: multipart/form-data`
-- **Auth**: `Authorization: Bearer <JWT_TOKEN>`
+### 1. Student Login
+**Endpoint:** `POST /auth/login`
+**Auth Required:** No
 
-### Unified Response Format
+**Request Body:**
+```json
+{
+  "username": "O210008",
+  "password": "password123"
+}
+```
+
+**Success Response (200 OK):**
 ```json
 {
   "success": true,
-  "data": { ... },     // On Success
-  "code": "ERROR_CODE", // On Error
-  "message": "Human readable message"
+  "token": "eyJhbGciOiJIUz...",
+  "role": "student",
+  "username": "O210008"
 }
 ```
 
 ---
 
-## 1. Role-Specific Authorization Matrix
-| Role | Service Access | Logic |
-| :--- | :--- | :--- |
-| **Student** | Auth, Profile, Academics, Outpass | Restricted to self-data. |
-| **Webmaster** | All | Global Root Access. |
-| **Director / Dean** | All | Full Academic & Outpass Oversight. |
-| **SWO** | Profile, Outpass | Global Outpass Approval. |
-| **Warden / Caretaker**| Profile, Outpass | Gender-Locked Outpass Approval. |
-| **Security** | Outpass | Read-only access to Approved/Active requests. |
-| **Librarian** | Profile | Basic Profile View. |
+### 2. Get My Profile
+**Endpoint:** `GET /profile/student/me`
+**Auth Required:** Yes (`Authorization: Bearer <TOKEN>`)
+
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "student": {
+    "_id": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "O210008",
+    "name": "DESU SREECHARAN",
+    "year": "3",
+    "branch": "CSE",
+    "profile_url": "https://...",
+    "has_pending_requests": false,
+    "is_in_campus": true
+  }
+}
+```
 
 ---
 
-## 2. Auth Service (/auth)
+## 📚 Academics (Grades & Attendance)
 
-### [POST] /login
-- **Body**: `{ "username": "...", "password": "..." }`
-- **Output Success**: `{ "success": true, "token": "...", "role": "...", "username": "...", "student_token": "...", "admin_token": "..." }`
+### 3. Get My Grades (Cached)
+**Endpoint:** `GET /academics/grades`
+**Auth Required:** Yes
+**Performance:** < 50ms (Redis Cached)
 
-### [POST] /signup
-- **Body**: `{ "username": "...", "password": "...", "role": "...", "email": "..." }`
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "grades": [
+    {
+      "id": "abc-123",
+      "grade": "EX",
+      "semesterId": "E3S1",
+      "subject": {
+        "code": "CS3101",
+        "name": "Operating Systems",
+        "credits": 4
+      }
+    },
+    {
+      "id": "abc-456",
+      "grade": "A",
+      "semesterId": "E3S1",
+      "subject": {
+        "code": "CS3102",
+        "name": "Compiler Design",
+        "credits": 4
+      }
+    }
+  ],
+  "source": "cache" // or "db"
+}
+```
 
-### [POST] /otp/request
-- **Body**: `{ "username": "..." }`
-- **Output**: `{ "success": true, "message": "OTP sent" }`
+### 4. Get My Attendance
+**Endpoint:** `GET /academics/attendance`
+**Auth Required:** Yes
 
-### [POST] /otp/verify
-- **Body**: `{ "username": "...", "otp": "..." }`
-
-### [POST] /password/reset
-- **Body**: `{ "username": "...", "otp": "...", "newPassword": "..." }`
-
----
-
-## 3. User Service (/profile)
-
-### [GET] /student/me
-- **Output**: `{ "success": true, "student": { "_id", "username", "name", "email", "gender", "year", "branch", "section", "roomno", "has_pending_requests", "is_in_campus", "blood_group", "phone_number", "profile_url", ... } }`
-
-### [PUT] /student/update
-- **Body**: `{ "name", "phone", "email", "address" }`
-
-### [POST] /student/search
-- **Body**: `{ "username", "branch", "year", "gender", "page", "limit" }`
-
-### [GET] /faculty/me
-- **Output**: `{ "success": true, "faculty": { "id", "Username", "Name", "Email", "Department", "Designation", "Role", "Contact", "ProfileUrl" } }`
-
-### [POST] /faculty/create
-- **Body**: `{ "username", "name", "email", "department", "designation" }`
-
-### [GET] /admin/me
-- **Output**: `{ "success": true, "data": { "id", "username", "email", "role" } }`
-
----
-
-## 4. Academics Service (/academics)
-
-### [GET] /grades
-- **Output**: `{ "success": true, "grades": [ { "id", "grade", "semesterId", "subject": { "id", "code", "name", "credits" } } ] }`
-
-### [POST] /grades/add
-- **Body**: `{ "studentId", "semesterId", "grades": [ { "subjectId", "grade" } ] }`
-
-### [GET] /grades/template
-- **Output**: Binary Data (.xlsx File)
-
-### [POST] /grades/upload
-- **Body**: Multipart `file`
-
-### [GET] /attendance
-- **Output**: `{ "success": true, "attendance": [ { "id", "attendedClasses", "totalClasses", "semesterId", "subject": { ... } } ] }`
-
-### [POST] /attendance/add
-- **Body**: `{ "subjectId", "records": [ { "studentId", "semesterId", "attended", "total" } ] }`
-
-### [GET] /attendance/template
-- **Output**: Binary Data (.xlsx File)
-
-### [POST] /attendance/upload
-- **Body**: Multipart `file`
-
-### [GET] /subjects
-- **Output**: `{ "success": true, "subjects": [ { "id", "code", "name", "credits", "department", "semester" } ] }`
-
-### [POST] /subjects/add
-- **Body**: `{ "code", "name", "credits", "department", "semester" }`
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "attendance": [
+    {
+      "id": "att-123",
+      "attendedClasses": 45,
+      "totalClasses": 50,
+      "subject": {
+        "code": "CS3101",
+        "name": "Operating Systems"
+      }
+    }
+  ]
+}
+```
 
 ---
 
-## 5. Outpass Service (/requests)
+## 🚪 Outpass & Permissions
 
-### [POST] /outpass
-- **Body**: `{ "reason", "fromDay", "toDay", "studentGender" }`
+### 5. Request Outpass
+**Endpoint:** `POST /requests/outpass`
+**Auth Required:** Yes
 
-### [POST] /outing
-- **Body**: `{ "reason", "fromTime", "toTime", "studentGender" }`
+**Request Body:**
+```json
+{
+  "reason": "Emergency visit to home due to health issues",
+  "fromDay": "2026-02-10T09:00:00Z",
+  "toDay": "2026-02-15T18:00:00Z",
+  "studentGender": "M" // Optional, derived from profile if available
+}
+```
 
-### [GET] /history or /history/:id
-- **Output**: `{ "success": true, "history": [ { "_id", "type", "is_approved", "is_rejected", "is_expired", "requested_time", "from_time", "to_time", "from_day", "to_day" } ], "pagination" }`
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "req-789",
+    "currentLevel": "caretaker", // The current appover required
+    "isApproved": false,
+    "createdAt": "2026-01-31T10:00:00Z"
+  }
+}
+```
 
-### [POST] /:id/approve or /:id/reject
-- **Body**: `{ "comment" }`
+### 6. Request Outing (Short Duration)
+**Endpoint:** `POST /requests/outing`
+**Auth Required:** Yes
 
-### [GET] /outpass/all
-- **Description**: Logic depends on Role (Security/Warden/Admin).
-
-### [GET] /outing/all
-- **Description**: Logic depends on Role (Security/Warden/Admin).
+**Request Body:**
+```json
+{
+  "reason": "Buying groceries",
+  "fromTime": "2026-02-10T17:00:00Z",
+  "toTime": "2026-02-10T20:00:00Z"
+}
+```
 
 ---
 
-## 6. Response Codes
+## 🔍 Search (Admin Only)
 
-| Code | Status | Logic |
-| :--- | :--- | :--- |
-| `AUTH_UNAUTHORIZED` | 401 | JWT Missing/Invalid. |
-| `AUTH_FORBIDDEN` | 403 | Role-Restriction Violation. |
-| `VALIDATION_ERROR` | 400 | Zod Schema Failure. |
-| `RESOURCE_NOT_FOUND` | 404 | Database miss. |
+### 7. Search Students
+**Endpoint:** `POST /profile/student/search`
+**Auth Required:** Yes (Director/Dean/Security)
+
+**Request Body (Filters):**
+```json
+{
+  "username": "O21",  // Partial match search
+  "branch": "CSE",    // Optional
+  "year": "3",        // Optional
+  "page": 1,
+  "limit": 10
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "students": [
+    {
+      "username": "O210008",
+      "name": "DESU SREECHARAN",
+      "branch": "CSE"
+    }
+    // ... more students
+  ],
+  "pagination": {
+    "page": 1,
+    "totalPages": 5,
+    "total": 50
+  }
+}
+```
 
 ---
-**Documented by UniZ Backend Core**
+
+## ⚠️ Common Error Codes
+*   **401 Unauthorized**: Invalid or missing Token.
+*   **403 Forbidden**: You do not have permission (e.g., Student trying to search students).
+*   **404 Not Found**: Resource does not exist.
+*   **409 Conflict**: You already have a pending outpass request.
