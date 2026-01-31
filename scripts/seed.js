@@ -4,9 +4,9 @@ const axios = require('axios');
 
 // Configuration
 const SERVICES = {
-    AUTH: 'https://uniz-auth-service.vercel.app',
-    USER: 'https://uniz-user-service.vercel.app',
-    ACADEMICS: 'https://uniz-academics-service.vercel.app'
+    AUTH: 'http://localhost:3001',
+    USER: 'http://localhost:3002',
+    ACADEMICS: 'http://localhost:3004'
 };
 
 const SUBJECTS_DATA = {
