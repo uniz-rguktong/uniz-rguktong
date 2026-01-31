@@ -241,9 +241,9 @@ const ADMINS = [
     { username: 'caretaker_female', password: 'caretaker@uniz', role: 'caretaker_female' },
     { username: 'caretaker_male', password: 'caretaker@uniz', role: 'caretaker_male' },
     { username: 'swo_admin', password: 'swo@uniz', role: 'swo' },
-    { username: 'warden_male', password: 'warden@uniz', role: 'warden_male' },
-    { username: 'warden_female', password: 'warden@uniz', role: 'warden_female' },
-    { username: 'security_admin', password: 'security@uniz', role: 'security' },
+    { username: 'warden_male', password: 'warden_male@uniz', role: 'warden_male' },
+    { username: 'warden_female', password: 'warden_female@uniz', role: 'warden_female' },
+    { username: 'security', password: 'security@uniz', role: 'security' },
     { username: 'librarian_admin', password: 'librarian@uniz', role: 'librarian' }
 ];
 

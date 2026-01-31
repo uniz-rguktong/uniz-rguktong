@@ -1,0 +1,553 @@
+{
+	"info": {
+		"_postman_id": "uniz-complete-production-v1",
+		"name": "UniZ Ultimate Production Collection (v1)",
+		"description": "The definitive, complete API collection for the UniZ System. Includes every route (Student, Faculty, Admin, Security, Outpass, Academics). AUTOMATION: Login endpoints automatically set environment variables (TOKENS) for subsequent requests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentication (ALL ROLES)",
+			"description": "Start here! Run the login matching your role to set the token.",
+			"item": [
+				{
+					"name": "Student Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"STUDENT_TOKEN\", jsonData.token);",
+									"    console.log(\"Student Token Set\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Director (Super Admin) Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"director\",\n    \"password\": \"director@uniz\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"DIRECTOR_TOKEN\", jsonData.token);",
+									"    console.log(\"Director Token Set\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Faculty/Warden Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"warden_male\",\n    \"password\": \"warden_male@uniz\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"FACULTY_TOKEN\", jsonData.token);",
+									"    console.log(\"Faculty Token Set\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Security Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"SECURITY_TOKEN\", jsonData.token);",
+									"    console.log(\"Security Token Set\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+                {
+					"name": "Webmaster Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"webmaster\",\n    \"password\": \"webmaster@uniz\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"WEBMASTER_TOKEN\", jsonData.token);",
+									"    console.log(\"Webmaster Token Set\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "🎓 Student Features",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/me",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "me"]
+						}
+					}
+				},
+				{
+					"name": "Update Detail (Phone/Email)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"9876543210\",\n    \"email\": \"updated@rguktong.ac.in\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/update",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "update"]
+						}
+					}
+				},
+				{
+					"name": "Get Grades (Cached)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/academics/grades",
+							"host": ["{{BASE_URL}}"],
+							"path": ["academics", "grades"]
+						}
+					}
+				},
+                {
+					"name": "Get Attendance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/academics/attendance",
+							"host": ["{{BASE_URL}}"],
+							"path": ["academics", "attendance"]
+						}
+					}
+				},
+				{
+					"name": "Get Public Banners",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/banners",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "banners"]
+						}
+					}
+				}
+			]
+		},
+        {
+			"name": "🎫 Outpass & Requests",
+			"item": [
+				{
+					"name": "Create Outpass",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Medical Issue\",\n    \"fromDay\": \"2026-02-15T09:00:00Z\",\n    \"toDay\": \"2026-02-17T18:00:00Z\",\n    \"studentGender\": \"M\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/requests/outpass",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", "outpass"]
+						}
+					}
+				},
+                {
+					"name": "Create Outing",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-15T16:00:00Z\",\n    \"toTime\": \"2026-02-15T19:00:00Z\",\n    \"studentGender\": \"M\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/requests/outing",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", "outing"]
+						}
+					}
+				},
+                {
+					"name": "My History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{STUDENT_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/requests/history",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", "history"]
+						}
+					}
+				}
+            ]
+        },
+		{
+			"name": "👨‍🏫 Faculty/Admin Features",
+			"item": [
+				{
+					"name": "Search Student (Director/Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{DIRECTOR_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/search",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "search"]
+						}
+					}
+				},
+                {
+					"name": "Create Faculty Profile (Director)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{DIRECTOR_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"new_faculty\",\n    \"name\": \"Dr. Smith\",\n    \"email\": \"smith@uniz.com\",\n    \"department\": \"CSE\",\n    \"designation\": \"Professor\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/faculty/create",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "faculty", "create"]
+						}
+					}
+				},
+                {
+                    "name": "Upload Grades (CSV)",
+                    "request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
+						],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {"key": "file", "type": "file", "description": "Select CSV file"}
+                            ]
+                        },
+						"url": {
+							"raw": "{{BASE_URL}}/academics/grades/upload",
+							"host": ["{{BASE_URL}}"],
+							"path": ["academics", "grades", "upload"]
+						}
+					}
+                }
+			]
+		},
+        {
+            "name": "🛡️ Security Features",
+            "item": [
+                {
+					"name": "View Students OUT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{SECURITY_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"isPresentInCampus\": false,\n    \"limit\": 20\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/search",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "search"]
+						}
+					}
+				},
+                {
+					"name": "Check OUT (Gate Exit)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{SECURITY_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"isPresent\": false\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/status",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "status"]
+						}
+					}
+				},
+                 {
+					"name": "Check IN (Gate Entry)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{SECURITY_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"isPresent\": true\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/student/status",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "student", "status"]
+						}
+					}
+				}
+            ]
+        },
+        {
+            "name": "✍️ Approvals (Warden/Admin)",
+            "item": [
+                {
+					"name": "Get Pending Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/requests/outpass/all",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", "outpass", "all"]
+						}
+					}
+				},
+                {
+					"name": "Approve Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"Approved\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/requests/:requestId/approve",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", ":requestId", "approve"],
+                            "variable": [{ "key": "requestId", "value": "req-123" }]
+						}
+					}
+				},
+                {
+					"name": "Reject Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"Rejected\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/requests/:requestId/reject",
+							"host": ["{{BASE_URL}}"],
+							"path": ["requests", ":requestId", "reject"],
+                            "variable": [{ "key": "requestId", "value": "req-123" }]
+
+						}
+					}
+				}
+            ]
+        },
+        {
+            "name": "🛠️ System/Webmaster",
+            "item": [
+                 {
+					"name": "Create Banner",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{WEBMASTER_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Update\",\n    \"text\": \"Server maintenance\",\n    \"imageUrl\": \"https://link.com/img.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/admin/banners",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "admin", "banners"]
+						}
+					}
+				},
+                 {
+					"name": "Publish Banner",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{WEBMASTER_TOKEN}}" },
+                            { "key": "Content-Type", "value": "application/json" }
+						],
+                        "body": {
+							"mode": "raw",
+							"raw": "{\n    \"publish\": true\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profile/admin/banners/:bannerId/publish",
+							"host": ["{{BASE_URL}}"],
+							"path": ["profile", "admin", "banners", ":bannerId", "publish"],
+                            "variable": [{ "key": "bannerId", "value": "ban-123" }]
+						}
+					}
+				}
+            ]
+        }
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "https://uniz-production-gateway.vercel.app/api/v1"
+		}
+	]
+}
