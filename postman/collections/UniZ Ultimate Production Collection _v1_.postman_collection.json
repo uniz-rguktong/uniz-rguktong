@@ -30,16 +30,59 @@
 					"response": []
 				},
 				{
-					"name": "Gateway Health (Auth)",
+					"name": "Auth Service Health",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/health",
+							"raw": "{{baseUrl}}/api/v1/auth/health",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"api",
+								"v1",
+								"auth",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Outpass Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/requests/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"requests",
 								"health"
 							]
 						}
@@ -52,35 +95,6 @@
 			"name": "Auth Service",
 			"item": [
 				{
-					"name": "Signup",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@student.uniz.edu\",\n    \"password\": \"password123\",\n    \"role\": \"student\",\n    \"metadata\": {\n        \"name\": \"Test Student\",\n        \"studentId\": \"S123456\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/auth/signup",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Login",
 					"event": [
 						{
@@ -88,7 +102,12 @@
 							"script": {
 								"exec": [
 									"var jsonData = pm.response.json();",
-									"pm.environment.set(\"authToken\", jsonData.token);"
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"authToken\", jsonData.token);",
+									"    if (jsonData.role !== 'student') {",
+									"        pm.environment.set(\"adminToken\", jsonData.token);",
+									"    }",
+									"}"
 								],
 								"type": "text/javascript"
 							}
@@ -99,7 +118,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@student.uniz.edu\",\n    \"password\": \"password123\"\n}",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"password\": \"password123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -122,18 +141,21 @@
 					"response": []
 				},
 				{
-					"name": "Logout",
+					"name": "OTP Request (Password Reset)",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
 							}
-						],
+						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/auth/logout",
+							"raw": "{{baseUrl}}/api/v1/auth/otp/request",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -141,7 +163,103 @@
 								"api",
 								"v1",
 								"auth",
-								"logout"
+								"otp",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/otp/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"otp",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\",\n    \"newPassword\": \"newpassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspend Student (Admin Only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"O210008\",\n    \"suspended\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/admin/suspend",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"admin",
+								"suspend"
 							]
 						}
 					},
@@ -153,7 +271,7 @@
 			"name": "User Profile Service",
 			"item": [
 				{
-					"name": "Get My Profile (Student)",
+					"name": "Get My Profile",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -180,7 +298,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Profile",
+					"name": "Update My Profile",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -192,7 +310,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone\": \"9876543210\",\n    \"address\": \"New Hostel Block A\"\n}",
+							"raw": "{\n    \"name\": \"DESU SREECHARAN\",\n    \"phone_number\": \"9876543210\",\n    \"blood_group\": \"O+\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -216,70 +334,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Presence Status",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"inCampus\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/profile/student/status",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"profile",
-								"student",
-								"status"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Banners (Public)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/profile/student/banners",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"profile",
-								"student",
-								"banners"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Faculty (Admin)",
+					"name": "Search Students (Admin)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -291,7 +346,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"faculty01\",\n    \"name\": \"Dr. Faculty\",\n    \"email\": \"faculty@uniz.edu\",\n    \"department\": \"CSE\",\n    \"designation\": \"Professor\"\n}",
+							"raw": "{\n    \"username\": \"O21\",\n    \"page\": 1,\n    \"limit\": 10\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -299,7 +354,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/profile/faculty/create",
+							"raw": "{{baseUrl}}/api/v1/profile/student/search",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -307,8 +362,51 @@
 								"api",
 								"v1",
 								"profile",
-								"faculty",
-								"create"
+								"student",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Update Student Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"gender\": \"M\",\n    \"branch\": \"CSE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"admin",
+								"student",
+								":username"
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "O210008"
+								}
 							]
 						}
 					},
@@ -317,10 +415,10 @@
 			]
 		},
 		{
-			"name": "Requests (Outpass) Service",
+			"name": "Requests (Outpass/Outing)",
 			"item": [
 				{
-					"name": "Create Outpass",
+					"name": "Request Outing",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -332,42 +430,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reason\": \"Medical Checkup\",\n    \"fromDay\": \"2024-10-10T10:00:00Z\",\n    \"toDay\": \"2024-10-12T18:00:00Z\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/requests/outpass",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"requests",
-								"outpass"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Outing",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2024-10-10T16:00:00Z\",\n    \"toTime\": \"2024-10-10T19:00:00Z\"\n}",
+							"raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-02T10:00:00Z\",\n    \"toTime\": \"2026-02-02T14:00:00Z\",\n    \"hours\": 4\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -390,9 +453,9 @@
 					"response": []
 				},
 				{
-					"name": "Get User History",
+					"name": "Request Outpass",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
@@ -400,34 +463,17 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/requests/history",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"requests",
-								"history"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Outpasses (Admin)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{adminToken}}",
-								"type": "text"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Going Home\",\n    \"fromDay\": \"2026-02-05T00:00:00Z\",\n    \"toDay\": \"2026-02-10T00:00:00Z\",\n    \"days\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
 							}
-						],
+						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/requests/outpass/all",
+							"raw": "{{baseUrl}}/api/v1/requests/outpass",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -435,15 +481,14 @@
 								"api",
 								"v1",
 								"requests",
-								"outpass",
-								"all"
+								"outpass"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Approve Request",
+					"name": "Approve Request (Admin)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -455,7 +500,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"comments\": \"Approved by warden\"\n}",
+							"raw": "{\n    \"message\": \"Approved for 4 hours\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -477,8 +522,101 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "REQUEST_ID_HERE"
+									"value": ""
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Security Check-Out",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/requests/:id/checkout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"requests",
+								":id",
+								"checkout"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Security Check-In",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/requests/:id/checkin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"requests",
+								":id",
+								"checkin"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Outings (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/requests/outing/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"requests",
+								"outing",
+								"all"
 							]
 						}
 					},
@@ -516,35 +654,9 @@
 					"response": []
 				},
 				{
-					"name": "Get My Attendance",
+					"name": "Get Batch Grades (Faculty/Admin)",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/academics/attendance",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"academics",
-								"attendance"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Subject (Admin)",
-					"request": {
-						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
@@ -552,49 +664,8 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Data Structures\",\n    \"code\": \"CS101\",\n    \"credits\": 4\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/academics/subjects/add",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"academics",
-								"subjects",
-								"add"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Files Service",
-			"item": [
-				{
-					"name": "Get Grades Template",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/academics/grades/template",
+							"raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=false",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -603,78 +674,21 @@
 								"v1",
 								"academics",
 								"grades",
-								"template"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Upload Grades",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{adminToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
+								"batch"
+							],
+							"query": [
 								{
-									"key": "file",
-									"type": "file",
-									"src": []
+									"key": "branch",
+									"value": "CSE"
+								},
+								{
+									"key": "year",
+									"value": "E2"
+								},
+								{
+									"key": "failedOnly",
+									"value": "false"
 								}
-							]
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/academics/grades/upload",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"academics",
-								"grades",
-								"upload"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Mail Service",
-			"item": [
-				{
-					"name": "Send Test Email (Internal)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"to\": \"test@example.com\",\n    \"subject\": \"Test Mail\",\n    \"body\": \"This is a test email from Postman.\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/v1/mail/send",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"mail",
-								"send"
 							]
 						}
 					},
@@ -686,7 +700,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:3000",
+			"value": "https://uniz-production-gateway.vercel.app",
 			"type": "string"
 		},
 		{
