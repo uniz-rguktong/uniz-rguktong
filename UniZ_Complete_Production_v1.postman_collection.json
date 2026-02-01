@@ -356,24 +356,64 @@
 					}
 				},
                 {
-                    "name": "Upload Grades (CSV)",
-                    "request": {
-						"method": "POST",
-						"header": [
-							{ "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
-						],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {"key": "file", "type": "file", "description": "Select CSV file"}
-                            ]
+                    "name": "🔥 Bulk Operations (With Progress)",
+                    "item": [
+                        {
+                            "name": "Download Pre-filled Template",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    { "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/academics/grades/template?branch=CSE&year=E1&semester=SEM-1&subjectCode=E1-SEM-1-CSE-1",
+                                    "host": ["{{BASE_URL}}"],
+                                    "path": ["academics", "grades", "template"],
+                                    "query": [
+                                        { "key": "branch", "value": "CSE" },
+                                        { "key": "year", "value": "E1" },
+                                        { "key": "semester", "value": "SEM-1" },
+                                        { "key": "subjectCode", "value": "E1-SEM-1-CSE-1" }
+                                    ]
+                                }
+                            }
                         },
-						"url": {
-							"raw": "{{BASE_URL}}/academics/grades/upload",
-							"host": ["{{BASE_URL}}"],
-							"path": ["academics", "grades", "upload"]
-						}
-					}
+                        {
+                            "name": "Upload Batch (Cloudinary Audit)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    { "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {"key": "file", "type": "file", "description": "Select Pre-filled Excel"}
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{BASE_URL}}/academics/grades/upload",
+                                    "host": ["{{BASE_URL}}"],
+                                    "path": ["academics", "grades", "upload"]
+                                }
+                            }
+                        },
+                         {
+                            "name": "Check Upload Status (Mock)",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    { "key": "Authorization", "value": "Bearer {{FACULTY_TOKEN}}" }
+                                ],
+                                "url": {
+                                    "raw": "{{BASE_URL}}/academics/upload/status/:jobId",
+                                    "host": ["{{BASE_URL}}"],
+                                    "path": ["academics", "upload", "status", ":jobId"],
+                                    "variable": [{ "key": "jobId", "value": "job-123" }]
+                                }
+                            }
+                        }
+                    ]
                 }
 			]
 		},
