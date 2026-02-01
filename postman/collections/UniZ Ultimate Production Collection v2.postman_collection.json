@@ -108,13 +108,28 @@
             {
               "listen": "test",
               "script": {
+                "id": "2b8ff1c4-c0c6-4827-97fb-3d76e0dfff0e",
                 "exec": [
                   "var jsonData = pm.response.json();",
                   "if (jsonData.token) {",
                   "    pm.environment.set(\"adminToken\", jsonData.token);",
                   "}"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "131d952e-6c70-4af4-9440-1a0123892944",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -124,7 +139,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"webmaster\",\n    \"password\": \"webmaster@uniz\"\n}",
+              "raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -482,7 +497,6 @@
               ]
             }
           },
-          "description": "Returns full student profile enriched with latest outpass history, academic grades (GPA), and attendance records from other microservices.",
           "response": []
         },
         {
@@ -599,7 +613,6 @@
               ]
             }
           },
-          "description": "Administrative view of a specific student profile, including all cross-service enriched data (History, Grades, Attendance).",
           "response": []
         },
         {
@@ -1175,7 +1188,8 @@
                   "description": "Optional: Admin can view any student's grades"
                 }
               ]
-            }
+            },
+            "description": "Fetches student grades with dynamic GPA calculation. Marks status as FAILED if 'R' grades are present."
           },
           "response": []
         },
@@ -1373,7 +1387,8 @@
                 "grades",
                 "upload"
               ]
-            }
+            },
+            "description": "Upload the filled Excel template. Supports both numeric (0-10) and character grades (EX, A, B, C, D, E, R). Updates existing records (upsert)."
           },
           "response": []
         },
@@ -1457,16 +1472,23 @@
                   "value": "E2"
                 },
                 {
-                  "key": "semester",
+                  "key": "semesterId",
                   "value": "SEM-1"
                 },
                 {
                   "key": "subjectCode",
                   "value": "CS201"
+                },
+                {
+                  "key": "remedialsOnly",
+                  "value": "true",
+                  "description": "If true, returns only students who have an 'R' grade in this subject."
                 }
               ]
-            }
+            },
+            "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If remedialsOnly is true, it pre-fills the sheet with only failed students."
           },
+
           "response": []
         }
       ],
