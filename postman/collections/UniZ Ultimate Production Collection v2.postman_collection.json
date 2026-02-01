@@ -1119,10 +1119,11 @@
               "response": []
             },
             {
-              "name": "Add New Subject",
+              "name": "Add New Subject (Upsert)",
               "id": "8d150361-9139-4697-8675-2210b5398c97",
               "request": {
                 "method": "POST",
+                "description": "Creates or updates a subject. If a subject with the same 'code' exists, it will be updated.",
                 "header": [
                   {
                     "key": "Authorization",
@@ -1337,6 +1338,7 @@
                 }
               ]
             },
+            "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert).",
             "url": {
               "raw": "{{baseUrl}}/api/v1/academics/attendance/upload",
               "host": [
@@ -1426,15 +1428,12 @@
                   "value": "E2"
                 },
                 {
-                  "key": "semester",
+                  "key": "semesterId",
                   "value": "SEM-1"
-                },
-                {
-                  "key": "subjectCode",
-                  "value": "CS201"
                 }
               ]
-            }
+            },
+            "description": "Downloads an Excel template for attendance. Automatically generates rows for ALL subjects matching the branch and year."
           },
           "response": []
         },
@@ -1451,7 +1450,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semester=SEM-1&subjectCode=CS201",
+              "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=true",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1465,30 +1464,33 @@
               "query": [
                 {
                   "key": "branch",
-                  "value": "CSE"
+                  "value": "CSE",
+                  "uuid": "c1e218b8-e9ad-4c2d-9073-346ae0f65211"
                 },
                 {
                   "key": "year",
-                  "value": "E2"
+                  "value": "E2",
+                  "uuid": "fdfb3a6e-49c8-42f0-867b-114233b9e2a6"
                 },
                 {
                   "key": "semesterId",
-                  "value": "SEM-1"
+                  "value": "SEM-1",
+                  "uuid": "748781e0-5347-4985-92dd-16860664db81"
                 },
                 {
                   "key": "subjectCode",
-                  "value": "CS201"
+                  "value": "CS201",
+                  "uuid": "86269369-7c01-4ce1-a1e9-876844fcabf5"
                 },
                 {
                   "key": "remedialsOnly",
-                  "value": "true",
-                  "description": "If true, returns only students who have an 'R' grade in this subject."
+                  "value": "false",
+                  "description": "If true, returns only students who have an 'R' grade in a specific subjectCode."
                 }
               ]
             },
-            "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If remedialsOnly is true, it pre-fills the sheet with only failed students."
+            "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
           },
-
           "response": []
         }
       ],
