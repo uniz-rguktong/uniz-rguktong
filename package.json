@@ -1,15 +1,16 @@
 {
   "name": "uniz-production-root",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "UniZ Microservices Production Ecosystem",
   "scripts": {
     "dev": "bash scripts/start_services.sh",
+    "db:push": "bash scripts/reset-dbs.sh",
+    "db:seed": "node scripts/seed.js && bash scripts/seed-admins.sh",
     "deploy": "bash scripts/vercel_update.sh",
     "test": "bash tests/test_api_flow.sh",
-    "seed": "bash scripts/seed-admins.sh",
-    "clean": "rm -f *.log gateway.log",
-    "install-all": "for d in uniz-*; do (cd $d && npm install); done",
-    "build-all": "for d in uniz-*; do (cd $d && npm run build); done"
+    "clean": "rm -rf logs/ *.log",
+    "install:all": "for d in uniz-*; do (cd $d && npm install); done",
+    "push:all": "git add . && git commit -m \"Update: Codebase synchronization and restructuring\" && git push origin main"
   },
   "dependencies": {
     "axios": "^1.6.0",
