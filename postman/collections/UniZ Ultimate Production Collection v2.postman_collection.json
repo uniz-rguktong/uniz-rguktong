@@ -498,7 +498,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"9876543210\",\n    \"bloodGroup\": \"O+\",\n    \"dateOfBirth\": \"2002-01-01T00:00:00.000Z\",\n    \"profileUrl\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\"\n}",
+              "raw": "{\n    \"name\": \"Sreecharan Desu\",\n    \"phone\": \"9876543210\",\n    \"email\": \"desu.sreecharan@gmail.com\",\n    \"bloodGroup\": \"O+\",\n    \"dateOfBirth\": \"2002-01-01T00:00:00.000Z\",\n    \"profileUrl\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\",\n    \"fatherName\": \"Venkata Ramana\",\n    \"motherName\": \"Lakshmi\",\n    \"fatherOccupation\": \"Business\",\n    \"motherOccupation\": \"Homemaker\",\n    \"fatherEmail\": \"father@example.com\",\n    \"motherEmail\": \"mother@example.com\",\n    \"fatherAddress\": \"NTR Colony, Ongole\",\n    \"motherAddress\": \"NTR Colony, Ongole\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
