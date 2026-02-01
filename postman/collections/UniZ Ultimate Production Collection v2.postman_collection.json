@@ -1123,7 +1123,6 @@
               "id": "8d150361-9139-4697-8675-2210b5398c97",
               "request": {
                 "method": "POST",
-                "description": "Creates or updates a subject. If a subject with the same 'code' exists, it will be updated.",
                 "header": [
                   {
                     "key": "Authorization",
@@ -1152,7 +1151,8 @@
                     "subjects",
                     "add"
                   ]
-                }
+                },
+                "description": "Creates or updates a subject. If a subject with the same 'code' exists, it will be updated."
               },
               "response": []
             }
@@ -1195,6 +1195,41 @@
           "response": []
         },
         {
+          "name": "Get My Attendance",
+          "id": "e4b6b6b6-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "attendance"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "O210008",
+                  "description": "Optional: Admin can view any student's attendance"
+                }
+              ]
+            },
+            "description": "Fetches student attendance with automatically calculated percentages and semester-wise summaries."
+          },
+          "response": []
+        },
+        {
           "name": "Get Batch Grades (Filter)",
           "id": "3689566a-14f6-4bf2-bebf-3abbf56687b0",
           "request": {
@@ -1206,6 +1241,15 @@
                 "type": "text"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=false",
               "host": [
@@ -1221,18 +1265,27 @@
               "query": [
                 {
                   "key": "branch",
-                  "value": "CSE"
+                  "value": "CSE",
+                  "uuid": "8581db3b-36fa-45a3-9c69-887a74158054"
                 },
                 {
                   "key": "year",
-                  "value": "E2"
+                  "value": "E2",
+                  "uuid": "686d9260-b5ed-4c2b-95f8-c011e1f66dcf"
                 },
                 {
                   "key": "failedOnly",
-                  "value": "false"
+                  "value": "false",
+                  "uuid": "a72d7701-7c70-463b-9a7f-042f850f2baa"
+                },
+                {
+                  "key": "semesterId",
+                  "value": "SEM-1",
+                  "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)"
                 }
               ]
-            }
+            },
+            "description": "Fetches a bulk view of grades for an entire branch and year. Includes a summary header with total and failed counts."
           },
           "response": []
         },
@@ -1338,7 +1391,6 @@
                 }
               ]
             },
-            "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert).",
             "url": {
               "raw": "{{baseUrl}}/api/v1/academics/attendance/upload",
               "host": [
@@ -1351,7 +1403,38 @@
                 "attendance",
                 "upload"
               ]
-            }
+            },
+            "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert)."
+          },
+          "response": []
+        },
+        {
+          "name": "Attendance Upload Progress",
+          "id": "a-99999999-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/attendance/upload/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "attendance",
+                "upload",
+                "progress"
+              ]
+            },
+            "description": "Monitor the real-time progress of bulk attendance uploads."
           },
           "response": []
         },
@@ -1395,6 +1478,36 @@
           "response": []
         },
         {
+          "name": "Publish Results Progress",
+          "id": "p-12345678-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/grades/publish/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "grades",
+                "publish",
+                "progress"
+              ]
+            },
+            "description": "Monitor the real-time progress of result emails being sent to students."
+          },
+          "response": []
+        },
+        {
           "name": "Download Attendance Template",
           "id": "e9141b58-a701-400f-a230-92f145a2dead",
           "request": {
@@ -1407,7 +1520,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance/template?branch=CSE&year=E2&semester=SEM-1&subjectCode=CS201",
+              "raw": "{{baseUrl}}/api/v1/academics/attendance/template?branch=CSE&year=E2&semesterId=SEM-1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1450,7 +1563,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=true",
+              "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=false",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1490,6 +1603,65 @@
               ]
             },
             "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
+          },
+          "response": []
+        },
+        {
+          "name": "Grades Upload Progress",
+          "id": "73e6298f-0357-47c2-bb8f-6021c768c693",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/grades/upload/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "grades",
+                "upload",
+                "progress"
+              ]
+            },
+            "description": "Monitor the real-time progress of bulk grades uploads."
+          },
+          "response": []
+        },
+        {
+          "name": "Unified Upload Progress",
+          "id": "u-00000000-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/upload/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "upload",
+                "progress"
+              ]
+            },
+            "description": "Global endpoint to monitor the latest academic upload progress (Grades or Attendance)."
           },
           "response": []
         }

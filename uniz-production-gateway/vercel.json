@@ -33,19 +33,19 @@
     },
     {
       "source": "/api/v1/academics/grades/upload",
-      "destination": "https://uniz-files-service.vercel.app/grades/upload"
+      "destination": "https://uniz-academics-service.vercel.app/grades/upload"
     },
     {
       "source": "/api/v1/academics/grades/template",
-      "destination": "https://uniz-files-service.vercel.app/grades/template"
+      "destination": "https://uniz-academics-service.vercel.app/grades/template"
     },
     {
       "source": "/api/v1/academics/attendance/upload",
-      "destination": "https://uniz-files-service.vercel.app/attendance/upload"
+      "destination": "https://uniz-academics-service.vercel.app/attendance/upload"
     },
     {
       "source": "/api/v1/academics/attendance/template",
-      "destination": "https://uniz-files-service.vercel.app/attendance/template"
+      "destination": "https://uniz-academics-service.vercel.app/attendance/template"
     },
     {
       "source": "/api/v1/files/(.*)",
