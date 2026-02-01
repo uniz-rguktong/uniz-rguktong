@@ -1286,7 +1286,7 @@
                 }
               ]
             },
-            "description": "Fetches a bulk view of grades for an entire branch and year. Includes a summary header with total and failed counts."
+            "description": "Fetches a bulk view of grades (or failures) for a branch/year. returns a 'students' array where each entry contains the student's profile details and a list of their specific records."
           },
           "response": []
         },
