@@ -1251,7 +1251,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=false",
+              "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=true&semesterId=SEM-1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1275,13 +1275,14 @@
                 },
                 {
                   "key": "failedOnly",
-                  "value": "false",
+                  "value": "true",
                   "uuid": "a72d7701-7c70-463b-9a7f-042f850f2baa"
                 },
                 {
                   "key": "semesterId",
                   "value": "SEM-1",
-                  "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)"
+                  "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)",
+                  "uuid": "5563e6f1-c3d4-42fd-a375-ec1e2cc3e6ea"
                 }
               ]
             },
@@ -1323,6 +1324,44 @@
                 "publish-email"
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Update Grades (JSON)",
+          "id": "b-88888888-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/grades/bulk-update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "grades",
+                "bulk-update"
+              ]
+            },
+            "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
           },
           "response": []
         },
@@ -1387,7 +1426,9 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": []
+                  "src": [
+                    "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_attendance.xlsx"
+                  ]
                 }
               ]
             },
@@ -1456,7 +1497,9 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": []
+                  "src": [
+                    "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_grades.xlsx"
+                  ]
                 }
               ]
             },

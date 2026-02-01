@@ -36,12 +36,28 @@
       "destination": "https://uniz-academics-service.vercel.app/grades/upload"
     },
     {
+      "source": "/api/v1/academics/grades/bulk-update",
+      "destination": "https://uniz-academics-service.vercel.app/grades/bulk-update"
+    },
+    {
       "source": "/api/v1/academics/grades/template",
       "destination": "https://uniz-academics-service.vercel.app/grades/template"
     },
     {
       "source": "/api/v1/academics/attendance/upload",
       "destination": "https://uniz-academics-service.vercel.app/attendance/upload"
+    },
+    {
+      "source": "/api/v1/academics/attendance/upload/progress",
+      "destination": "https://uniz-academics-service.vercel.app/attendance/upload/progress"
+    },
+    {
+      "source": "/api/v1/academics/grades/upload/progress",
+      "destination": "https://uniz-academics-service.vercel.app/grades/upload/progress"
+    },
+    {
+      "source": "/api/v1/academics/grades/publish/progress",
+      "destination": "https://uniz-academics-service.vercel.app/grades/publish/progress"
     },
     {
       "source": "/api/v1/academics/attendance/template",
