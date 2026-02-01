@@ -566,6 +566,41 @@
           "response": []
         },
         {
+          "name": "Admin View Specific Student",
+          "id": "admin-view-student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "profile",
+                "admin",
+                "student",
+                ":username"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": "O210008"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Update Presence Status",
           "id": "f88bb13f-5e7c-44f2-8700-0b8f62912563",
           "request": {
@@ -761,6 +796,49 @@
           "response": []
         },
         {
+          "name": "Forward Request",
+          "id": "forward-request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"comment\": \"Forwarding to next level after parent call.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/:id/forward",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                ":id",
+                "forward"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Reject Request",
           "id": "db64c8b9-99f8-4248-9ad3-230a3f1d4dcd",
           "request": {
@@ -872,6 +950,40 @@
           "response": []
         },
         {
+          "name": "Security Consolidated Summary",
+          "id": "security-summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/security/summary?search=O210008",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                "security",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "O210008"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "View Pending Outings (Admin)",
           "id": "ea9b3098-451a-4949-8dd8-660a74b0b635",
           "request": {
@@ -884,7 +996,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outing/all",
+              "raw": "{{baseUrl}}/api/v1/requests/outing/all?page=1&limit=50&search=O210008",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -894,6 +1006,20 @@
                 "requests",
                 "outing",
                 "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "search",
+                  "value": "O210008"
+                }
               ]
             }
           },
@@ -912,7 +1038,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outpass/all",
+              "raw": "{{baseUrl}}/api/v1/requests/outpass/all?page=1&limit=50&search=O210008",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -922,6 +1048,20 @@
                 "requests",
                 "outpass",
                 "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "search",
+                  "value": "O210008"
+                }
               ]
             }
           },
