@@ -439,6 +439,10 @@ All admins (Director, Dean, Wardens, Caretakers, Security) use the **same Login 
 
 ## 🛠️ Webmaster Features
 
+---
+
+## 🛠️ Webmaster Features
+
 ### 21. Create Banners
 **Endpoint:** `POST /profile/admin/banners`
 **Auth Required:** Yes (Webmaster)
@@ -446,6 +450,21 @@ All admins (Director, Dean, Wardens, Caretakers, Security) use the **same Login 
 ### 22. Publish/Unpublish Banner
 **Endpoint:** `POST /profile/admin/banners/:id/publish`
 **Request Body:** `{"publish": true}`
+
+### 23. System Health Check
+**Endpoint:** `GET /system/health`
+**Auth Required:** No
+**Description:** Aggregates health status of all microservices in real-time.
+**Success Response:**
+```json
+{
+  "success": true,
+  "services": [
+    { "name": "Auth Service", "status": "UP", "latency": "120ms" },
+    { "name": "Mail Service", "status": "UP", "latency": "45ms" }
+  ]
+}
+```
 
 ---
 

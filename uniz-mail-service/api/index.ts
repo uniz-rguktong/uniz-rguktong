@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
-import authRoutes from '../src/routes/auth.routes';
+import emailRoutes from '../src/routes/email.routes';
 
 dotenv.config();
 
@@ -18,15 +18,15 @@ app.use(express.json());
 
 // Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', service: 'uniz-auth-service' });
+  res.status(200).json({ status: 'ok', service: 'uniz-mail-service' });
 });
 
 app.get('/', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'UniZ Auth Service API holds individual endpoints.', health: '/health' });
+  res.status(200).json({ status: 'ok', message: 'UniZ Mail Service API holds individual endpoints.', health: '/health' });
 });
 
 // Routes
-app.use('/', authRoutes);
+app.use('/', emailRoutes);
 
 // Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

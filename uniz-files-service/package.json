@@ -1,7 +1,7 @@
 {
-  "name": "uniz-auth-service",
+  "name": "uniz-files-service",
   "version": "1.0.0",
-  "description": "Auth Microservice",
+  "description": "Files and Template Service",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

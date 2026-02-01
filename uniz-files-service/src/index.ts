@@ -7,7 +7,7 @@ import fileRoutes from './routes/file.routes';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3006;
+const PORT = process.env.PORT || 3005;
 
 app.use(helmet());
 app.use(cors());

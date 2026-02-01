@@ -1,5 +1,0 @@
-
-> uniz-user-service@1.0.0 dev
-> ts-node src/index.ts
-
-User Service running on port 3002

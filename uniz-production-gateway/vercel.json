@@ -8,6 +8,10 @@
       "destination": "https://uniz-auth-service.vercel.app/$1"
     },
     {
+      "source": "/api/v1/system/health",
+      "destination": "/api/system-health"
+    },
+    {
       "source": "/api/v1/profile/(.*)",
       "destination": "https://uniz-user-service.vercel.app/$1"
     },

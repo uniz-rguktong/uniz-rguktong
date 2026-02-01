@@ -599,6 +599,18 @@
                             "path": ["academics", "grades", "publish-email"]
                         }
                     }
+                },
+                {
+                    "name": "System Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{BASE_URL}}/system/health",
+                            "host": ["{{BASE_URL}}"],
+                            "path": ["system", "health"]
+                        }
+                    }
                 }
             ]
         }
