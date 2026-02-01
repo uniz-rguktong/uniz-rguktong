@@ -113,6 +113,30 @@
 }
 ```
 
+### 4a. Download Grade Template (Files Service)
+**Endpoint:** `GET /academics/grades/template`
+**Auth Required:** Yes (Faculty/Admin)
+**Query Params:** `branch` (CSE), `year` (E1), `semester` (SEM-1), `subjectCode` (E1-SEM-1-CSE-1)
+**Description:** Downloads an Excel template pre-filled with student IDs for the specified batch.
+
+### 4b. Upload Grades (Files Service)
+**Endpoint:** `POST /academics/grades/upload`
+**Auth Required:** Yes (Faculty/Admin)
+**Response:** JSON with success count, fail count, and errors.
+**Note:** Processed in batches.
+
+### 4c. Check Upload Status (Files Service)
+**Endpoint:** `GET /academics/upload/status/:jobId`
+**Auth Required:** Yes (Faculty/Admin)
+**Description:** Polls the status of the background upload job (Mock for now).
+**Response:** `{ "status": "completed", "progress": 100 }`
+
+### 4d. Publish Results (Email)
+**Endpoint:** `POST /academics/grades/publish-email`
+**Auth Required:** Yes (Webmaster/Dean/Director)
+**Body:** `{ "semesterId": "SEM-1" }`
+**Description:** Triggers bulk email notifications to all students for the given semester results.
+
 ---
 
 ## 🚪 Outpass & Permissions

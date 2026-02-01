@@ -24,6 +24,30 @@
       "destination": "https://uniz-notification-service.vercel.app/$1"
     },
     {
+      "source": "/api/v1/mail/(.*)",
+      "destination": "https://uniz-mail-service.vercel.app/$1"
+    },
+    {
+      "source": "/api/v1/academics/grades/upload",
+      "destination": "https://uniz-files-service.vercel.app/grades/upload"
+    },
+    {
+      "source": "/api/v1/academics/grades/template",
+      "destination": "https://uniz-files-service.vercel.app/grades/template"
+    },
+    {
+      "source": "/api/v1/academics/attendance/upload",
+      "destination": "https://uniz-files-service.vercel.app/attendance/upload"
+    },
+    {
+      "source": "/api/v1/academics/attendance/template",
+      "destination": "https://uniz-files-service.vercel.app/attendance/template"
+    },
+    {
+      "source": "/api/v1/files/(.*)",
+      "destination": "https://uniz-files-service.vercel.app/$1"
+    },
+    {
       "source": "/api/v1/academics/(.*)",
       "destination": "https://uniz-academics-service.vercel.app/$1"
     },
