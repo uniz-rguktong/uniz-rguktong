@@ -1,7 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 
-const isLocal = process.env.NODE_ENV === 'development';
+const isLocal = process.env.NODE_ENV === 'development' || !process.env.VERCEL;
+
+console.log(`System Health Check: isLocal=${isLocal}, NODE_ENV=${process.env.NODE_ENV}`);
 
 const services = [
     { name: 'Auth Service', url: isLocal ? 'http://localhost:3001/health' : 'https://uniz-auth-service.vercel.app/health' },
