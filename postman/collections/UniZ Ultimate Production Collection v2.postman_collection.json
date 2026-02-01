@@ -482,6 +482,7 @@
               ]
             }
           },
+          "description": "Returns full student profile enriched with latest outpass history, academic grades (GPA), and attendance records from other microservices.",
           "response": []
         },
         {
@@ -598,6 +599,7 @@
               ]
             }
           },
+          "description": "Administrative view of a specific student profile, including all cross-service enriched data (History, Grades, Attendance).",
           "response": []
         },
         {
@@ -1156,7 +1158,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades",
+              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1165,6 +1167,13 @@
                 "v1",
                 "academics",
                 "grades"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "O210008",
+                  "description": "Optional: Admin can view any student's grades"
+                }
               ]
             }
           },
