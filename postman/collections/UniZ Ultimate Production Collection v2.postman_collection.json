@@ -498,7 +498,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"phone\": \"9876543210\",\n    \"bloodGroup\": \"O+\",\n    \"dateOfBirth\": \"2002-01-01\",\n    \"email\" : \"o21008@rguktong.ac.in\",\n    \"roomno\" : \"I-207\",\n    \"profileUrl\" : \"https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n}",
+              "raw": "{\n    \"name\": \"Sreecharan Desu\",\n    \"phone\": \"9876543210\",\n    \"email\": \"o21008@rguktong.ac.in\",\n    \"gender\": \"M\",\n    \"bloodGroup\": \"O+\",\n    \"dateOfBirth\": \"2002-01-01\",\n    \"profileUrl\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\",\n    \"roomno\": \"I-207\",\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"section\": \"B\",\n    \"fatherName\": \"Venkata Ramana\",\n    \"motherName\": \"Lakshmi\",\n    \"fatherOccupation\": \"Business\",\n    \"motherOccupation\": \"Homemaker\",\n    \"fatherEmail\": \"father@example.com\",\n    \"motherEmail\": \"mother@example.com\",\n    \"fatherAddress\": \"Ongole\",\n    \"motherAddress\": \"Ongole\",\n    \"isPresentInCampus\": true,\n    \"isApplicationPending\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -535,7 +535,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"branch\": \"CSE\",\n    \"gender\": \"M\",\n    \"year\": \"E2\"\n}",
+              "raw": "{\n    \"name\": \"Updated Name\",\n    \"branch\": \"ECE\",\n    \"year\": \"E3\",\n    \"section\": \"A\",\n    \"roomno\": \"J-101\",\n    \"email\": \"admin-updated@uniz.edu\",\n    \"phone\": \"0000000000\",\n    \"gender\": \"F\",\n    \"fatherName\": \"Admin Refined\",\n    \"isApplicationPending\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
