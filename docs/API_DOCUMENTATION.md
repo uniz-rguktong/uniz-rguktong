@@ -437,7 +437,85 @@ All admins (Director, Dean, Wardens, Caretakers, Security) use the **same Login 
 
 ---
 
-## 🛠️ Webmaster Features
+## 📚 Academic & Examination Cell (AEC)
+
+### 25. Get Batch Grades (Bulk View)
+**Endpoint:** `GET /academics/grades/batch`
+**Auth Required:** Yes (Webmaster/Dean/Director)
+**Query Params:** `branch` (e.g., CSE), `year` (e.g., E2), `semesterId` (e.g., SEM-1), `failedOnly` (true/false)
+
+**Success Response (200 OK):**
+```json
+{
+  "success": true,
+  "summary": {
+    "totalStudents": 3,
+    "totalRecords": 7,
+    "failedRecords": 7,
+    "timestamp": "2026-02-01T..."
+  },
+  "students": [
+    {
+      "studentId": "O210139",
+      "name": "DAMARLA SEETHA RAM PRAVEEN",
+      "branch": "CSE",
+      "year": "E2",
+      "records": [
+        {
+          "subjectCode": "E2-SEM-1-CSE-3",
+          "subjectName": "Design & Analysis of Algorithms",
+          "grade": 0,
+          "credits": 4,
+          "semesterId": "SEM-1"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 26. Bulk Update Grades (JSON)
+**Endpoint:** `POST /academics/grades/bulk-update`
+**Auth Required:** Yes (Webmaster/Dean)
+**Description:** Efficiently update multiple grades without Excel. Great for re-evaluations.
+
+**Request Body:**
+```json
+{
+    "updates": [
+        {
+            "studentId": "O210008",
+            "subjectId": "UUID-HERE",
+            "semesterId": "SEM-1",
+            "grade": "EX" // or numeric points like 9.5
+        }
+    ]
+}
+```
+
+### 27. Publish Results via Email
+**Endpoint:** `POST /academics/grades/publish-email`
+**Auth Required:** Yes (Director Only)
+**Request Body:** `{"semesterId": "SEM-1"}`
+**Note:** Triggers a background job to email report cards.
+
+### 28. Monitor Progress
+**Endpoints:**
+*   Uploads: `GET /academics/grades/upload/progress`
+*   Publishing: `GET /academics/grades/publish/progress`
+
+**Response:**
+```json
+{
+  "success": true,
+  "progress": {
+    "status": "processing",
+    "percent": 45,
+    "processed": 150,
+    "total": 330
+  }
+}
+```
 
 ---
 
