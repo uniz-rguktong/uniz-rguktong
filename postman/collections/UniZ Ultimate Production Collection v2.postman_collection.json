@@ -1450,36 +1450,6 @@
           "response": []
         },
         {
-          "name": "Attendance Upload Progress",
-          "id": "a-99999999-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance/upload/progress",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "attendance",
-                "upload",
-                "progress"
-              ]
-            },
-            "description": "Monitor the real-time progress of bulk attendance uploads."
-          },
-          "response": []
-        },
-        {
           "name": "Grades Upload",
           "id": "e68f3018-1e3f-401e-a785-de225f9c6d0b",
           "request": {
@@ -1517,36 +1487,6 @@
               ]
             },
             "description": "Upload the filled Excel template. Supports both numeric (0-10) and character grades (EX, A, B, C, D, E, R). Updates existing records (upsert)."
-          },
-          "response": []
-        },
-        {
-          "name": "Publish Results Progress",
-          "id": "p-12345678-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/publish/progress",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "publish",
-                "progress"
-              ]
-            },
-            "description": "Monitor the real-time progress of result emails being sent to students."
           },
           "response": []
         },
@@ -1646,36 +1586,6 @@
               ]
             },
             "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
-          },
-          "response": []
-        },
-        {
-          "name": "Grades Upload Progress",
-          "id": "73e6298f-0357-47c2-bb8f-6021c768c693",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/upload/progress",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "upload",
-                "progress"
-              ]
-            },
-            "description": "Monitor the real-time progress of bulk grades uploads."
           },
           "response": []
         },

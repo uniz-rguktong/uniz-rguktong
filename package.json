@@ -10,7 +10,8 @@
     "test": "bash tests/test_api_flow.sh",
     "clean": "rm -rf logs/ *.log",
     "install:all": "for d in uniz-*; do (cd $d && npm install); done",
-    "push:all": "git add . && git commit -m \"Update: Codebase synchronization and restructuring\" && git push origin main"
+    "push:all": "git add . && git commit -m \"Update: Codebase synchronization and restructuring\" && git push origin main",
+    "data-reset": "npm run data-reset --prefix uniz-academics-service && npm run data-reset --prefix uniz-user-service && npm run data-reset --prefix uniz-auth-service && npm run data-reset --prefix uniz-outpass-service"
   },
   "dependencies": {
     "axios": "^1.13.4",
