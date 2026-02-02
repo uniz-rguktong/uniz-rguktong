@@ -7,7 +7,7 @@
     "db:push": "bash scripts/reset-dbs.sh",
     "db:seed": "node scripts/seed.js && bash scripts/seed-admins.sh",
     "deploy": "bash scripts/vercel_update.sh",
-    "test": "bash tests/test_api_flow.sh",
+    "test": "node scripts/test_flow.js",
     "clean": "rm -rf logs/ *.log",
     "install:all": "for d in uniz-*; do (cd $d && npm install); done",
     "push:all": "git add . && git commit -m \"Update: Codebase synchronization and restructuring\" && git push origin main",

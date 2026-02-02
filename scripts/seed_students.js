@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 const BASE_URL = 'http://localhost:3000/api/v1';
 
 // Student Default Password
-const STUDENT_PASSWORD = 'password123';
+const STUDENT_PASSWORD = '123456';
 
 const jsonPath = '/Users/sreecharandesu/Downloads/CSE-1 Attendance_upto_february.json';
 
@@ -35,7 +35,7 @@ const mapStudent = (entry) => {
 
 async function seedStudents() {
     console.log('🌱 Seeding Students from JSON...');
-
+ 
     if (!fs.existsSync(jsonPath)) {
         console.error('❌ JSON file not found:', jsonPath);
         process.exit(1);

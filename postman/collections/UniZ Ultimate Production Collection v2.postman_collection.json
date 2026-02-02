@@ -7,56 +7,7 @@
   },
   "item": [
     {
-      "name": "0. System & Health",
-      "item": [
-        {
-          "name": "Master Health (All Services)",
-          "id": "36dca745-9f46-46b4-a38e-ae46f10e52ee",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/system/health",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "system",
-                "health"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Trigger Cron Maintenance",
-          "id": "2e1221ac-f012-4f8e-8462-6689ed444fe3",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/cron/api/cron",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "cron",
-                "api",
-                "cron"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "00bc958d-5cc7-40be-9535-44ef63d10f61"
-    },
-    {
-      "name": "1. Authentication",
+      "name": "Authentication & Public",
       "item": [
         {
           "name": "Student Login",
@@ -224,6 +175,27 @@
           "response": []
         },
         {
+          "name": "Master Health (All Services)",
+          "id": "36dca745-9f46-46b4-a38e-ae46f10e52ee",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/system/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "system",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Password Reset",
           "id": "dea37d07-b89e-472d-b703-41847b8a3657",
           "request": {
@@ -253,16 +225,20 @@
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "Student Dashboard",
+      "item": [
         {
-          "name": "Signup (New User)",
-          "id": "e2e26435-80b5-4f8d-a88c-bef161b716ef",
+          "name": "OTP Request",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"NEWUSER\",\n    \"password\": \"password123\",\n    \"email\": \"newuser@uniz.edu\",\n    \"role\": \"student\"\n}",
+              "raw": "{\n    \"username\": \"O210008\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -270,7 +246,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/v1/auth/signup",
+              "raw": "{{baseUrl}}/api/v1/auth/otp/request",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -278,27 +254,21 @@
                 "api",
                 "v1",
                 "auth",
-                "signup"
+                "otp",
+                "request"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Suspend Account (Admin)",
-          "id": "49e77170-3272-4fd4-80e9-afa343514768",
+          "name": "Verify OTP",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"suspended\": true\n}",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -306,7 +276,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/v1/auth/admin/suspend",
+              "raw": "{{baseUrl}}/api/v1/auth/otp/verify",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -314,118 +284,307 @@
                 "api",
                 "v1",
                 "auth",
-                "admin",
-                "suspend"
+                "otp",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\",\n    \"newPassword\": \"newSecurePassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/password/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "password",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/profile/student/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "profile",
+                "student",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Grades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "grades"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "O210008",
+                  "description": "Optional: Admin can view any student's grades"
+                }
+              ]
+            },
+            "description": "Fetches student grades with dynamic GPA calculation. Marks status as FAILED if 'R' grades are present."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academics",
+                "attendance"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "O210008",
+                  "description": "Optional: Admin can view any student's attendance"
+                }
+              ]
+            },
+            "description": "Fetches student attendance with automatically calculated percentages and semester-wise summaries."
+          },
+          "response": []
+        },
+        {
+          "name": "Request Outpass",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Home visit\",\n    \"fromDay\": \"2026-02-10T09:00:00.000Z\",\n    \"toDay\": \"2026-02-15T18:00:00.000Z\",\n    \"days\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/outpass",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                "outpass"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Student Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Sreecharan Desu\",\n    \"phone_number\": \"6300625861\",\n    \"email\": \"o21008@rguktong.ac.in\",\n    \"gender\": \"M\",\n    \"blood_group\": \"O+\",\n    \"date_of_birth\": \"2002-01-01\",\n    \"profile_url\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\",\n    \"room_number\": \"I-207\",\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"section\": \"B\",\n    \"father_name\": \"Venkata Ramana\",\n    \"mother_name\": \"Lakshmi\",\n    \"father_occupation\": \"Business\",\n    \"mother_occupation\": \"Homemaker\",\n    \"father_email\": \"father@example.com\",\n    \"mother_email\": \"mother@example.com\",\n    \"father_address\": \"Ongole\",\n    \"mother_address\": \"Ongole\",\n    \"is_in_campus\": true,\n    \"has_pending_requests\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/profile/student/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "profile",
+                "student",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Outing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-02T16:00:00.000Z\",\n    \"toTime\": \"2026-02-02T20:00:00.000Z\",\n    \"hours\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/outing",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                "outing"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Outpass History (Status)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                "history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Student Banners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/profile/student/banners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "profile",
+                "student",
+                "banners"
               ]
             }
           },
           "response": []
         }
-      ],
-      "id": "02a45dfc-077e-4f17-b569-bc8024310beb"
+      ]
     },
     {
-      "name": "2. User Profiles",
+      "name": "Administrative Suite",
       "item": [
         {
-          "name": "Banners Management",
+          "name": "Director & Dean",
           "item": [
             {
-              "name": "Get Student Banners",
-              "id": "4b817038-10c4-45b3-99fc-9226004fd61c",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{authToken}}",
-                    "type": "text"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/api/v1/profile/student/banners",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "v1",
-                    "profile",
-                    "student",
-                    "banners"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Get All Banners (Admin)",
-              "id": "b63351ce-331b-4916-9ae7-10d7553b64f1",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{adminToken}}",
-                    "type": "text"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/api/v1/profile/admin/banners",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "v1",
-                    "profile",
-                    "admin",
-                    "banners"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Create Banner",
-              "id": "2d5c1439-a78f-4b15-875c-692707b3b2b5",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{adminToken}}",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"title\": \"Holiday Notice\",\n    \"text\": \"College is closed tomorrow\",\n    \"imageUrl\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/api/v1/profile/admin/banners",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "v1",
-                    "profile",
-                    "admin",
-                    "banners"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
               "name": "Publish Banner",
-              "id": "bfd1ed83-9db3-4dc9-82b3-cfef75b8f42b",
+              "id": "938a37f9-8f8a-4733-ba8c-367790b9f946",
               "request": {
                 "method": "POST",
                 "header": [
@@ -467,633 +626,83 @@
                 }
               },
               "response": []
-            }
-          ],
-          "id": "a84a5627-d7b1-4b51-a7d0-f2418e5fc44d"
-        },
-        {
-          "name": "Get My Profile",
-          "id": "1d525ed9-069c-41d7-86cb-629efb49e4c9",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/student/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "student",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Student Details",
-          "id": "1d57e3ec-01c3-4bff-9a6a-dadccf50f80c",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"Sreecharan Desu\",\n    \"phone_number\": \"6300625861\",\n    \"email\": \"o21008@rguktong.ac.in\",\n    \"gender\": \"M\",\n    \"blood_group\": \"O+\",\n    \"date_of_birth\": \"2002-01-01\",\n    \"profile_url\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\",\n    \"room_number\": \"I-207\",\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"section\": \"B\",\n    \"father_name\": \"Venkata Ramana\",\n    \"mother_name\": \"Lakshmi\",\n    \"father_occupation\": \"Business\",\n    \"mother_occupation\": \"Homemaker\",\n    \"father_email\": \"father@example.com\",\n    \"mother_email\": \"mother@example.com\",\n    \"father_address\": \"Ongole\",\n    \"mother_address\": \"Ongole\",\n    \"is_in_campus\": true,\n    \"has_pending_requests\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/student/update",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "student",
-                "update"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Update Student (Power)",
-          "id": "24739f2b-fdda-471e-9550-b4cd0f6718a6",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"branch\": \"CSE\",\n    \"gender\": \"M\",\n    \"year\": \"E2\",\n    \"phone_number\" : \"6300625861\",\n    \"room_number\": \"I-207\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            {
+              "name": "Admin View Specific Student",
+              "id": "2f1baf72-1a6f-4872-80fe-dec276579cf1",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "student",
+                    ":username"
+                  ],
+                  "variable": [
+                    {
+                      "key": "username",
+                      "value": "O210008"
+                    }
+                  ]
                 }
-              }
+              },
+              "response": []
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "admin",
-                "student",
-                ":username"
-              ],
-              "variable": [
-                {
-                  "key": "username",
-                  "value": "O210008"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin View Specific Student",
-          "id": "admin-view-student",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "admin",
-                "student",
-                ":username"
-              ],
-              "variable": [
-                {
-                  "key": "username",
-                  "value": "O210008"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Presence Status",
-          "id": "f88bb13f-5e7c-44f2-8700-0b8f62912563",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"isPresent\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/student/status",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "student",
-                "status"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Search Students (Filter)",
-          "id": "c332e43b-7f49-4120-80b3-e247cf68caed",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"page\": 1,\n    \"limit\": 50\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/profile/student/search",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "profile",
-                "student",
-                "search"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "e638a296-f25a-402c-a685-30c3131ad680"
-    },
-    {
-      "name": "3. Outpass & Outings",
-      "item": [
-        {
-          "name": "Request Outing",
-          "id": "9a52e6b9-7527-4e3f-8a5d-ffdb9ea76000",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-02T16:00:00.000Z\",\n    \"toTime\": \"2026-02-02T20:00:00.000Z\",\n    \"hours\": 4\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outing",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                "outing"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Request Outpass",
-          "id": "4349f570-e785-4852-b6bc-cc1e28b10f2c",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"reason\": \"Home visit\",\n    \"fromDay\": \"2026-02-10T09:00:00.000Z\",\n    \"toDay\": \"2026-02-15T18:00:00.000Z\",\n    \"days\": 5\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outpass",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                "outpass"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Approve Request",
-          "id": "2e452161-1297-4b43-b858-35c51ecba30d",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"message\": \"Parent verified. Fine to go.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/:id/approve",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                ":id",
-                "approve"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Forward Request",
-          "id": "forward-request",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"comment\": \"Forwarding to next level after parent call.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/:id/forward",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                ":id",
-                "forward"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Reject Request",
-          "id": "db64c8b9-99f8-4248-9ad3-230a3f1d4dcd",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"comment\": \"Emergency not valid.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/:id/reject",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                ":id",
-                "reject"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Security Check-Out",
-          "id": "eb28866c-cc53-4144-becb-98ee871a876c",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/:id/checkout",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                ":id",
-                "checkout"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Security Check-In",
-          "id": "2ad922a0-5dc5-4692-a428-9358991a9431",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/:id/checkin",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                ":id",
-                "checkin"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Security Consolidated Summary",
-          "id": "security-summary",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/security/summary?search=O210008",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                "security",
-                "summary"
-              ],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "O210008"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "View Pending Outings (Admin)",
-          "id": "ea9b3098-451a-4949-8dd8-660a74b0b635",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outing/all?page=1&limit=50&search=O210008",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                "outing",
-                "all"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
+            {
+              "name": "Bulk Update Grades REMIDIAL (JSON)",
+              "id": "049533e5-4181-45c4-b137-f28c461ea63d",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
-                {
-                  "key": "limit",
-                  "value": "50"
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/bulk-update",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "bulk-update"
+                  ]
                 },
-                {
-                  "key": "search",
-                  "value": "O210008"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "View Pending Outpasses (Admin)",
-          "id": "f5c2c280-ba99-482e-be94-41a7b9a89f30",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/outpass/all?page=1&limit=50&search=O210008",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "requests",
-                "outpass",
-                "all"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "50"
-                },
-                {
-                  "key": "search",
-                  "value": "O210008"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "a5c0a9a8-4368-4f1f-9ffe-48a5e7c86022"
-    },
-    {
-      "name": "4. Academics & Grades",
-      "item": [
-        {
-          "name": "Subjects Management",
-          "item": [
+                "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
+              },
+              "response": []
+            },
             {
               "name": "List All Subjects",
-              "id": "a3448a52-9395-47e2-a34a-4b9e9a90ad0d",
+              "id": "63b7d233-4844-441e-a214-b416f1c389b6",
               "request": {
                 "method": "GET",
                 "header": [
@@ -1119,8 +728,8 @@
               "response": []
             },
             {
-              "name": "Add New Subject (Upsert)",
-              "id": "8d150361-9139-4697-8675-2210b5398c97",
+              "name": "Add New Subject (Upsert) Also can edit",
+              "id": "79c421b5-c531-40ef-a5a7-ac9e1afab324",
               "request": {
                 "method": "POST",
                 "header": [
@@ -1155,471 +764,2026 @@
                 "description": "Creates or updates a subject. If a subject with the same 'code' exists, it will be updated."
               },
               "response": []
-            }
-          ],
-          "id": "ed9ea655-d2eb-43b3-8dda-da487b29fb31"
-        },
-        {
-          "name": "Get My Grades",
-          "id": "32a90ac6-b77a-414f-b560-c84afe81695b",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades"
-              ],
-              "query": [
-                {
-                  "key": "studentId",
-                  "value": "O210008",
-                  "description": "Optional: Admin can view any student's grades"
-                }
-              ]
             },
-            "description": "Fetches student grades with dynamic GPA calculation. Marks status as FAILED if 'R' grades are present."
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Attendance",
-          "id": "e4b6b6b6-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "attendance"
-              ],
-              "query": [
-                {
-                  "key": "studentId",
-                  "value": "O210008",
-                  "description": "Optional: Admin can view any student's attendance"
-                }
-              ]
-            },
-            "description": "Fetches student attendance with automatically calculated percentages and semester-wise summaries."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Batch Grades (Filter)",
-          "id": "3689566a-14f6-4bf2-bebf-3abbf56687b0",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=true&semesterId=SEM-1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "batch"
-              ],
-              "query": [
-                {
-                  "key": "branch",
-                  "value": "CSE",
-                  "uuid": "8581db3b-36fa-45a3-9c69-887a74158054"
+            {
+              "name": "Publish Results to Mail",
+              "id": "597c8a60-b0c6-4fb3-ae92-f7f9c89e183f",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"semesterId\": \"SEM-1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
-                {
-                  "key": "year",
-                  "value": "E2",
-                  "uuid": "686d9260-b5ed-4c2b-95f8-c011e1f66dcf"
-                },
-                {
-                  "key": "failedOnly",
-                  "value": "true",
-                  "uuid": "a72d7701-7c70-463b-9a7f-042f850f2baa"
-                },
-                {
-                  "key": "semesterId",
-                  "value": "SEM-1",
-                  "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)",
-                  "uuid": "5563e6f1-c3d4-42fd-a375-ec1e2cc3e6ea"
-                }
-              ]
-            },
-            "description": "Fetches a bulk view of grades (or failures) for a branch/year. returns a 'students' array where each entry contains the student's profile details and a list of their specific records."
-          },
-          "response": []
-        },
-        {
-          "name": "Publish Results to Mail",
-          "id": "3eb2ccf3-de11-4128-9131-0d791f65522f",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"semesterId\": \"SEM-1\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/publish-email",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "publish-email"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Bulk Update Grades (JSON)",
-          "id": "b-88888888-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/bulk-update",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "bulk-update"
-              ]
-            },
-            "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
-          },
-          "response": []
-        },
-        {
-          "name": "Manual Add Grade",
-          "id": "0393d584-41f0-4819-a12f-7ccb0742f091",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"studentId\": \"O210008\",\n    \"subjectId\": \"GUID-HERE\",\n    \"semesterId\": \"SEM-1\",\n    \"grade\": 9\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/add",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "add"
-              ]
-            }
-          },
-          "response": []
-        }
-      ],
-      "id": "48ed3f67-a8bf-44c3-926a-f427d5d78a9e"
-    },
-    {
-      "name": "5. Bulk Imports (Excel)",
-      "item": [
-        {
-          "name": "Attendance Upload",
-          "id": "8dd1483e-df7e-4d9b-b515-1114c263995b",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": [
-                    "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_attendance.xlsx"
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/publish-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "publish-email"
                   ]
                 }
-              ]
+              },
+              "response": []
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance/upload",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "attendance",
-                "upload"
-              ]
+            {
+              "name": "Attendance Upload",
+              "id": "8561d1aa-683a-423e-bb85-f4c121fcce41",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [
+                        "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_attendance.xlsx"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "upload"
+                  ]
+                },
+                "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert)."
+              },
+              "response": []
             },
-            "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert)."
-          },
-          "response": []
-        },
-        {
-          "name": "Grades Upload",
-          "id": "e68f3018-1e3f-401e-a785-de225f9c6d0b",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": [
-                    "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_grades.xlsx"
+            {
+              "name": "Grades Upload",
+              "id": "cddfc91d-0fe0-4074-9b32-8a353841c2e6",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [
+                        "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_grades.xlsx"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "upload"
+                  ]
+                },
+                "description": "Upload the filled Excel template. Supports both numeric (0-10) and character grades (EX, A, B, C, D, E, R). Updates existing records (upsert)."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Batch Grades (Filter)",
+              "id": "eb830432-4e69-4168-ae2a-32ecfac4ca8d",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=true&semesterId=SEM-1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "batch"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE",
+                      "uuid": "8581db3b-36fa-45a3-9c69-887a74158054"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2",
+                      "uuid": "686d9260-b5ed-4c2b-95f8-c011e1f66dcf"
+                    },
+                    {
+                      "key": "failedOnly",
+                      "value": "true",
+                      "uuid": "a72d7701-7c70-463b-9a7f-042f850f2baa"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1",
+                      "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)",
+                      "uuid": "5563e6f1-c3d4-42fd-a375-ec1e2cc3e6ea"
+                    }
+                  ]
+                },
+                "description": "Fetches a bulk view of grades (or failures) for a branch/year. returns a 'students' array where each entry contains the student's profile details and a list of their specific records."
+              },
+              "response": []
+            },
+            {
+              "name": "Download Attendance Template",
+              "id": "3204baaa-ac2b-4f86-af9b-fcbaab4a635a",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/template?branch=CSE&year=E2&semesterId=SEM-1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "template"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1"
+                    }
+                  ]
+                },
+                "description": "Downloads an Excel template for attendance. Automatically generates rows for ALL subjects matching the branch and year."
+              },
+              "response": []
+            },
+            {
+              "name": "Download Grades Template",
+              "id": "e184e2f5-e3a6-4e39-bd3e-37324661ef85",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=false",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "template"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE",
+                      "uuid": "c1e218b8-e9ad-4c2d-9073-346ae0f65211"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2",
+                      "uuid": "fdfb3a6e-49c8-42f0-867b-114233b9e2a6"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1",
+                      "uuid": "748781e0-5347-4985-92dd-16860664db81"
+                    },
+                    {
+                      "key": "subjectCode",
+                      "value": "CS201",
+                      "uuid": "86269369-7c01-4ce1-a1e9-876844fcabf5"
+                    },
+                    {
+                      "key": "remedialsOnly",
+                      "value": "false",
+                      "description": "If true, returns only students who have an 'R' grade in a specific subjectCode."
+                    }
+                  ]
+                },
+                "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
+              },
+              "response": []
+            },
+            {
+              "name": "Suspend Account (Admin)",
+              "id": "83c72df3-9ba7-4815-bac5-0e6e8b2016f6",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"O210008\",\n    \"suspended\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/admin/suspend",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "admin",
+                    "suspend"
                   ]
                 }
-              ]
+              },
+              "response": []
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/upload",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "upload"
-              ]
-            },
-            "description": "Upload the filled Excel template. Supports both numeric (0-10) and character grades (EX, A, B, C, D, E, R). Updates existing records (upsert)."
-          },
-          "response": []
-        },
-        {
-          "name": "Download Attendance Template",
-          "id": "e9141b58-a701-400f-a230-92f145a2dead",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance/template?branch=CSE&year=E2&semesterId=SEM-1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "attendance",
-                "template"
-              ],
-              "query": [
-                {
-                  "key": "branch",
-                  "value": "CSE"
+            {
+              "name": "Search Students (Filter)",
+              "id": "75d2a632-bf6f-4caa-ae6f-456f67bd08af",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"page\": 1,\n    \"limit\": 50\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
-                {
-                  "key": "year",
-                  "value": "E2"
-                },
-                {
-                  "key": "semesterId",
-                  "value": "SEM-1"
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/student/search",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "student",
+                    "search"
+                  ]
                 }
-              ]
+              },
+              "response": []
             },
-            "description": "Downloads an Excel template for attendance. Automatically generates rows for ALL subjects matching the branch and year."
-          },
-          "response": []
+            {
+              "name": "Unified Upload Progress",
+              "id": "e7360c67-53a1-4097-85bb-ff467a3bac52",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/upload/progress",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "upload",
+                    "progress"
+                  ]
+                },
+                "description": "Global endpoint to monitor the latest academic upload progress (Grades or Attendance)."
+              },
+              "response": []
+            }
+          ]
         },
         {
-          "name": "Download Grades Template",
-          "id": "129122de-44bb-4cf5-a91d-3141e348bd1c",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=false",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "grades",
-                "template"
-              ],
-              "query": [
+          "name": "Warden & Caretaker & Security",
+          "item": [
+            {
+              "name": "Admin Login",
+              "event": [
                 {
-                  "key": "branch",
-                  "value": "CSE",
-                  "uuid": "c1e218b8-e9ad-4c2d-9073-346ae0f65211"
+                  "listen": "test",
+                  "script": {
+                    "id": "2b8ff1c4-c0c6-4827-97fb-3d76e0dfff0e",
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.token) {",
+                      "    pm.environment.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
                 },
                 {
-                  "key": "year",
-                  "value": "E2",
-                  "uuid": "fdfb3a6e-49c8-42f0-867b-114233b9e2a6"
-                },
-                {
-                  "key": "semesterId",
-                  "value": "SEM-1",
-                  "uuid": "748781e0-5347-4985-92dd-16860664db81"
-                },
-                {
-                  "key": "subjectCode",
-                  "value": "CS201",
-                  "uuid": "86269369-7c01-4ce1-a1e9-876844fcabf5"
-                },
-                {
-                  "key": "remedialsOnly",
-                  "value": "false",
-                  "description": "If true, returns only students who have an 'R' grade in a specific subjectCode."
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "131d952e-6c70-4af4-9440-1a0123892944",
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
                 }
-              ]
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
             },
-            "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
-          },
-          "response": []
+            {
+              "name": "Verify OTP",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/otp/verify",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "otp",
+                    "verify"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Pending Outpasses (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/outpass/all?page=1&limit=50&search=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "outpass",
+                    "all"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "search",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"message\": \"Parent verified. Fine to go.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/approve",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "approve"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"comment\": \"Emergency not valid.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/reject",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "reject"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Security Check-Out",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/checkout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "checkout"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Security Check-In",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/checkin",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "checkin"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Security Consolidated Summary",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/security/summary?search=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "security",
+                    "summary"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Forward Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"comment\": \"Forwarding to next level after parent call.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/forward",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "forward"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         },
         {
-          "name": "Unified Upload Progress",
-          "id": "u-00000000-b6b6-4b6b-b6b6-b6b6b6b6b6b6",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/upload/progress",
-              "host": [
-                "{{baseUrl}}"
+          "name": "SWO",
+          "item": [
+            {
+              "name": "Admin Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b8ff1c4-c0c6-4827-97fb-3d76e0dfff0e",
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.token) {",
+                      "    pm.environment.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "131d952e-6c70-4af4-9440-1a0123892944",
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
               ],
-              "path": [
-                "api",
-                "v1",
-                "academics",
-                "upload",
-                "progress"
-              ]
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
             },
-            "description": "Global endpoint to monitor the latest academic upload progress (Grades or Attendance)."
-          },
-          "response": []
+            {
+              "name": "Approve Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"message\": \"Parent verified. Fine to go.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/approve",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "approve"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"comment\": \"Emergency not valid.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/:id/reject",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    ":id",
+                    "reject"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Presence Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"O210008\",\n    \"isPresent\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/student/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "student",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Webmaster & System",
+          "item": [
+            {
+              "name": "Student Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.token) {",
+                      "    pm.environment.set(\"authToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"O210008\",\n    \"password\": \"password123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2b8ff1c4-c0c6-4827-97fb-3d76e0dfff0e",
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.token) {",
+                      "    pm.environment.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "131d952e-6c70-4af4-9440-1a0123892944",
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get My Grades",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades"
+                  ],
+                  "query": [
+                    {
+                      "key": "studentId",
+                      "value": "O210008",
+                      "description": "Optional: Admin can view any student's grades"
+                    }
+                  ]
+                },
+                "description": "Fetches student grades with dynamic GPA calculation. Marks status as FAILED if 'R' grades are present."
+              },
+              "response": []
+            },
+            {
+              "name": "Get My Attendance",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance"
+                  ],
+                  "query": [
+                    {
+                      "key": "studentId",
+                      "value": "O210008",
+                      "description": "Optional: Admin can view any student's attendance"
+                    }
+                  ]
+                },
+                "description": "Fetches student attendance with automatically calculated percentages and semester-wise summaries."
+              },
+              "response": []
+            },
+            {
+              "name": "Request Outpass",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"reason\": \"Home visit\",\n    \"fromDay\": \"2026-02-10T09:00:00.000Z\",\n    \"toDay\": \"2026-02-15T18:00:00.000Z\",\n    \"days\": 5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/outpass",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "outpass"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Student Details",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Sreecharan Desu\",\n    \"phone_number\": \"6300625861\",\n    \"email\": \"o21008@rguktong.ac.in\",\n    \"gender\": \"M\",\n    \"blood_group\": \"O+\",\n    \"date_of_birth\": \"2002-01-01\",\n    \"profile_url\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7\",\n    \"room_number\": \"I-207\",\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"section\": \"B\",\n    \"father_name\": \"Venkata Ramana\",\n    \"mother_name\": \"Lakshmi\",\n    \"father_occupation\": \"Business\",\n    \"mother_occupation\": \"Homemaker\",\n    \"father_email\": \"father@example.com\",\n    \"mother_email\": \"mother@example.com\",\n    \"father_address\": \"Ongole\",\n    \"mother_address\": \"Ongole\",\n    \"is_in_campus\": true,\n    \"has_pending_requests\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/student/update",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "student",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Request Outing",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-02T16:00:00.000Z\",\n    \"toTime\": \"2026-02-02T20:00:00.000Z\",\n    \"hours\": 4\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/outing",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "outing"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get My Outpass History (Status)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/history",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Student Banners",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/student/banners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "student",
+                    "banners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Publish Banner",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"publish\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/banners/:id/publish",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "banners",
+                    ":id",
+                    "publish"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "40cc5f53-1f50-429a-90c9-324aaa31092d"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin View Specific Student",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "student",
+                    ":username"
+                  ],
+                  "variable": [
+                    {
+                      "key": "username",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Bulk Update Grades REMIDIAL (JSON)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/bulk-update",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "bulk-update"
+                  ]
+                },
+                "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
+              },
+              "response": []
+            },
+            {
+              "name": "List All Subjects",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/subjects",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "subjects"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add New Subject (Upsert) Also can edit",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Machine Learning\",\n    \"code\": \"CSE401\",\n    \"credits\": 4\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/subjects/add",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "subjects",
+                    "add"
+                  ]
+                },
+                "description": "Creates or updates a subject. If a subject with the same 'code' exists, it will be updated."
+              },
+              "response": []
+            },
+            {
+              "name": "Attendance Upload",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [
+                        "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_attendance.xlsx"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "upload"
+                  ]
+                },
+                "description": "Upload the filled Excel template. Supports 'Total Classes Occurred' and 'Total Classes Attended' columns. Updates existing records (upsert)."
+              },
+              "response": []
+            },
+            {
+              "name": "Grades Upload",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": [
+                        "/Users/sreecharandesu/Projects/uniz-rguktong/tests/data/full_batch_grades.xlsx"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "upload"
+                  ]
+                },
+                "description": "Upload the filled Excel template. Supports both numeric (0-10) and character grades (EX, A, B, C, D, E, R). Updates existing records (upsert)."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Batch Grades (Filter)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/batch?branch=CSE&year=E2&failedOnly=true&semesterId=SEM-1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "batch"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE",
+                      "uuid": "8581db3b-36fa-45a3-9c69-887a74158054"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2",
+                      "uuid": "686d9260-b5ed-4c2b-95f8-c011e1f66dcf"
+                    },
+                    {
+                      "key": "failedOnly",
+                      "value": "true",
+                      "uuid": "a72d7701-7c70-463b-9a7f-042f850f2baa"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1",
+                      "description": "Optional: Filter by specific semester (e.g., SEM-1, SEM-2)",
+                      "uuid": "5563e6f1-c3d4-42fd-a375-ec1e2cc3e6ea"
+                    }
+                  ]
+                },
+                "description": "Fetches a bulk view of grades (or failures) for a branch/year. returns a 'students' array where each entry contains the student's profile details and a list of their specific records."
+              },
+              "response": []
+            },
+            {
+              "name": "Download Attendance Template",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/template?branch=CSE&year=E2&semesterId=SEM-1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "template"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1"
+                    }
+                  ]
+                },
+                "description": "Downloads an Excel template for attendance. Automatically generates rows for ALL subjects matching the branch and year."
+              },
+              "response": []
+            },
+            {
+              "name": "Download Grades Template",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/template?branch=CSE&year=E2&semesterId=SEM-1&subjectCode=CS201&remedialsOnly=false",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "template"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "CSE",
+                      "uuid": "c1e218b8-e9ad-4c2d-9073-346ae0f65211"
+                    },
+                    {
+                      "key": "year",
+                      "value": "E2",
+                      "uuid": "fdfb3a6e-49c8-42f0-867b-114233b9e2a6"
+                    },
+                    {
+                      "key": "semesterId",
+                      "value": "SEM-1",
+                      "uuid": "748781e0-5347-4985-92dd-16860664db81"
+                    },
+                    {
+                      "key": "subjectCode",
+                      "value": "CS201",
+                      "uuid": "86269369-7c01-4ce1-a1e9-876844fcabf5"
+                    },
+                    {
+                      "key": "remedialsOnly",
+                      "value": "false",
+                      "description": "If true, returns only students who have an 'R' grade in a specific subjectCode."
+                    }
+                  ]
+                },
+                "description": "Downloads an Excel template for grading. Supports character grades: EX, A, B, C, D, E, R. If subjectCode is omitted, it generates a multi-subject template for the entire branch."
+              },
+              "response": []
+            },
+            {
+              "name": "Suspend Account (Admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"O210008\",\n    \"suspended\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/admin/suspend",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "admin",
+                    "suspend"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search Students (Filter)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"branch\": \"CSE\",\n    \"year\": \"E2\",\n    \"page\": 1,\n    \"limit\": 50\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/student/search",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "student",
+                    "search"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unified Upload Progress",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/upload/progress",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "upload",
+                    "progress"
+                  ]
+                },
+                "description": "Global endpoint to monitor the latest academic upload progress (Grades or Attendance)."
+              },
+              "response": []
+            },
+            {
+              "name": "View Pending Outpasses (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/outpass/all?page=1&limit=50&search=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "outpass",
+                    "all"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "search",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Banners (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/banners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "banners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Banner",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"title\": \"Holiday Notice\",\n    \"text\": \"College is closed tomorrow\",\n    \"imageUrl\": \"https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/banners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "banners"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Update Student (Power)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"branch\": \"CSE\",\n    \"gender\": \"M\",\n    \"year\": \"E2\",\n    \"phone_number\" : \"6300625861\",\n    \"room_number\": \"I-207\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/profile/admin/student/:username",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "profile",
+                    "admin",
+                    "student",
+                    ":username"
+                  ],
+                  "variable": [
+                    {
+                      "key": "username",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Trigger Cron Maintenance",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/cron/api/cron",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "cron",
+                    "api",
+                    "cron"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Pending Outings (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/outing/all?page=1&limit=50&search=O210008",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "outing",
+                    "all"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "search",
+                      "value": "O210008"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Manual Add Grade",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"studentId\": \"O210008\",\n    \"subjectId\": \"GUID-HERE\",\n    \"semesterId\": \"SEM-1\",\n    \"grade\": 9\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/add",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
-      ],
-      "id": "6257197a-5412-4bad-b46d-5c367e08f1b8"
+      ]
     }
   ],
   "variable": [
