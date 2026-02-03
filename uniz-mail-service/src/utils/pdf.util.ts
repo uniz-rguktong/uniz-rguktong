@@ -28,8 +28,10 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
     const credit = Number(g.subject.credits);
     const gradePoint = Number(g.grade);
     totalCredits += credit;
-    if (gradePoint > 0) {
-       earnedPoints += (credit * gradePoint);
+    // GPA typically includes all credits registered, but let's follow standard
+    // If gradePoint is 0 (Remedial), it counts as attempted (credits added) but 0 points.
+    if (credit > 0) {
+       earnedPoints += (credit * (gradePoint > 0 ? gradePoint : 0));
     }
   });
 
@@ -109,27 +111,27 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
   </html>
   `;
 
-  // --- BROWSER CONFIGURATION FOR SERVERLESS & LOCAL ---
   let browser;
   try {
       const isProduction = process.env.NODE_ENV === 'production';
       
-      // Setup fonts for serverless environment if needed
-      // sparticuz handles fonts best via URL or layer, but basic rendering usually works or needs specific font setup
       if (isProduction) {
-          await chromium.font('https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf');
+          try {
+             // @ts-ignore: font property exists in newer sparticuz versions
+             await chromium.font('https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf');
+          } catch (e) { console.warn("Font load failed:", e); }
       }
 
-      // Configure Launch
+      const execPath = isProduction 
+         ? await chromium.executablePath()
+         : (process.env.PUPPETEER_EXECUTABLE_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
+
+      // @ts-ignore: ignoring specific type mismatches for now
       browser = await puppeteer.launch({
           args: isProduction ? chromium.args : [],
-          defaultViewport: chromium.defaultViewport,
-          executablePath: isProduction 
-              ? await chromium.executablePath() 
-              // LOCAL FALLBACK: Look for common Chrome paths on Mac/Linux/Win
-              // Or better, let user set PUPPETEER_EXECUTABLE_PATH env var
-              : (process.env.PUPPETEER_EXECUTABLE_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'), 
-          headless: isProduction ? chromium.headless : true, // sparticuz strict types 
+          defaultViewport: isProduction ? chromium.defaultViewport : { width: 1200, height: 800 },
+          executablePath: execPath,
+          headless: isProduction ? chromium.headless : true,
       });
 
       const page = await browser.newPage();
