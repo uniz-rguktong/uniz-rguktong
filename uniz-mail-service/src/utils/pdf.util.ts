@@ -115,12 +115,13 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
   try {
       const isProduction = process.env.NODE_ENV === 'production';
       
+      /* Font loading removed due to incompatibility
       if (isProduction) {
           try {
-             // @ts-ignore: font property exists in newer sparticuz versions
              await chromium.font('https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf');
           } catch (e) { console.warn("Font load failed:", e); }
       }
+      */
 
       const execPath = isProduction 
          ? await chromium.executablePath()
