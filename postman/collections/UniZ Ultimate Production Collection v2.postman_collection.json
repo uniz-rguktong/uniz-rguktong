@@ -573,6 +573,42 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Submit Grievance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"category\": \"Hostel\",\n    \"description\": \"Water supply issue in Room I-207\",\n    \"isAnonymous\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/grievance/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "requests",
+                "grievance",
+                "submit"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -2776,6 +2812,33 @@
                     "academics",
                     "grades",
                     "add"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Grievances (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/requests/grievance/list",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "requests",
+                    "grievance",
+                    "list"
                   ]
                 }
               },
