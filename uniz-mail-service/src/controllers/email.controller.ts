@@ -18,7 +18,7 @@ export const sendEmail = async (req: Request, res: Response) => {
                 success = await sendOtpEmail(to, data.username, data.otp);
                 break;
             case 'results':
-                success = await sendResultEmail(to, data.username, data.semesterId, data.grades);
+                success = await sendResultEmail(to, data.username, data.name, data.branch, data.campus, data.semesterId, data.grades);
                 break;
             case 'login_alert':
                 success = await sendLoginNotification(to, data.username, data.ip);

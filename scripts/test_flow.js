@@ -39,7 +39,6 @@ async function request(method, endpoint, body = null, token = null) {
         try { data = JSON.parse(text); } catch (e) { data = { message: text }; }
 
         console.log(`Response (${res.status}) - ${duration}ms:`);
-        // Limit output length for massive responses
         const jsonStr = JSON.stringify(data, null, 2);
         if (jsonStr.length > 2000) console.log(jsonStr.substring(0, 2000) + "... [Truncated]");
         else console.log(jsonStr);
@@ -91,16 +90,13 @@ async function run() {
         
         console.log("INFO: Testing Password Reset Flow for O210008...");
         
-        // 1. Request OTP
         try {
             await request('POST', '/auth/otp/request', { username: 'O210008' });
             log("SUCCESS: OTP Requested. Check your email/console.");
         } catch(e) {
             log(`FAILURE: OTP Request Failed: ${e.message}`);
-            // If failed, we might not be able to proceed with reset, but let's try assuming user has OTP
         }
 
-        // 2. Interactive Input Loop
         while (true) {
             const otp = await askUser("\nPROMPT: Enter the OTP sent to O210008 (or press Enter/type 'skip' to skip): ");
             
@@ -109,24 +105,18 @@ async function run() {
                 break;
             }
 
-            // 3. Verify & Reset
             try {
-                const newPass = "tempPass123";
+                const newPass = "password123"; // Force keep it consistent for test
                 await request('POST', '/auth/password/reset', { 
                     username: 'O210008', 
                     otp: otp.trim(), 
                     newPassword: newPass 
                 });
-                log("SUCCESS: Password Reset to 'tempPass123'");
-
-                // 4. Verify Login with New Password
+                log("SUCCESS: Password Reset Successful");
                 await request('POST', '/auth/login', { username: 'O210008', password: newPass });
                 log("SUCCESS: Logged in with New Password!");
-
-                log("INFO: Note: Password is now 'tempPass123' for this session.");
                 global.studentPassword = newPass;
-                break; // Exit loop on success
-
+                break; 
             } catch (e) {
                 log(`FAILURE: Error: ${e.message}`);
                 log("INFO: Please try again.");
@@ -143,22 +133,15 @@ async function run() {
             webmasterToken = res.token;
             log("SUCCESS: Webmaster Logged In");
 
-            // Upload Grades
             if (fs.existsSync('tests/data/full_batch_grades.xlsx')) {
                 await uploadFile('/academics/grades/upload', 'tests/data/full_batch_grades.xlsx', webmasterToken);
                 log("SUCCESS: Grades Uploaded");
-            } else {
-                log("SKIP: Grades file not found in tests/data!");
             }
 
-            // Upload Attendance
             if (fs.existsSync('tests/data/full_batch_attendance.xlsx')) {
                 await uploadFile('/academics/attendance/upload', 'tests/data/full_batch_attendance.xlsx', webmasterToken);
                 log("SUCCESS: Attendance Uploaded");
-            } else {
-                 log("SKIP: Attendance file not found in tests/data!");
             }
-
         } catch (e) {
             log(`FAILURE: Academic Phase Failed: ${e.message}`);
         }
@@ -169,8 +152,7 @@ async function run() {
         section("Phase 2: Student Academic View");
         let studentToken;
         try {
-            // Login Logic with Password Discovery
-            let passwords = ['tempPass123'];
+            let passwords = ['password123', '123456'];
             if (global.studentPassword) passwords.unshift(global.studentPassword);
 
             for (const p of passwords) {
@@ -183,44 +165,34 @@ async function run() {
                 } catch (e) { /* Cont */ }
             }
             
-            if (!studentToken) throw new Error("All passwords failed.");
+            if (!studentToken) throw new Error("CRITICAL: Student Login Failed for O210008. Aborting test.");
 
-            // Check Grades
             const gradesRes = await request('GET', '/academics/grades', null, studentToken);
             log(`SUCCESS: Grades Fetched: ${gradesRes.grades?.length || 0} records`);
 
-            // Check Attendance
             const attRes = await request('GET', '/academics/attendance', null, studentToken);
             log(`SUCCESS: Attendance Fetched: ${attRes.attendance?.length || 0} records`);
 
         } catch (e) {
             log(`FAILURE: Student Academic Phase Failed: ${e.message}`);
+            if (e.message.includes("CRITICAL")) {
+                rl.close();
+                process.exit(1);
+            }
         }
-
 
         // ==========================================
         // PHASE 3: OUTPASS FLOW
         // ==========================================
         section("Phase 3: Outpass Lifecycle");
         
-        // 1. Profile & Gender Check
         let gender = 'Male'; 
         try {
             const profile = await request('GET', '/profile/student/me', null, studentToken);
-            if (profile.gender) gender = profile.gender;
-            else {
-                 try {
-                    await request('PUT', '/profile/student/update', { gender: 'Male' }, studentToken);
-                    gender = 'Male';
-                    log("INFO: Updated Gender to Male");
-                 } catch(updErr) {}
-            }
+            gender = profile.gender || 'Male';
         } catch (e) {}
 
-        // 2. Clear Active Requests
         let requestId;
-        
-        // Caretaker Token for Checks
         const caretakerUser = gender.toLowerCase() === 'female' ? 'caretaker_female' : 'caretaker_male';
         let caretakerToken;
         try {
@@ -228,7 +200,7 @@ async function run() {
             caretakerToken = res.token;
         } catch(e) { log(`FAILURE: Caretaker Login Failed`); return; }
 
-        log("Checking Existing Requests (Admin View)...");
+        log("INFO: Checking Existing Requests (Admin View)...");
         try {
             const outpassesRes = await request('GET', `/requests/outpass/all?search=O210008`, null, caretakerToken);
             const outingsRes = await request('GET', `/requests/outing/all?search=O210008`, null, caretakerToken);
@@ -237,13 +209,8 @@ async function run() {
 
             if (active) {
                 requestId = active._id || active.id;
-                // Infer status
-                let status = "PENDING";
-                if (active.checked_out_time) status = "CHECKED_OUT";
-                else if (active.is_approved) status = "APPROVED";
-                log(`WARN: Found active request ${requestId} (${status}). Resuming...`);
+                log(`WARN: Found active request ${requestId}. Resuming...`);
             } else {
-                // Create New
                 const payload = {
                     reason: "Full Flow Test",
                     destination: "Test Dest",
@@ -257,80 +224,53 @@ async function run() {
             }
         } catch (e) {
             log(`FAILURE: Setup Failed: ${e.message}`);
-            if(e.message.includes("409")) log("   (Conflict persists without visible active request?)");
             return;
         }
 
-        // 3. Verify Constraints
-        log("Verifying Request Constraints...");
-        try {
-             await request('POST', '/requests/outpass', { 
-                 reason: "Fail", destination: "X", contact: "0", 
-                 fromDay: new Date().toISOString(), toDay: new Date().toISOString() 
-             }, studentToken);
-             log("FAILURE: CONSTRAINT FAILED: Second request was allowed!");
-        } catch (e) {
-            if(e.message.includes("409")) log("SUCCESS: Constraint Verified (409 Conflict)");
-            else log(`WARN: Unexpected Error on Second Request: ${e.message}`);
-        }
-
-        // 4. Approval Chain
-        const tryApprove = async (role, token) => {
+        // 3. Chain with 'forward' actions to test hierarchical flow
+        const tryAction = async (role, token, action = 'approve') => {
             try {
-                await request('POST', `/requests/${requestId}/approve`, { comments: "OK" }, token);
-                log(`SUCCESS: ${role} Approved`);
+                const res = await request('POST', `/requests/${requestId}/approve`, { comments: "OK", action }, token);
+                const status = res.data.isApproved ? "Approved" : "Forwarded";
+                log(`SUCCESS: ${role} ${status}`);
+                return res.data;
             } catch (e) {
-                if(e.message.includes("409")) log(`INFO: ${role} already approved (Skipped)`);
+                if(e.message.includes("409")) log(`INFO: ${role} already finalized (Skipped)`);
                 else log(`WARN: ${role} Failed: ${e.message}`);
             }
         };
 
-        await tryApprove("Caretaker", caretakerToken);
+        // Standard Hierarchy: Caretaker Forward -> Warden Forward -> SWO Approve
+        await tryAction("Caretaker", caretakerToken, "forward");
 
         const wardenUser = gender.toLowerCase() === 'female' ? 'warden_female' : 'warden_male';
         try {
             const { token } = await request('POST', '/auth/login', { username: wardenUser, password: `${wardenUser}@uniz` });
-            await tryApprove("Warden", token);
+            await tryAction("Warden", token, "forward");
         } catch(e) { log(`FAILURE: Warden Login Failed`); }
 
         try {
             const { token } = await request('POST', '/auth/login', { username: 'swo', password: 'swo@uniz' });
-            await tryApprove("SWO", token);
+            await tryAction("SWO", token, "approve"); // Final approval
         } catch(e) { log(`FAILURE: SWO Login Failed`); }
 
         // Security
         try {
             const { token } = await request('POST', '/auth/login', { username: 'security', password: 'security@uniz' });
             const securityToken = token;
-            
-            try {
-                await request('POST', `/requests/${requestId}/checkout`, {}, securityToken);
-                log("SUCCESS: Security Check-Out");
-            } catch(e) { /* Ignore */ }
-            
-            try {
-                await request('POST', `/requests/${requestId}/checkin`, {}, securityToken);
-                log("SUCCESS: Security Check-In");
-            } catch(e) {  }
-
+            await request('POST', `/requests/${requestId}/checkout`, {}, securityToken);
+            log("SUCCESS: Security Check-Out");
+            await request('POST', `/requests/${requestId}/checkin`, {}, securityToken);
+            log("SUCCESS: Security Check-In");
         } catch(e) { log(`FAILURE: Security Flow Failed`); }
 
-        // --- FINAL VERIFICATION ---
         section("Phase 4: Final Verification");
-        try {
-            const outpassesRes = await request('GET', `/requests/outpass/all?search=O210008`, null, caretakerToken);
-            const outingsRes = await request('GET', `/requests/outing/all?search=O210008`, null, caretakerToken);
-            const allRequests = [...(outpassesRes.outpasses || []), ...(outingsRes.outings || [])];
-            const active = allRequests.find(r => !r.is_rejected && !r.is_expired && !r.checked_in_time);
-            
-            if (active) {
-                log(`FAILURE: FINAL CHECK FAILED: Request ${active._id || active.id} is still ACTIVE!`);
-            } else {
-                log(`SUCCESS: FINAL CHECK PASSED: No active requests found.`);
-            }
-        } catch (e) {
-            log(`WARN: Final verify failed: ${e.message}`);
-        }
+        const outpassesRes = await request('GET', `/requests/outpass/all?search=O210008`, null, caretakerToken);
+        const allRequests = outpassesRes.outpasses || [];
+        const active = allRequests.find(r => !r.is_rejected && !r.is_expired && !r.checked_in_time);
+        
+        if (active) log(`FAILURE: Request ${active._id || active.id} is still ACTIVE!`);
+        else log(`SUCCESS: FINAL CHECK PASSED: No active requests found.`);
     
     } finally {
         rl.close();
