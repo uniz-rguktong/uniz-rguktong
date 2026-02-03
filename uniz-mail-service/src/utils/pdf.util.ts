@@ -45,23 +45,38 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
   let titleText = `${semesterId.toUpperCase()} RESULTS`;
   
   // Regex for E1S1, P2S1, E3-S2, etc.
-  const idMatch = semesterId.match(/([EP][1-4])[-_ ]?S([1-3])/i);
-  if (idMatch) {
-      const year = idMatch[1].toUpperCase(); // E1, P2
-      const sem = idMatch[2];
-      titleText = `${year} SEMESTER-${sem} RESULTS`;
-  } else if (grades.length > 0 && grades[0].subject && grades[0].subject.code) {
-      // Try to infer from Course Code (Standard Format: XXYZZZ e.g., CS2101 -> Year 2 Sem 1)
-      // Taking majority vote or just first valid one could work. Let's try first valid.
-      const codeMatch = grades[0].subject.code.match(/[a-zA-Z]{2,3}([1-4])([1-3])\d{2}/);
+  // Regex for E1S1, P2S1, E3-S2, etc.
+  // We decouple Year and Sem extraction to handle cases like "SEM-1" (Year missing)
+  
+  let yearStr = "";
+  let semStr = "";
+
+  // 1. Try to extract Year (E1-E4, P1-P2) from semesterId
+  const yearMatch = semesterId.match(/([EP])[-_ ]?([1-4])/i);
+  if (yearMatch) {
+      yearStr = `${yearMatch[1].toUpperCase()}${yearMatch[2]}`;
+  }
+
+  // 2. Try to extract Semester (S1-S3) from semesterId
+  const semMatch = semesterId.match(/S(?:em(?:ester)?)?[-_ ]?([1-3])/i);
+  if (semMatch) {
+      semStr = semMatch[1];
+  }
+
+  // 3. Fallback: Infer Year from Subject Code if missing (e.g. CS2101 -> E2)
+  if (!yearStr && grades.length > 0 && grades[0].subject && grades[0].subject.code) {
+      // Matches: First digit after letters (CS2... -> 2)
+      const codeMatch = grades[0].subject.code.match(/^[a-zA-Z]+[-_ ]?([1-4])/);
       if (codeMatch) {
-          const yVal = codeMatch[1];
-          const sVal = codeMatch[2];
-          const type = grades[0].subject.code.startsWith('P') ? 'P' : 'E'; // PUC codes often start with M/P/C but let's assume E default unless specific
-          // Actually RGUKT codes: P1xx are PUC. Engineering starts at 1st year (E1).
-          // Let's assume E for 1-4 unless we know otherwise.
-          titleText = `E${yVal} SEMESTER-${sVal} RESULTS`;
+          yearStr = `E${codeMatch[1]}`; // Default to Engineering
       }
+  }
+
+  if (yearStr && semStr) {
+      titleText = `${yearStr} SEMESTER-${semStr} RESULTS`;
+  } else {
+      // Fallback if partial info
+      titleText = `${semesterId.toUpperCase()} RESULTS`.replace(' RESULTS RESULTS', ' RESULTS');
   }
 
   const getGradeLetter = (point: number) => {
