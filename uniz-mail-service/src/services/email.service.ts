@@ -148,7 +148,7 @@ export const sendResultEmail = async (email: string, username: string, name: str
       Dear ${name},<br><br>
       The results for <strong>${semesterId}</strong> have been published.<br><br>
       Please find the detailed grade report attached to this email.<br><br>
-      You may also view your results on the <a href="https://uniz.vercel.app/academics">UniZ Academics Dashboard</a>.
+      You may also view your results on the <a href="https://uniz.sreecharandesu.in">UniZ Academics Dashboard</a>.
     `;
     
     // Generate PDF
