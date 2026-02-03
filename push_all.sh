@@ -13,6 +13,12 @@ git add .
 git commit -m "feat: include student details in result publishing" || echo "No changes to commit in academics service"
 git push || echo "Push failed in academics service"
 
+echo "Processing uniz-outpass-service..."
+cd /Users/sreecharandesu/Projects/uniz-rguktong/uniz-outpass-service
+git add .
+git commit -m "feat: include student details in result publishing" || echo "No changes to commit in outpass service"
+git push || echo "Push failed in outpass service"
+
 echo "Processing root repo..."
 cd /Users/sreecharandesu/Projects/uniz-rguktong
 git add .
