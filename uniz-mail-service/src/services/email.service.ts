@@ -14,16 +14,41 @@ const emailTemplate = (content: string) => `
 <html>
 <head>
 <style>
-  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #333; }
-  p { margin-bottom: 15px; }
-  .footer { margin-top: 30px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 15px; }
-  a { color: #0056b3; text-decoration: none; }
+  body { font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #2d3748; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  .email-container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+  .header { border-bottom: 2px solid #800000; padding-bottom: 12px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+  .uni-name { font-size: 18px; font-weight: 700; color: #800000; text-transform: uppercase; letter-spacing: 0.5px; }
+  .system-name { font-size: 13px; color: #718096; font-weight: 500; text-transform: uppercase; float: right; margin-top: 4px;}
+  .content { font-size: 15px; color: #2d3748; }
+  .footer { margin-top: 45px; padding-top: 20px; border-top: 1px solid #edf2f7; font-size: 12px; color: #a0aec0; text-align: left; }
+  a { color: #800000; text-decoration: none; font-weight: 500; }
+  a:hover { text-decoration: underline; }
+  .details-list { margin: 15px 0; padding-left: 0; list-style: none; }
+  .details-list li { margin-bottom: 8px; font-size: 14px; }
+  .info-label { font-weight: 600; color: #4a5568; width: 100px; display: inline-block; }
+  .otp-code { font-size: 24px; font-weight: 700; letter-spacing: 4px; color: #800000; margin: 20px 0; display: inline-block; border-bottom: 1px dashed #cbd5e0; padding-bottom: 5px; }
+  
+  /* Utilities */
+  .text-bold { font-weight: 700; }
+  .mt-2 { margin-top: 10px; }
+  .mb-4 { margin-bottom: 20px; }
 </style>
 </head>
 <body>
-  ${content}
-  <div class="footer">
-    <p>Regards,<br>UniZ System<br>Rajiv Gandhi University of Knowledge Technologies</p>
+  <div class="email-container">
+    <div class="header">
+      <span class="uni-name">RGUKT AP</span>
+      <span class="system-name">UniZ Portal</span>
+    </div>
+    
+    <div class="content">
+      ${content}
+    </div>
+
+    <div class="footer">
+      <p style="margin: 0;">Rajiv Gandhi University of Knowledge Technologies - Andhra Pradesh</p>
+      <p style="margin: 5px 0 0;">This is an automated notification. Please do not reply directly to this email.</p>
+    </div>
   </div>
 </body>
 </html>
@@ -33,15 +58,15 @@ export const sendOtpEmail = async (email: string, username: string, otp: string)
   try {
     const content = `
       <p>Dear ${username},</p>
-      <p>You have requested to reset your password. Please use the OTP below to proceed:</p>
-      <p style="font-size: 24px; font-weight: bold; letter-spacing: 2px;">${otp}</p>
-      <p>This OTP is valid for 10 minutes.</p>
+      <p>We received a request to reset your password. Use the code below to complete the process:</p>
+      <div class="otp-code">${otp}</div>
+      <p>This code is valid for 10 minutes. If you did not request this change, please ignore this email.</p>
     `;
 
     await transporter.sendMail({
       from: '"UniZ Security" <noreplycampusschield@gmail.com>',
       to: email,
-      subject: 'Password Reset OTP',
+      subject: 'Password Verification Code',
       html: emailTemplate(content)
     });
     return true;
@@ -53,22 +78,22 @@ export const sendOtpEmail = async (email: string, username: string, otp: string)
 
 export const sendLoginNotification = async (email: string, username: string, ipAddress?: string): Promise<boolean> => {
   try {
-    const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
     const content = `
       <p>Dear ${username},</p>
-      <p>A new login was detected on your account.</p>
-      <p>
-        <strong>Time:</strong> ${timestamp}<br>
-        ${ipAddress ? `<strong>IP Address:</strong> ${ipAddress}<br>` : ''}
-        <strong>Device:</strong> Web Browser
-      </p>
-      <p>If this wasn't you, please reset your password immediately.</p>
+      <p>A new login to your account was detected.</p>
+      <ul class="details-list">
+        <li><span class="info-label">Date:</span> ${timestamp}</li>
+        ${ipAddress ? `<li><span class="info-label">IP Address:</span> ${ipAddress}</li>` : ''}
+        <li><span class="info-label">Device:</span> Web Browser</li>
+      </ul>
+      <p>If you recognize this activity, no action is required. If not, please proceed to reset your password immediately.</p>
     `;
 
     await transporter.sendMail({
       from: '"UniZ Security" <noreplycampusschield@gmail.com>',
       to: email,
-      subject: 'New Login Detected',
+      subject: 'Security Alert: New Login',
       html: emailTemplate(content)
     });
     return true;
@@ -82,20 +107,20 @@ export const sendOutpassRequestNotification = async (email: string, username: st
   try {
     const content = `
       <p>Dear ${username},</p>
-      <p>Your outpass request has been submitted successfully.</p>
-      <p>
-        <strong>Reason:</strong> ${reason}<br>
-        <strong>From:</strong> ${new Date(fromDate).toLocaleDateString('en-IN')}<br>
-        <strong>To:</strong> ${new Date(toDate).toLocaleDateString('en-IN')}<br>
-        <strong>Status:</strong> Pending Review
-      </p>
-      <p>You will be notified once your request is reviewed.</p>
+      <p>Your outpass application has been successfully submitted.</p>
+      <ul class="details-list">
+        <li><span class="info-label">Reason:</span> ${reason}</li>
+        <li><span class="info-label">From:</span> ${new Date(fromDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</li>
+        <li><span class="info-label">To:</span> ${new Date(toDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</li>
+        <li><span class="info-label">Status:</span> Pending Approval</li>
+      </ul>
+      <p>You will be notified once the relevant authorities review your request.</p>
     `;
 
     await transporter.sendMail({
-      from: '"UniZ Requests" <noreplycampusschield@gmail.com>',
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
-      subject: 'Outpass Request Submitted',
+      subject: 'Outpass Application Submitted',
       html: emailTemplate(content)
     });
     return true;
@@ -112,18 +137,18 @@ export const sendOutpassApprovalNotification = async (email: string, username: s
     
     const content = `
       <p>Dear ${username},</p>
-      <p>Your outpass request has been <strong>${statusText}</strong>.</p>
-      <p>
-        <strong>Reviewed by:</strong> ${approver}<br>
-        ${comment ? `<strong>Comment:</strong> ${comment}<br>` : ''}
-      </p>
-      ${isApproved ? '<p>You may proceed with your journey.</p>' : ''}
+      <p>Your outpass application has been <strong>${statusText.toLowerCase()}</strong>.</p>
+      <ul class="details-list">
+        <li><span class="info-label">Reviewer:</span> ${approver}</li>
+        ${comment ? `<li><span class="info-label">Remark:</span> ${comment}</li>` : ''}
+      </ul>
+      ${isApproved ? '<p>You may proceed with your journey. Safe travels.</p>' : '<p>Please contact the warden/care-taker for further clarification.</p>'}
     `;
 
     await transporter.sendMail({
-      from: '"UniZ Requests" <noreplycampusschield@gmail.com>',
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
-      subject: `Outpass Request ${statusText}`,
+      subject: `Outpass Application ${statusText}`,
       html: emailTemplate(content)
     });
     return true;
@@ -136,9 +161,10 @@ export const sendResultEmail = async (email: string, username: string, name: str
   try {
     const content = `
       <p>Dear ${name},</p>
-      <p>Your results for <strong>${semesterId}</strong> have been published.</p>
-      <p>Please find the attached report card for detailed grades.</p>
-      <p><a href="https://uniz.vercel.app/academics">View Results Dashboard</a></p>
+      <p>We are writing to inform you that the results for <strong>${semesterId}</strong> have officially been published.</p>
+      <p>A detailed grade report is attached to this email for your reference.</p>
+      <p class="mt-2">You may also view your full academic history on the student portal:</p>
+      <p><a href="https://uniz.vercel.app/academics">Access Academic Dashboard &rarr;</a></p>
     `;
     
     // Generate PDF
@@ -152,7 +178,7 @@ export const sendResultEmail = async (email: string, username: string, name: str
     });
 
     await transporter.sendMail({
-      from: '"UniZ Examination Cell" <noreplycampusschield@gmail.com>',
+      from: '"UniZ Academics" <noreplycampusschield@gmail.com>',
       to: email,
       subject: `Result Declaration: ${semesterId}`,
       html: emailTemplate(content),
