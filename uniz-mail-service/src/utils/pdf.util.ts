@@ -50,7 +50,6 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
 
   const rows = grades.map((g) => `
       <tr>
-          <td>${g.subject.code}</td>
           <td>${g.subject.name}</td>
           <td class="center">${g.subject.credits.toFixed(1)}</td>
           <td class="center">${getGradeLetter(g.grade)}</td>
@@ -99,7 +98,7 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
       <div class="results-title">${titleText}</div>
       <table class="results-table">
           <thead class="green-header">
-              <tr><th style="border-left: 2px solid #008000;">COURSE CODE</th><th>COURSE TITLE</th><th class="center">Credits</th><th class="center" style="border-right: 2px solid #008000;">Grade</th></tr>
+              <tr><th style="border-left: 2px solid #008000;">COURSE TITLE</th><th class="center">Credits</th><th class="center" style="border-right: 2px solid #008000;">Grade</th></tr>
           </thead>
           <tbody>
               ${rows}
