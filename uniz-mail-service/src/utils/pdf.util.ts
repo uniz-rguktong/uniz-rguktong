@@ -36,7 +36,33 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
   });
 
   const sgpa = totalCredits > 0 ? (earnedPoints / totalCredits).toFixed(2) : "0.00";
-  const titleText = `${semesterId.toUpperCase()} RESULTS`;
+  /* 
+    Title Logic:
+    1. Try to parse E#S# or P#S# from semesterId (e.g., "E2S1", "AY24-E3-S2")
+    2. If not found, try to infer from first subject code (e.g., "CS2101" -> E2 S1)
+    3. Fallback to raw semesterId
+  */
+  let titleText = `${semesterId.toUpperCase()} RESULTS`;
+  
+  // Regex for E1S1, P2S1, E3-S2, etc.
+  const idMatch = semesterId.match(/([EP][1-4])[-_ ]?S([1-3])/i);
+  if (idMatch) {
+      const year = idMatch[1].toUpperCase(); // E1, P2
+      const sem = idMatch[2];
+      titleText = `${year} SEMESTER-${sem} RESULTS`;
+  } else if (grades.length > 0 && grades[0].subject && grades[0].subject.code) {
+      // Try to infer from Course Code (Standard Format: XXYZZZ e.g., CS2101 -> Year 2 Sem 1)
+      // Taking majority vote or just first valid one could work. Let's try first valid.
+      const codeMatch = grades[0].subject.code.match(/[a-zA-Z]{2,3}([1-4])([1-3])\d{2}/);
+      if (codeMatch) {
+          const yVal = codeMatch[1];
+          const sVal = codeMatch[2];
+          const type = grades[0].subject.code.startsWith('P') ? 'P' : 'E'; // PUC codes often start with M/P/C but let's assume E default unless specific
+          // Actually RGUKT codes: P1xx are PUC. Engineering starts at 1st year (E1).
+          // Let's assume E for 1-4 unless we know otherwise.
+          titleText = `E${yVal} SEMESTER-${sVal} RESULTS`;
+      }
+  }
 
   const getGradeLetter = (point: number) => {
     if (point >= 10) return "EX";
