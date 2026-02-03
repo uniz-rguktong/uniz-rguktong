@@ -279,6 +279,18 @@
                   "key": "studentId",
                   "value": "O210008",
                   "description": "Optional: Admin can view any student's grades"
+                },
+                {
+                  "key": "semester",
+                  "value": "E1S2",
+                  "description": "Optional: Filter by Semester ID",
+                  "disabled": true
+                },
+                {
+                  "key": "year",
+                  "value": "E1",
+                  "description": "Optional: Filter by Year (e.g. E1 matches E1S1, E1S2)",
+                  "disabled": true
                 }
               ]
             },
@@ -314,6 +326,18 @@
                   "key": "studentId",
                   "value": "O210008",
                   "description": "Optional: Admin can view any student's attendance"
+                },
+                {
+                  "key": "semester",
+                  "value": "E1S2",
+                  "description": "Optional: Filter by Semester ID",
+                  "disabled": true
+                },
+                {
+                  "key": "year",
+                  "value": "E1",
+                  "description": "Optional: Filter by Year (e.g. E1 matches E1S1, E1S2)",
+                  "disabled": true
                 }
               ]
             },
@@ -568,14 +592,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/v1/requests/grievance/submit",
+              "raw": "{{baseUrl}}/api/v1/grievance/submit",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "requests",
                 "grievance",
                 "submit"
               ]
