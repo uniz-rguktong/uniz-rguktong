@@ -16,6 +16,10 @@
       "destination": "https://uniz-user-service.vercel.app/$1"
     },
     {
+      "source": "/api/v1/grievance/(.*)",
+      "destination": "https://uniz-outpass-service.vercel.app/grievance/$1"
+    },
+    {
       "source": "/api/v1/requests/(.*)",
       "destination": "https://uniz-outpass-service.vercel.app/$1"
     },
