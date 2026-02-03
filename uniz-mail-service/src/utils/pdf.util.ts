@@ -57,7 +57,7 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
       </tr>
   `).join('');
 
-  const LOGO_URL = "https://upload.wikimedia.org/wikipedia/en/9/98/Rajiv_Gandhi_University_of_Knowledge_Technologies_logo.png";
+  const LOGO_URL = "https://res.cloudinary.com/dy2fjgt46/image/upload/v1770094547/rguktongole_logo_tzdkrc.jpg";
 
   const html = `
   <!DOCTYPE html>
