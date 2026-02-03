@@ -94,11 +94,13 @@ export const sendOutpassRequestNotification = async (email: string, username: st
   }
 };
 
-export const sendOutpassApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected', approver: string, comment?: string): Promise<boolean> => {
+export const sendOutpassApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected' | 'forwarded', approver: string, comment?: string): Promise<boolean> => {
   try {
-    const isApproved = status === 'approved';
-    const statusText = isApproved ? 'Approved' : 'Rejected';
-    
+    let statusText = 'Processed';
+    if (status === 'approved') statusText = 'Approved';
+    if (status === 'rejected') statusText = 'Rejected';
+    if (status === 'forwarded') statusText = 'Forwarded';
+
     const content = `
       Dear ${username},<br><br>
       Your outpass application has been <strong>${statusText.toLowerCase()}</strong>.<br><br>
@@ -110,6 +112,28 @@ export const sendOutpassApprovalNotification = async (email: string, username: s
       from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
       subject: `Outpass Application ${statusText}`,
+      html: emailTemplate(content)
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const sendCheckpointNotification = async (email: string, username: string, type: 'check_in' | 'check_out', time: string): Promise<boolean> => {
+  try {
+    const action = type === 'check_in' ? 'Checked In' : 'Checked Out';
+    const content = `
+      Dear ${username},<br><br>
+      You have successfully <strong>${action}</strong> at the campus gate.<br><br>
+      <strong>Time:</strong> ${time}<br><br>
+      Safe travels!
+    `;
+
+    await transporter.sendMail({
+      from: '"UniZ Security" <noreplycampusschield@gmail.com>',
+      to: email,
+      subject: `Campus ${action}`,
       html: emailTemplate(content)
     });
     return true;
@@ -154,6 +178,49 @@ export const sendResultEmail = async (email: string, username: string, name: str
     return true;
   } catch (error: any) {
     console.error(`❌ Failed to send result email to ${email}:`, error.message);
+    return false;
+  }
+};
+
+export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName: string, studentId: string, reason: string): Promise<boolean> => {
+  try {
+    const content = `
+      Dear Administrator,<br><br>
+      A new outpass request has been submitted by <strong>${studentName} (${studentId})</strong>.<br><br>
+      <strong>Reason:</strong> ${reason}<br><br>
+      Please login to the UniZ Admin Portal to review and take action.
+    `;
+
+    await transporter.sendMail({
+      from: '"UniZ Alerts" <noreplycampusschield@gmail.com>',
+      to: adminEmail,
+      subject: `New Outpass Request: ${studentId}`,
+      html: emailTemplate(content)
+    });
+    return true;
+  } catch (error) {
+    console.error(`❌ Failed to send admin alert:`, error);
+    return false;
+  }
+};
+
+export const sendActionConfirmationToAdmin = async (adminEmail: string, action: 'approved' | 'rejected', studentName: string, studentId: string): Promise<boolean> => {
+  try {
+    const actionText = action === 'approved' ? 'Approved' : 'Rejected';
+    const content = `
+      Dear Administrator,<br><br>
+      You have successfully <strong>${actionText}</strong> the outpass request for <strong>${studentName} (${studentId})</strong>.<br><br>
+      This email serves as a confirmation of your action.
+    `;
+
+    await transporter.sendMail({
+      from: '"UniZ System" <noreplycampusschield@gmail.com>',
+      to: adminEmail,
+      subject: `Action Confirmed: ${actionText} ${studentId}`,
+      html: emailTemplate(content)
+    });
+    return true;
+  } catch (error) {
     return false;
   }
 };

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { sendOtpEmail, sendResultEmail, sendLoginNotification, sendOutpassRequestNotification, sendOutpassApprovalNotification } from '../services/email.service';
+import { sendOtpEmail, sendResultEmail, sendLoginNotification, sendOutpassRequestNotification, sendOutpassApprovalNotification, sendNewRequestAlertToAdmin, sendActionConfirmationToAdmin, sendCheckpointNotification } from '../services/email.service';
 
 export const sendEmail = async (req: Request, res: Response) => {
     const { type, to, data } = req.body;
@@ -28,6 +28,15 @@ export const sendEmail = async (req: Request, res: Response) => {
                 break;
             case 'outpass_approval':
                 success = await sendOutpassApprovalNotification(to, data.username, data.status, data.approver, data.comment);
+                break;
+            case 'admin_alert':
+                success = await sendNewRequestAlertToAdmin(to, data.studentName, data.studentId, data.reason);
+                break;
+            case 'admin_action_confirmation':
+                success = await sendActionConfirmationToAdmin(to, data.action, data.studentName, data.studentId);
+                break;
+            case 'checkpoint':
+                success = await sendCheckpointNotification(to, data.username, data.type, data.time);
                 break;
             default:
                 return res.status(400).json({ success: false, message: 'Invalid email type' });
