@@ -102,8 +102,15 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
           </thead>
           <tbody>
               ${rows}
-              <tr class="footer-row"><td colspan="2" style="text-align: right; padding-right: 20px;">Total</td><td class="center">${totalCredits.toFixed(0)}</td><td class="center">${earnedPoints.toFixed(1)}</td></tr>
-              <tr class="footer-row"><td colspan="3" style="text-align: right; padding-right: 20px;">SGPA</td><td class="center">${sgpa}</td></tr>
+              <tr class="footer-row">
+                  <td style="text-align: right; padding-right: 20px;">Total</td>
+                  <td class="center">${totalCredits.toFixed(0)}</td>
+                  <td class="center">${earnedPoints.toFixed(1)}</td>
+              </tr>
+              <tr class="footer-row">
+                  <td colspan="2" style="text-align: right; padding-right: 20px;">SGPA</td>
+                  <td class="center">${sgpa}</td>
+              </tr>
           </tbody>
       </table>
   </body>
@@ -111,32 +118,37 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
   `;
 
   let browser;
-  try {
-      const isProduction = process.env.NODE_ENV === 'production';
-      
-      /* Font loading removed due to incompatibility
-      if (isProduction) {
-          try {
-             await chromium.font('https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf');
-          } catch (e) { console.warn("Font load failed:", e); }
+  const launchBrowser = async (retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const isProduction = process.env.NODE_ENV === 'production';
+        const execPath = isProduction 
+           ? await chromium.executablePath()
+           : (process.env.PUPPETEER_EXECUTABLE_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
+  
+        // @ts-ignore
+        return await puppeteer.launch({
+            args: isProduction ? chromium.args : [],
+            // @ts-ignore
+            defaultViewport: isProduction ? chromium.defaultViewport : { width: 1200, height: 800 },
+            executablePath: execPath,
+            // @ts-ignore
+            headless: isProduction ? chromium.headless : true,
+        });
+      } catch (err: any) {
+        if (i < retries - 1 && (err.code === 'ETXTBSY' || err.message.includes('ETXTBSY'))) {
+          console.warn(`Launch failed (attempt ${i + 1}), retrying in 200ms...`);
+          await new Promise(r => setTimeout(r, 200));
+        } else {
+          throw err;
+        }
       }
-      */
+    }
+  };
 
-      const execPath = isProduction 
-         ? await chromium.executablePath()
-         : (process.env.PUPPETEER_EXECUTABLE_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
-
-      // @ts-ignore: ignoring specific type mismatches for now
-      browser = await puppeteer.launch({
-        args: isProduction ? chromium.args : [],
-              // @ts-ignore: ignoring specific type mismatches for now
-
-          defaultViewport: isProduction ? chromium.defaultViewport : { width: 1200, height: 800 },
-        executablePath: execPath,
-                // @ts-ignore: ignoring specific type mismatches for now
-
-          headless: isProduction ? chromium.headless : true,
-      });
+  try {
+      browser = await launchBrowser();
+      if (!browser) throw new Error("Failed to launch browser after retries");
 
       const page = await browser.newPage();
       await page.setContent(html);
