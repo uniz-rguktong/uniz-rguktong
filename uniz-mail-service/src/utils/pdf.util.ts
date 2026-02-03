@@ -128,9 +128,13 @@ export const generateResultPdf = async (data: ResultData): Promise<Buffer> => {
 
       // @ts-ignore: ignoring specific type mismatches for now
       browser = await puppeteer.launch({
-          args: isProduction ? chromium.args : [],
+        args: isProduction ? chromium.args : [],
+              // @ts-ignore: ignoring specific type mismatches for now
+
           defaultViewport: isProduction ? chromium.defaultViewport : { width: 1200, height: 800 },
-          executablePath: execPath,
+        executablePath: execPath,
+                // @ts-ignore: ignoring specific type mismatches for now
+
           headless: isProduction ? chromium.headless : true,
       });
 
