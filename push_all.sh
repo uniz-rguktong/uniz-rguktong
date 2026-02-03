@@ -19,6 +19,12 @@ git add .
 git commit -m "feat: include student details in result publishing" || echo "No changes to commit in outpass service"
 git push || echo "Push failed in outpass service"
 
+echo "Processing uniz-auth-service..."
+cd /Users/sreecharandesu/Projects/uniz-rguktong/uniz-auth-service
+git add .
+git commit -m "feat: include student details in result publishing" || echo "No changes to commit in auth service"
+git push || echo "Push failed in auth service"
+
 echo "Processing root repo..."
 cd /Users/sreecharandesu/Projects/uniz-rguktong
 git add .
