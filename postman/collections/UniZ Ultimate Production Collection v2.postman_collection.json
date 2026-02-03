@@ -165,6 +165,28 @@
           "response": []
         },
         {
+          "name": "Trigger Maintenance (Cron)",
+          "id": "cron-trigger-manual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/cron/api/cron",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "cron",
+                "api",
+                "cron"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Password Reset",
           "id": "dea37d07-b89e-472d-b703-41847b8a3657",
           "request": {
@@ -1232,7 +1254,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"GUID-OF-SUBJECT-HERE\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
+                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"CSE-E1-SEM-1-01\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"CSE-E1-SEM-1-01\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1297,7 +1319,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"Calculus & Linear Algebraaas\",\n    \"code\": \"CSE-E1-SEM-1-01\",\n    \"credits\": 4,\n    \"semster\" : \"SEM-1\",\n    \"department\" : \"CSE\"\n}",
+                  "raw": "{\n    \"name\": \"Calculus & Linear Algebraaas\",\n    \"code\": \"CSE-E1-SEM-1-01\",\n    \"credits\": 4,\n    \"semester\" : \"SEM-1\",\n    \"department\" : \"CSE\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1927,7 +1949,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"Machine Learning\",\n    \"code\": \"CSE401\",\n    \"credits\": 4\n}",
+                  "raw": "{\n    \"name\": \"Machine Learning\",\n    \"code\": \"CSE401\",\n    \"credits\": 4,\n    \"department\": \"CSE\",\n    \"semester\": \"SEM-4\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
