@@ -39,7 +39,7 @@ export const sendOtpEmail = async (email: string, username: string, otp: string)
     });
     return true;
   } catch (error) {
-    console.error(`❌ Failed to send OTP email:`, error);
+    console.error(`Failed to send OTP email:`, error);
     return false;
   }
 };
@@ -64,7 +64,7 @@ export const sendLoginNotification = async (email: string, username: string, ipA
     });
     return true;
   } catch (error) {
-    console.error(`❌ Failed to send login notification:`, error);
+    console.error(`Failed to send login notification:`, error);
     return false;
   }
 };
@@ -89,7 +89,7 @@ export const sendOutpassRequestNotification = async (email: string, username: st
     });
     return true;
   } catch (error) {
-    console.error(`❌ Failed to send outpass request notification:`, error);
+    console.error(`Failed to send outpass request notification:`, error);
     return false;
   }
 };
@@ -177,7 +177,7 @@ export const sendResultEmail = async (email: string, username: string, name: str
     
     return true;
   } catch (error: any) {
-    console.error(`❌ Failed to send result email to ${email}:`, error.message);
+    console.error(`Failed to send result email to ${email}:`, error.message);
     return false;
   }
 };
@@ -199,7 +199,7 @@ export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName
     });
     return true;
   } catch (error) {
-    console.error(`❌ Failed to send admin alert:`, error);
+    console.error(`Failed to send admin alert:`, error);
     return false;
   }
 };
