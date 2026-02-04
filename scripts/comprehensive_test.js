@@ -270,17 +270,17 @@ async function run() {
         // 5. AUTH FLOW: Password Reset
         // ==========================================
         log("STEP 5", "Reset Password: Send OTP");
-        await request('POST', '/auth/otp/request', { username: 'O210008' });
+        const otpRes = await request('POST', '/auth/otp/request', { username: 'O210008' });
+        
+        let otp = otpRes.data.debug_otp;
+        console.log(`   ℹ️  Captured Debug OTP: ${otp}`);
 
-        log("STEP 5", "Try OTP again immediately (Rate Limit Test < 5s)");
-        const otpFail = await request('POST', '/auth/otp/request', { username: 'O210008' }, null, false);
-        if (otpFail.status === 429 || otpFail.status === 400) console.log("   ✅ Rate limit hit (Expected).");
-        else console.log(`   ⚠️ API responded with ${otpFail.status} (Might not have strict 5s limit implemented yet).`);
-
-        const otp = await askUser("\n👉 Enter the OTP sent to O210008: ");
+        if (!otp) {
+             otp = await askUser("\n👉 Enter the OTP sent to O210008: ");
+        }
 
         log("STEP 5", "Reset Password");
-        await request('POST', '/auth/password/reset', { username: 'O210008', otp: otp.trim(), newPassword: 'password123' });
+        await request('POST', '/auth/password/reset', { username: 'O210008', otp: String(otp).trim(), newPassword: 'password123' });
         console.log("   ✅ Password reset to 'password123'.");
         
         // Re-login to confirm
@@ -339,7 +339,7 @@ async function run() {
         // Using existing studentToken assuming it's still valid
         
         log("STEP 7", "File Grievance (Anonymous)");
-        await request('POST', '/grievance', { 
+        await request('POST', '/grievance/submit', { 
             subject: 'Mess Food Issue', 
             description: 'Quality is low today.', 
             isAnonymous: true, 
@@ -347,7 +347,7 @@ async function run() {
         }, studentToken);
 
         log("STEP 7", "File Grievance (Named)");
-        await request('POST', '/grievance', { 
+        await request('POST', '/grievance/submit', { 
             subject: 'Wi-Fi Problem', 
             description: 'Speed is slow in block 2.', 
             isAnonymous: false, 
@@ -356,7 +356,7 @@ async function run() {
 
         log("STEP 7", "Login SWO & Check Grievances");
         // Using existing swoToken
-        await request('GET', '/grievance/all', null, swoToken);
+        await request('GET', '/grievance/list', null, swoToken);
 
         log("COMPLETED", "Extensive Test Flow Finished Successfully! 🚀");
         
