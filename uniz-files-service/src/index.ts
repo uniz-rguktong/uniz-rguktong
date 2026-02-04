@@ -13,6 +13,10 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Attribution & Malformed Activity Handling (Mandatory)
+import { attributionMiddleware } from './middlewares/attribution.middleware';
+app.use(attributionMiddleware);
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'uniz-files-service' });
 });
