@@ -264,7 +264,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008&semester=SEM-1&year=E1",
+              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008&semester=SEM-1&year=E2",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -287,7 +287,7 @@
                 },
                 {
                   "key": "year",
-                  "value": "E1",
+                  "value": "E2",
                   "uuid": "93bc39f9-c4b9-4fcc-b6a8-684ee6e67c34"
                 }
               ]
@@ -309,7 +309,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008&year=E1&semester=SEM-1",
+              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008&year=E3&semester=SEM-1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -328,7 +328,7 @@
                 },
                 {
                   "key": "year",
-                  "value": "E1",
+                  "value": "E3",
                   "uuid": "703236ed-36a6-4aaa-84b1-a0e59374ea68"
                 },
                 {
