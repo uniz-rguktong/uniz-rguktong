@@ -9,7 +9,14 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Minimal template acting like a standard/plain professional email
+// Minimal text footer
+const emailFooter = (username?: string) => `
+
+Regards,
+UniZ Portal
+Rajiv Gandhi University of Knowledge Technologies`;
+
+// Fancy template for Result Emails only
 const emailTemplate = (content: string) => `
 <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #222;">
   ${content}
@@ -17,25 +24,26 @@ const emailTemplate = (content: string) => `
   <div style="color: #555;">
     Regards,<br>
     <strong>UniZ Portal</strong><br>
-    Rajiv Gandhi University of Knowledge Technologies
+    Rajiv Gandhi University of Knowledge Technologies , Ongole
   </div>
 </div>
 `;
 
 export const sendOtpEmail = async (email: string, username: string, otp: string): Promise<boolean> => {
   try {
-    const content = `
-      Dear ${username},<br><br>
-      Please use the text below to complete your password reset request:<br><br>
-      <strong>${otp}</strong><br><br>
-      This code is valid for 10 minutes. If you did not request this, please ignore this email.
-    `;
+    const text = `Dear ${username},
+
+Please use the code below to complete your password reset request:
+
+${otp}
+
+This code is valid for 10 minutes. If you did not request this, please ignore this email.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Security" <noreplycampusschield@gmail.com>',
       to: email,
       subject: 'Password Verification Code',
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -47,20 +55,20 @@ export const sendOtpEmail = async (email: string, username: string, otp: string)
 export const sendLoginNotification = async (email: string, username: string, ipAddress?: string): Promise<boolean> => {
   try {
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-    const content = `
-      Dear ${username},<br><br>
-      A new login was detected on your account.<br><br>
-      <strong>Time:</strong> ${timestamp}<br>
-      ${ipAddress ? `<strong>IP Address:</strong> ${ipAddress}<br>` : ''}
-      <strong>Device:</strong> Web Browser<br><br>
-      If this was not you, please reset your password immediately.
-    `;
+    const text = `Dear ${username},
+
+A new login was detected on your account.
+
+Time: ${timestamp}
+${ipAddress ? `IP Address: ${ipAddress}\n` : ''}Device: Web Browser
+
+If this was not you, please reset your password immediately.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Security" <noreplycampusschield@gmail.com>',
       to: email,
       subject: 'Security Alert: New Login',
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -71,21 +79,22 @@ export const sendLoginNotification = async (email: string, username: string, ipA
 
 export const sendOutpassRequestNotification = async (email: string, username: string, reason: string, fromDate: string, toDate: string): Promise<boolean> => {
   try {
-    const content = `
-      Dear ${username},<br><br>
-      Your outpass application has been submitted.<br><br>
-      <strong>Reason:</strong> ${reason}<br>
-      <strong>From:</strong> ${new Date(fromDate).toLocaleDateString('en-IN')}<br>
-      <strong>To:</strong> ${new Date(toDate).toLocaleDateString('en-IN')}<br>
-      <strong>Status:</strong> Pending Approval<br><br>
-      You will be notified once the request is reviewed.
-    `;
+    const text = `Dear ${username},
+
+Your outpass application has been submitted.
+
+Reason: ${reason}
+From: ${new Date(fromDate).toLocaleDateString('en-IN')}
+To: ${new Date(toDate).toLocaleDateString('en-IN')}
+Status: Pending Approval
+
+You will be notified once the request is reviewed.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
       subject: 'Outpass Application Submitted',
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -101,18 +110,18 @@ export const sendOutpassApprovalNotification = async (email: string, username: s
     if (status === 'rejected') statusText = 'Rejected';
     if (status === 'forwarded') statusText = 'Forwarded';
 
-    const content = `
-      Dear ${username},<br><br>
-      Your outpass application has been <strong>${statusText.toLowerCase()}</strong>.<br><br>
-      <strong>Reviewer:</strong> ${approver}<br>
-      ${comment ? `<strong>Remark:</strong> ${comment}<br>` : ''}
-    `;
+    const text = `Dear ${username},
+
+Your outpass application has been ${statusText.toLowerCase()}.
+
+Reviewer: ${approver}
+${comment ? `Remark: ${comment}\n` : ''}${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
       subject: `Outpass Application ${statusText}`,
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -123,18 +132,19 @@ export const sendOutpassApprovalNotification = async (email: string, username: s
 export const sendCheckpointNotification = async (email: string, username: string, type: 'check_in' | 'check_out', time: string): Promise<boolean> => {
   try {
     const action = type === 'check_in' ? 'Checked In' : 'Checked Out';
-    const content = `
-      Dear ${username},<br><br>
-      You have successfully <strong>${action}</strong> at the campus gate.<br><br>
-      <strong>Time:</strong> ${time}<br><br>
-      Safe travels!
-    `;
+    const text = `Dear ${username},
+
+You have successfully ${action} at the campus gate.
+
+Time: ${time}
+
+Safe travels!${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Security" <noreplycampusschield@gmail.com>',
       to: email,
       subject: `Campus ${action}`,
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -184,18 +194,19 @@ export const sendResultEmail = async (email: string, username: string, name: str
 
 export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName: string, studentId: string, reason: string): Promise<boolean> => {
   try {
-    const content = `
-      Dear Administrator,<br><br>
-      A new outpass request has been submitted by <strong>${studentName} (${studentId})</strong>.<br><br>
-      <strong>Reason:</strong> ${reason}<br><br>
-      Please login to the UniZ Admin Portal to review and take action.
-    `;
+    const text = `Dear Administrator,
+
+A new outpass request has been submitted by ${studentName} (${studentId}).
+
+Reason: ${reason}
+
+Please login to the UniZ Admin Portal to review and take action.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Alerts" <noreplycampusschield@gmail.com>',
       to: adminEmail,
       subject: `New Outpass Request: ${studentId}`,
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
@@ -207,17 +218,17 @@ export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName
 export const sendActionConfirmationToAdmin = async (adminEmail: string, action: 'approved' | 'rejected', studentName: string, studentId: string): Promise<boolean> => {
   try {
     const actionText = action === 'approved' ? 'Approved' : 'Rejected';
-    const content = `
-      Dear Administrator,<br><br>
-      You have successfully <strong>${actionText}</strong> the outpass request for <strong>${studentName} (${studentId})</strong>.<br><br>
-      This email serves as a confirmation of your action.
-    `;
+    const text = `Dear Administrator,
+
+You have successfully ${actionText} the outpass request for ${studentName} (${studentId}).
+
+This email serves as a confirmation of your action.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ System" <noreplycampusschield@gmail.com>',
       to: adminEmail,
       subject: `Action Confirmed: ${actionText} ${studentId}`,
-      html: emailTemplate(content)
+      text
     });
     return true;
   } catch (error) {
