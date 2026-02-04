@@ -1258,7 +1258,8 @@
                       "value": "O210008"
                     }
                   ]
-                }
+                },
+                "description": "Fetches a student's full profile details. When accessed by an administrator, the response is automatically enriched with real-time academic data (GPA Summary, Subject-wise Grades, and Attendance Records) from the Academics Service."
               },
               "response": []
             },
@@ -1296,7 +1297,7 @@
                     "bulk-update"
                   ]
                 },
-                "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
+                "description": "Updates multiple student grades in one call. Supports both internal Subject UUIDs and human-readable Subject Codes (e.g. 'E2-SEM-1-CSE-1'). Includes 'Smart Merge' logic: if a student already has a record for the subject in a different semester bucket (e.g. 'SEM-1' vs 'E2-SEM-1'), the system will merge them into a single consistent record to prevent GPA fragmentation."
               },
               "response": []
             },
@@ -1366,7 +1367,7 @@
               "response": []
             },
             {
-              "name": "Publish Results to Mail",
+              "name": "Publish Results to Mail (Async)",
               "id": "597c8a60-b0c6-4fb3-ae92-f7f9c89e183f",
               "request": {
                 "method": "POST",
@@ -1379,7 +1380,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"semesterId\": \"SEM-1\"\n}",
+                  "raw": "{\n    \"semesterId\": \"SEM-1\",\n    \"year\": \"E2\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1398,7 +1399,8 @@
                     "grades",
                     "publish-email"
                   ]
-                }
+                },
+                "description": "Triggers a background process to send result emails to students. Supports filtering by semesterId and optionally by year (e.g. 'E2'). Returns immediately; use progress API to track status."
               },
               "response": []
             },
@@ -1926,7 +1928,7 @@
                     "bulk-update"
                   ]
                 },
-                "description": "Updates multiple student grades in one call. Useful for re-examinations or quick corrections. Accepts numeric or character grades."
+                "description": "Updates multiple student grades in one call. Supports both internal Subject UUIDs and human-readable Subject Codes. Automatically resolves Subject Codes to IDs and merges duplicate semester records for the same student/subject to maintain a clean academic history."
               },
               "response": []
             },
