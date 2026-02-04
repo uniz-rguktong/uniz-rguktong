@@ -1276,7 +1276,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"CSE-E1-SEM-1-01\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": \"EX\"\n        },\n        {\n            \"studentId\": \"O210329\",\n            \"subjectId\": \"CSE-E1-SEM-1-01\",\n            \"semesterId\": \"SEM-1\",\n            \"grade\": 9.5\n        }\n    ]\n}",
+                  "raw": "{\n    \"updates\": [\n        {\n            \"studentId\": \"O210008\",\n            \"subjectId\": \"E2-SEM-1-CSE-5\",\n            \"semesterId\": \"E2-SEM-1\",\n            \"grade\": \"EX\"\n        }\n    ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
