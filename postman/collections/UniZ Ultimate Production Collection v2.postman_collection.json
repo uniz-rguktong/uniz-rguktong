@@ -2541,6 +2541,74 @@
               "response": []
             },
             {
+              "name": "Publish Attendance (Batch)",
+              "id": "publish-att-batch",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"semesterId\": \"SEM-1\",\n    \"year\": \"O21\",\n    \"branch\": \"CSE\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/publish-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "publish-email"
+                  ]
+                },
+                "description": "Triggers a background process to send attendance report emails to students in a specific batch/semester."
+              },
+              "response": []
+            },
+            {
+              "name": "Attendance Publish Progress",
+              "id": "att-publish-prog",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/attendance/publish/progress",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "attendance",
+                    "publish",
+                    "progress"
+                  ]
+                },
+                "description": "Monitor the real-time progress of the attendance email publishing task."
+              },
+              "response": []
+            },
+            {
               "name": "List Grievances (Admin)",
               "id": "44471a2b-90ed-4bb4-9692-e69ef5f8131c",
               "request": {

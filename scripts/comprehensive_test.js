@@ -3,15 +3,23 @@ const fs = require('fs');
 const FormData = require('form-data');
 const readline = require('readline');
 const { performance } = require('perf_hooks');
+const { execSync } = require('child_process');
 
-const BASE_URL = 'https://uniz-production-gateway.vercel.app/api/v1';
+const BASE_URL = 'http://localhost:3000/api/v1';
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-const askUser = (question) => new Promise(resolve => rl.question(question, resolve));
+const askUser = (question) => new Promise(resolve => {
+    if (rl.closed) return resolve("123456"); // Fallback for closed streams
+    try {
+        rl.question(question, resolve);
+    } catch (e) {
+        resolve("123456");
+    }
+});
 
 // Elite Hacker-Themed Formatting
 const C_RESET = "\x1b[0m";
@@ -97,29 +105,59 @@ async function request(method, url, body = null, token = null, checkStatus = tru
     }
 }
 
-async function upload(url, filePath, token) {
+async function uploadWithProgress(url, filePath, token, type) {
     const start = performance.now();
     try {
+        const headers = { Authorization: `Bearer ${token}` };
         const form = new FormData();
         form.append("file", fs.createReadStream(filePath));
         
-        const res = await axios.post(`${BASE_URL}${url}`, form, {
+        console.log(`\n⏳ Validating ${type} Bulk Ingestion Protocol...`);
+        
+        // Target: API Call
+        const uploadPromise = axios.post(`${BASE_URL}${url}`, form, {
             headers: {
                 ...form.getHeaders(),
                 Authorization: `Bearer ${token}`,
                 "x-upload-type": "FULL_BATCH"
             }
         });
+
+        // Monitor Progress in Parallel
+        let done = false;
+        const monitorPromise = new Promise((resolve) => {
+            const interval = setInterval(async () => {
+                try {
+                    const res = await axios.get(`${BASE_URL}/academics/upload/progress`, { headers });
+                    const prog = res.data.progress;
+                    if (prog && prog.total > 0) {
+                        const etaText = prog.status === 'done' ? 'Done' : `${prog.etaSeconds || 0}s remaining`;
+                        process.stdout.write(`\r   📊 Progress: ${prog.percent}% (${prog.processed}/${prog.total}) - ${etaText} [${prog.status}]   `);
+                        if (prog.status === 'done') {
+                            process.stdout.write('\n');
+                            clearInterval(interval);
+                            resolve(prog);
+                        }
+                    }
+                } catch (e) { /* silent poll */ }
+                if (done) {
+                    clearInterval(interval);
+                    resolve(null);
+                }
+            }, 800);
+        });
+
+        const [uploadRes] = await Promise.all([uploadPromise]);
+        done = true;
+        await monitorPromise;
+
         const end = performance.now();
-        console.log(formatLog("UPLOAD", url, res.status, end - start));
-        console.log(C_DIM + JSON.stringify(res.data, null, 2).replace(/^/gm, '   ') + C_RESET);
-        return res.data;
+        console.log(formatLog("UPLOAD", url, uploadRes.status, end - start));
+        console.log(C_DIM + `   > Result: ${uploadRes.data.successCount} indexed, ${uploadRes.data.failCount} rejected` + C_RESET);
+        return uploadRes.data;
     } catch (e) {
         const end = performance.now();
         console.log(formatLog("UPLOAD", url, e.response?.status || 500, end - start, `| ${e.message}`));
-        if(e.response?.data) {
-             console.log(C_DIM + JSON.stringify(e.response.data, null, 2).replace(/^/gm, '   ') + C_RESET);
-        }
         throw e;
     }
 }
@@ -132,36 +170,55 @@ async function run() {
 
     try {
         // ==========================================
-        // 0. CLEANUP
+        // 0. CLEANUP & INITIALIZATION
         // ==========================================
         printSection("Environment Sanitization");
-        logAction("Initializing Cleanup Protocols");
-
+        logAction("Initializing Maintenance Protocols");
+        
         try {
-            const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' });
-            const adminToken = webRes.data.token;
-            if(!adminToken) throw new Error("Admin login failed");
+            logAction("Truncating Academic History Tables");
+            execSync('node uniz-academics-service/scripts/temp_truncate.js', { stdio: 'inherit' });
+            logComplete("Database Sanitized");
+        } catch (truncErr) {
+            console.warn(C_YELLOW + "   [!] Truncation script failed or missing. Continuing with existing data." + C_RESET);
+        }
 
+        {
+            // Login Admin (Cache Session)
+            const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' }, null, false);
+            webmasterToken = webRes.data?.token;
+
+            // Login Security (Needed for Force Check-in & Step 4)
+            const secRes = await request('POST', '/auth/login', { username: 'security', password: 'security@uniz' }, null, false);
+            securityToken = secRes.data?.token;
+
+            // Login Student (Persist Token)
             const stuRes = await request('POST', '/auth/login', { username: 'O210008', password: 'password123' });
-            const stuToken = stuRes.data.token;
+            studentToken = stuRes.data.token;
+            if (!studentToken) throw new Error("Student Login Failed");
             
-            const myRequests = await request('GET', '/requests/history?limit=100', null, stuToken);
+            const myRequests = await request('GET', '/requests/history?limit=100', null, studentToken);
             const allReqs = myRequests.data.history || [];
             
             let deletedCount = 0;
             for (const req of allReqs) {
+                 const reqId = req.id || req._id;
                  if (!req.checked_in_time && req.status !== 'REJECTED') {
-                     await request('POST', `/requests/${req.id || req._id}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, adminToken, false);
-                     deletedCount++;
+                     if (req.isApproved || req.status === 'APPROVED') {
+                         // Force Check-in to close it
+                         await request('POST', `/requests/${reqId}/checkin`, {}, securityToken, false);
+                         deletedCount++;
+                     } else {
+                         // Reject Pending
+                         await request('POST', `/requests/${reqId}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, webmasterToken, false);
+                         deletedCount++;
+                     }
                  }
             }
-            logComplete(`Purged ${deletedCount} stale entities`);
+            logComplete(`Purged/Closed ${deletedCount} active entities`);
             
-            await request('PUT', '/profile/admin/student/O210008', { has_pending_requests: false }, adminToken);
+            if(webmasterToken) await request('PUT', '/profile/admin/student/O210008', { has_pending_requests: false }, webmasterToken);
             logComplete("Profile Pending Flag Reset");
-
-        } catch (e) { 
-            console.log(`${C_RED}   > Cleanup Warning: ${e.message}${C_RESET}`); 
         }
 
         // ==========================================
@@ -169,8 +226,8 @@ async function run() {
         // ==========================================
         printSection("Student Workflow Simulation");
         
-        const loginRes = await request('POST', '/auth/login', { username: 'O210008', password: 'password123' });
-        studentToken = loginRes.data.token;
+        // Reuse studentToken from Step 0
+        console.log(`   > Using cached session for O210008...`);
 
         await request('GET', '/profile/student/me', null, studentToken);
         await request('PUT', '/profile/student/update', { phone: '9876543210' }, studentToken);
@@ -246,9 +303,7 @@ async function run() {
         // 4. SECURITY FLOW
         // ==========================================
         printSection("Security Checkpoint Integration");
-
-        const secRes = await request('POST', '/auth/login', { username: 'security', password: 'security@uniz' });
-        securityToken = secRes.data.token;
+        console.log("   > Using cached Security session...");
 
         await request('GET', '/requests/security/summary', null, securityToken);
         await request('POST', `/requests/${requestId}/checkout`, {}, securityToken);
@@ -303,20 +358,24 @@ async function run() {
         // 6. ACADEMICS
         // ==========================================
         printSection("Academic Data Ingestion");
-
-        const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' });
-        webmasterToken = webRes.data.token;
+        console.log("   > Using cached Webmaster session...");
 
         await request('POST', '/profile/student/search', { limit: 10 }, webmasterToken);
         await request('GET', '/profile/admin/student/O210008', null, webmasterToken);
 
-        await upload('/academics/grades/upload', 'tests/data/full_batch_grades.xlsx', webmasterToken);
-        await upload('/academics/attendance/upload', 'tests/data/full_batch_attendance.xlsx', webmasterToken);
+        await uploadWithProgress('/academics/grades/upload', 'tests/data/full_batch_grades.xlsx', webmasterToken, "Grades");
+        await uploadWithProgress('/academics/attendance/upload', 'tests/data/full_batch_attendance.xlsx', webmasterToken, "Attendance");
 
         const batchRes = await request('GET', '/academics/grades/batch?branch=CSE&semesterId=SEM-1&year=O21&failedOnly=true', null, webmasterToken);
         console.log(`   > Grade Analysis: ${batchRes.data.grades?.length || 0} failing records identified`);
 
         await request('POST', '/academics/grades/publish-email', { semesterId: 'SEM-1', year: 'O21' }, webmasterToken);
+        
+        logAction("Testing Attendance Result Publishing Notification");
+        await request('POST', '/academics/attendance/publish-email', { semesterId: 'SEM-1', year: 'O21' }, webmasterToken);
+        
+        // Optional: Monitor publish progress if needed
+        // await monitorPublishProgress(webmasterToken, "Attendance");
 
         // ==========================================
         // 7. GRIEVANCE

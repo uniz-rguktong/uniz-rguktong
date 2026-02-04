@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/v1/auth/(.*)",
-      "destination": "https://uniz-auth-service.vercel.app/$1"
+      "destination": "http://localhost:3001/$1"
     },
     {
       "source": "/api/v1/system/health",
@@ -13,67 +13,31 @@
     },
     {
       "source": "/api/v1/profile/(.*)",
-      "destination": "https://uniz-user-service.vercel.app/$1"
+      "destination": "http://localhost:3002/$1"
     },
     {
       "source": "/api/v1/grievance/(.*)",
-      "destination": "https://uniz-outpass-service.vercel.app/grievance/$1"
+      "destination": "http://localhost:3003/grievance/$1"
     },
     {
       "source": "/api/v1/requests/(.*)",
-      "destination": "https://uniz-outpass-service.vercel.app/$1"
+      "destination": "http://localhost:3003/$1"
     },
     {
       "source": "/api/v1/cron/(.*)",
-      "destination": "https://uniz-cron-service.vercel.app/$1"
+      "destination": "http://localhost:3008/$1"
     },
     {
       "source": "/api/v1/notifications/(.*)",
-      "destination": "https://uniz-notification-service.vercel.app/$1"
+      "destination": "http://localhost:3007/$1"
     },
     {
       "source": "/api/v1/mail/(.*)",
-      "destination": "https://uniz-mail-service.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/academics/grades/upload",
-      "destination": "https://uniz-academics-service.vercel.app/grades/upload"
-    },
-    {
-      "source": "/api/v1/academics/grades/bulk-update",
-      "destination": "https://uniz-academics-service.vercel.app/grades/bulk-update"
-    },
-    {
-      "source": "/api/v1/academics/grades/template",
-      "destination": "https://uniz-academics-service.vercel.app/grades/template"
-    },
-    {
-      "source": "/api/v1/academics/attendance/upload",
-      "destination": "https://uniz-academics-service.vercel.app/attendance/upload"
-    },
-    {
-      "source": "/api/v1/academics/attendance/upload/progress",
-      "destination": "https://uniz-academics-service.vercel.app/attendance/upload/progress"
-    },
-    {
-      "source": "/api/v1/academics/grades/upload/progress",
-      "destination": "https://uniz-academics-service.vercel.app/grades/upload/progress"
-    },
-    {
-      "source": "/api/v1/academics/grades/publish/progress",
-      "destination": "https://uniz-academics-service.vercel.app/grades/publish/progress"
-    },
-    {
-      "source": "/api/v1/academics/attendance/template",
-      "destination": "https://uniz-academics-service.vercel.app/attendance/template"
-    },
-    {
-      "source": "/api/v1/files/(.*)",
-      "destination": "https://uniz-files-service.vercel.app/$1"
+      "destination": "http://localhost:3006/$1"
     },
     {
       "source": "/api/v1/academics/(.*)",
-      "destination": "https://uniz-academics-service.vercel.app/$1"
+      "destination": "http://localhost:3004/$1"
     },
     {
       "source": "/(health|status)",
