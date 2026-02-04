@@ -99,21 +99,36 @@ async function run() {
         // ==========================================
         // 0. CLEANUP (Pre-test)
         // ==========================================
-        log("STEP 0", "Cleanup: Rejecting existing requests to avoid 409");
         try {
-            const cmRes = await request('POST', '/auth/login', { username: 'caretaker_male', password: 'caretaker_male@uniz' });
-            const token = cmRes.data.token;
-            const existing = await request('GET', `/requests/outing/all?search=O210008`, null, token);
-            const activeReqs = existing.data.outings?.filter(r => !r.is_rejected && !r.is_expired && !r.checked_in_time) || [];
+            // Login as Admin for deletion power
+            const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' });
+            const adminToken = webRes.data.token;
+
+            // Login as Student to find their own "stuck" requests (more reliable than search)
+            const stuRes = await request('POST', '/auth/login', { username: 'O210008', password: 'password123' });
+            const stuToken = stuRes.data.token;
             
-            for (const req of activeReqs) {
-                 console.log(`   Deleting stuck request: ${req.id || req._id}`);
-                 await request('POST', `/requests/${req.id || req._id}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, token, false);
+            const myRequests = await request('GET', '/requests/history?limit=100', null, stuToken);
+            const allReqs = myRequests.data.history || [];
+            
+            console.log(`   Found ${allReqs.length} total requests in student dashboard.`);
+            
+            for (const req of allReqs) {
+                 if (!req.checked_in_time && req.status !== 'REJECTED') {
+                     console.log(`   Deleting stuck request: ${req.id || req._id} (${req.type || 'unknown'})`);
+                     await request('POST', `/requests/${req.id || req._id}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, adminToken, false);
+                 }
+            }
+            
+            for (const req of allReqs) {
+                 if (!req.checked_in_time && req.status !== 'REJECTED') {
+                     console.log(`   Deleting stuck request: ${req.id || req._id} (${req.type || 'unknown'})`);
+                     await request('POST', `/requests/${req.id || req._id}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, adminToken, false);
+                 }
             }
             
             // Force reset profile flag via Admin
-            const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' });
-            await request('PUT', '/profile/admin/student/O210008', { has_pending_requests: false }, webRes.data.token);
+            await request('PUT', '/profile/admin/student/O210008', { has_pending_requests: false }, adminToken);
             console.log("   ✅ Profile pending flag force-reset.");
 
         } catch (e) { console.log("   Cleanup warning:", e.message); }
@@ -145,7 +160,7 @@ async function run() {
         };
         const applyRes = await request('POST', '/requests/outing', outingPayload, studentToken);
         console.log("DEBUG: Outing Response:", JSON.stringify(applyRes.data, null, 2));
-        requestId = applyRes.data.requestId || applyRes.data.id || applyRes.data.request?.id || applyRes.data.outpass?.id; 
+        requestId = applyRes.data.data?.id || applyRes.data.data?.requestId || applyRes.data.requestId || applyRes.data.id; 
         
         if (!requestId) {
             throw new Error("Failed to extract Request ID from response");
@@ -188,20 +203,32 @@ async function run() {
 
 
         // ==========================================
-        // 3. APPROVAL FLOW
+        // 3. APPROVAL FLOW (Dynamic)
         // ==========================================
-        log("STEP 3", "Caretaker Male Forward");
-        await request('POST', `/requests/${requestId}/approve`, { action: 'forward', comments: 'Ok' }, caretakerMaleToken);
+        log("STEP 3", "Caretaker Male Action");
+        const ctAction = await request('POST', `/requests/${requestId}/approve`, { action: 'forward', comments: 'Ok' }, caretakerMaleToken);
+        
+        let isFinalized = ctAction.data.isApproved || ctAction.data.data?.isApproved;
 
-        log("STEP 3", "Login Warden Male");
-        const wmRes = await request('POST', '/auth/login', { username: 'warden_male', password: 'warden_male@uniz' });
-        wardenMaleToken = wmRes.data.token;
+        if (!isFinalized) {
+            log("STEP 3", "Login Warden Male (Request Forwarded)");
+            const wmRes = await request('POST', '/auth/login', { username: 'warden_male', password: 'warden_male@uniz' });
+            wardenMaleToken = wmRes.data.token;
 
-        log("STEP 3", "Warden Male Forward");
-        await request('POST', `/requests/${requestId}/approve`, { action: 'forward', comments: 'Good' }, wardenMaleToken);
+            log("STEP 3", "Warden Male Forward");
+            const wdAction = await request('POST', `/requests/${requestId}/approve`, { action: 'forward', comments: 'Good' }, wardenMaleToken);
+            isFinalized = wdAction.data.isApproved || wdAction.data.data?.isApproved;
+        } else {
+             console.log("   ℹ️ Request Approved by Caretaker (Short duration). Skipping Warden.");
+        }
 
-        log("STEP 3", "SWO Approve");
-        await request('POST', `/requests/${requestId}/approve`, { action: 'approve', comments: 'Approved' }, swoToken);
+        if (!isFinalized) {
+            log("STEP 3", "SWO Approve");
+            await request('POST', `/requests/${requestId}/approve`, { action: 'approve', comments: 'Approved' }, swoToken);
+        } else {
+             console.log("   ℹ️ Request already finalized. Skipping SWO.");
+        }
+        
         console.log("   ✅ Request Fully Approved");
 
 
@@ -213,7 +240,7 @@ async function run() {
         securityToken = secRes.data.token;
 
         log("STEP 4", "Security Check Consolidated Requests");
-        await request('GET', '/requests/consolidated', null, securityToken);
+        await request('GET', '/requests/security/summary', null, securityToken);
 
         log("STEP 4", "Checkout Student");
         await request('POST', `/requests/${requestId}/checkout`, {}, securityToken);
