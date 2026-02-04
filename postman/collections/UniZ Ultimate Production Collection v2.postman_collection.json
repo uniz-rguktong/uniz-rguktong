@@ -1266,7 +1266,7 @@
               "name": "Bulk Update Grades REMIDIAL (JSON)",
               "id": "049533e5-4181-45c4-b137-f28c461ea63d",
               "request": {
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Authorization",
@@ -1896,7 +1896,7 @@
               "name": "Bulk Update Grades REMIDIAL (JSON)",
               "id": "668a0ec9-a824-4892-b113-2eefd873872f",
               "request": {
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Authorization",
