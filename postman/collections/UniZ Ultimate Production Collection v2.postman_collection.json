@@ -194,7 +194,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"848497\",\n    \"newPassword\": \"password123\"\n}",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"708045\",\n    \"newPassword\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
