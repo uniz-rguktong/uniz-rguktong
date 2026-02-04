@@ -264,7 +264,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008",
+              "raw": "{{baseUrl}}/api/v1/academics/grades?studentId=O210008&semester=SEM-1&year=E1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -278,19 +278,17 @@
                 {
                   "key": "studentId",
                   "value": "O210008",
-                  "description": "Optional: Admin can view any student's grades"
+                  "uuid": "00bc0ee5-5ed5-4f84-b2ac-d30a232f06e1"
                 },
                 {
                   "key": "semester",
-                  "value": "E1S2",
-                  "description": "Optional: Filter by Semester ID",
-                  "disabled": true
+                  "value": "SEM-1",
+                  "uuid": "d5d26999-013e-4036-aef8-23a3d10a9683"
                 },
                 {
                   "key": "year",
                   "value": "E1",
-                  "description": "Optional: Filter by Year (e.g. E1 matches E1S1, E1S2)",
-                  "disabled": true
+                  "uuid": "93bc39f9-c4b9-4fcc-b6a8-684ee6e67c34"
                 }
               ]
             },
@@ -311,7 +309,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008",
+              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008&year=E1&semester=SEM-1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -325,19 +323,18 @@
                 {
                   "key": "studentId",
                   "value": "O210008",
-                  "description": "Optional: Admin can view any student's attendance"
-                },
-                {
-                  "key": "semester",
-                  "value": "E1S2",
-                  "description": "Optional: Filter by Semester ID",
-                  "disabled": true
+                  "description": "Optional: Admin can view any student's attendance",
+                  "uuid": "177fa8db-4af5-4545-b398-83ffcb24240e"
                 },
                 {
                   "key": "year",
                   "value": "E1",
-                  "description": "Optional: Filter by Year (e.g. E1 matches E1S1, E1S2)",
-                  "disabled": true
+                  "uuid": "703236ed-36a6-4aaa-84b1-a0e59374ea68"
+                },
+                {
+                  "key": "semester",
+                  "value": "SEM-1",
+                  "uuid": "a7dd071b-10d2-46fe-8a4e-99a710db5634"
                 }
               ]
             },
