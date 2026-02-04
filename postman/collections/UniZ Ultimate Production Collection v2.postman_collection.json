@@ -1745,7 +1745,37 @@
                     "progress"
                   ]
                 },
-                "description": "Global endpoint to monitor the latest academic upload progress (Grades or Attendance)."
+                "description": "Global endpoint to monitor the latest academic background tasks, including CSV Uploads (Grades/Attendance) and Result Publishing progress."
+              },
+              "response": []
+            },
+            {
+              "name": "Publish Result Progress",
+              "id": "f8e4b2a1-0c5d-4e9b-a3f2-d6c7b8a9d0e1",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/academics/grades/publish/progress",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "academics",
+                    "grades",
+                    "publish",
+                    "progress"
+                  ]
+                },
+                "description": "Specific endpoint to monitor the progress of result publishing (sending emails) to students."
               },
               "response": []
             }
