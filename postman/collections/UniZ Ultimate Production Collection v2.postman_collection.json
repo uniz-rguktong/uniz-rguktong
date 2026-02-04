@@ -139,7 +139,55 @@
                 "otp",
                 "request"
               ]
+            },
+            "description": "Step 1: Request OTP for password reset. OTP will be sent to the user's registered email (username@rguktong.ac.in). OTP is valid for 10 minutes."
+          },
+          "response": []
+        },
+        {
+          "name": "OTP Verify",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.resetToken) {",
+                  "    pm.environment.set(\"resetToken\", jsonData.resetToken);",
+                  "    console.log(\"Reset token saved to environment:\", jsonData.resetToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
             }
+          ],
+          "id": "otp-verify-endpoint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/otp/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "otp",
+                "verify"
+              ]
+            },
+            "description": "Step 2: Verify the OTP received via email. On successful verification, returns a resetToken valid for 5 minutes. This token is automatically saved to the environment variable 'resetToken' for use in password reset."
           },
           "response": []
         },
@@ -194,7 +242,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"246121\",\n    \"newPassword\": \"password123\"\n}",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"resetToken\": \"{{resetToken}}\",\n    \"newPassword\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -213,7 +261,8 @@
                 "password",
                 "reset"
               ]
-            }
+            },
+            "description": "Step 3: Reset password using the resetToken obtained from OTP verification. The resetToken is valid for 5 minutes and can only be used once. After successful password reset, the token is automatically deleted."
           },
           "response": []
         }
@@ -532,7 +581,55 @@
                 "otp",
                 "request"
               ]
+            },
+            "description": "Step 1: Request OTP for password reset. OTP will be sent to the user's registered email (username@rguktong.ac.in). OTP is valid for 10 minutes."
+          },
+          "response": []
+        },
+        {
+          "name": "OTP Verify",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.resetToken) {",
+                  "    pm.environment.set(\"resetToken\", jsonData.resetToken);",
+                  "    console.log(\"Reset token saved to environment:\", jsonData.resetToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
             }
+          ],
+          "id": "student-otp-verify-endpoint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/otp/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "otp",
+                "verify"
+              ]
+            },
+            "description": "Step 2: Verify the OTP received via email. On successful verification, returns a resetToken valid for 5 minutes. This token is automatically saved to the environment variable 'resetToken' for use in password reset."
           },
           "response": []
         },
@@ -544,7 +641,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"123456\",\n    \"newPassword\": \"newSecurePassword123\"\n}",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"resetToken\": \"{{resetToken}}\",\n    \"newPassword\": \"newSecurePassword123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -563,7 +660,8 @@
                 "password",
                 "reset"
               ]
-            }
+            },
+            "description": "Step 3: Reset password using the resetToken obtained from OTP verification. The resetToken is valid for 5 minutes and can only be used once. After successful password reset, the token is automatically deleted."
           },
           "response": []
         },
