@@ -120,7 +120,8 @@ async function uploadWithProgress(url, filePath, token, type) {
                 ...form.getHeaders(),
                 Authorization: `Bearer ${token}`,
                 "x-upload-type": "FULL_BATCH"
-            }
+            },
+            timeout: 300000 // 5 minutes timeout for large batches
         });
 
         // Monitor Progress in Parallel
@@ -128,12 +129,13 @@ async function uploadWithProgress(url, filePath, token, type) {
         const monitorPromise = new Promise((resolve) => {
             const interval = setInterval(async () => {
                 try {
-                    const res = await axios.get(`${BASE_URL}/academics/upload/progress`, { headers });
+                    const res = await axios.get(`${BASE_URL}/academics/upload/progress`, { headers, timeout: 5000 });
                     const prog = res.data.progress;
                     if (prog && prog.total > 0) {
-                        const etaText = prog.status === 'done' ? 'Done' : `${prog.etaSeconds || 0}s remaining`;
+                        const etaText = prog.status === 'done' ? 'Done' : `${prog.etaSeconds || '?'}s remaining`;
                         process.stdout.write(`\r   📊 Progress: ${prog.percent}% (${prog.processed}/${prog.total}) - ${etaText} [${prog.status}]   `);
                         if (prog.status === 'done') {
+                            done = true; // Signal the loop to stop
                             process.stdout.write('\n');
                             clearInterval(interval);
                             resolve(prog);
