@@ -194,7 +194,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"708045\",\n    \"newPassword\": \"password123\"\n}",
+              "raw": "{\n    \"username\": \"O210008\",\n    \"otp\": \"246121\",\n    \"newPassword\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -309,7 +309,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008&year=E3&semester=SEM-1",
+              "raw": "{{baseUrl}}/api/v1/academics/attendance?studentId=O210008&year=E2&semester=SEM-1",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -328,7 +328,7 @@
                 },
                 {
                   "key": "year",
-                  "value": "E3",
+                  "value": "E2",
                   "uuid": "703236ed-36a6-4aaa-84b1-a0e59374ea68"
                 },
                 {
@@ -429,7 +429,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"reason\": \"Shopping\",\n    \"fromTime\": \"2026-02-04T16:00:00.000Z\",\n    \"toTime\": \"2026-02-05T20:00:00.000Z\",\n    \"hours\": 4\n}",
+              "raw": "{\n  \"reason\": \"Shopping\",\n  \"fromTime\": \"2026-02-04T11:50:54.000Z\",\n  \"toTime\": \"2026-02-04T12:00:54.000Z\",\n  \"hours\": 4\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -649,7 +649,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"username\": \"caretaker_male\",\n    \"password\": \"caretaker_male@uniz\"\n}",
+                  "raw": "{\n    \"username\": \"security\",\n    \"password\": \"security@uniz\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -740,11 +740,13 @@
                   "query": [
                     {
                       "key": "page",
-                      "value": "1"
+                      "value": "1",
+                      "uuid": "29f9cbad-6f49-4b18-83ad-b14ea49272bd"
                     },
                     {
                       "key": "limit",
-                      "value": "50"
+                      "value": "50",
+                      "uuid": "47700a2b-49e6-4be0-8104-f61d7892aa2d"
                     },
                     {
                       "key": "search",
@@ -769,7 +771,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"message\": \"Parent verified. Fine to go.\"\n}",
+                  "raw": "{\n    \"message\": \"verified. Fine to go. return by time\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -791,7 +793,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": ""
+                      "value": "5a1196f2-8eaf-49d2-a4a4-8966863530db"
                     }
                   ]
                 }
@@ -834,7 +836,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "696945a3-8382-4344-afa7-0241c47f7c9f"
+                      "value": "bb5ca018-c6b8-498f-8033-bc91ff0ef7b1"
                     }
                   ]
                 }
@@ -868,7 +870,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": ""
+                      "value": "5a1196f2-8eaf-49d2-a4a4-8966863530db"
                     }
                   ]
                 }
@@ -902,7 +904,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": ""
+                      "value": "5a1196f2-8eaf-49d2-a4a4-8966863530db"
                     }
                   ]
                 }

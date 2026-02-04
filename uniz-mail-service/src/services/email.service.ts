@@ -103,6 +103,32 @@ You will be notified once the request is reviewed.${emailFooter()}`;
   }
 };
 
+export const sendOutingRequestNotification = async (email: string, username: string, reason: string, fromDate: string, toDate: string): Promise<boolean> => {
+  try {
+    const text = `Dear ${username},
+
+Your outing application has been submitted.
+
+Reason: ${reason}
+From: ${new Date(fromDate).toLocaleDateString('en-IN')}
+To: ${new Date(toDate).toLocaleDateString('en-IN')}
+Status: Pending Approval
+
+You will be notified once the request is reviewed.${emailFooter()}`;
+
+    await transporter.sendMail({
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
+      to: email,
+      subject: 'Outing Application Submitted',
+      text
+    });
+    return true;
+  } catch (error) {
+    console.error(`Failed to send outing request notification:`, error);
+    return false;
+  }
+};
+
 export const sendOutpassApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected' | 'forwarded', approver: string, comment?: string): Promise<boolean> => {
   try {
     let statusText = 'Processed';
@@ -121,6 +147,32 @@ ${comment ? `Remark: ${comment}\n` : ''}${emailFooter()}`;
       from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
       to: email,
       subject: `Outpass Application ${statusText}`,
+      text
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const sendOutingApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected' | 'forwarded', approver: string, comment?: string): Promise<boolean> => {
+  try {
+    let statusText = 'Processed';
+    if (status === 'approved') statusText = 'Approved';
+    if (status === 'rejected') statusText = 'Rejected';
+    if (status === 'forwarded') statusText = 'Forwarded';
+
+    const text = `Dear ${username},
+
+Your outing application has been ${statusText.toLowerCase()}.
+
+Reviewer: ${approver}
+${comment ? `Remark: ${comment}\n` : ''}${emailFooter()}`;
+
+    await transporter.sendMail({
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
+      to: email,
+      subject: `Outing Application ${statusText}`,
       text
     });
     return true;
@@ -192,20 +244,25 @@ export const sendResultEmail = async (email: string, username: string, name: str
   }
 };
 
-export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName: string, studentId: string, reason: string): Promise<boolean> => {
+export const sendNewRequestAlertToAdmin = async (adminEmail: string, studentName: string, studentId: string, reason: string, type: string = 'outpass'): Promise<boolean> => {
   try {
+    let label = 'Request';
+    if (type === 'outing') label = 'Outing';
+    else if (type === 'outpass') label = 'Outpass';
+    else if (type === 'grievance') label = 'Grievance';
+
     const text = `Dear Administrator,
 
-A new outpass request has been submitted by ${studentName} (${studentId}).
+A new ${label.toLowerCase()} has been submitted by ${studentName} (${studentId}).
 
-Reason: ${reason}
+Details: ${reason}
 
 Please login to the UniZ Admin Portal to review and take action.${emailFooter()}`;
 
     await transporter.sendMail({
       from: '"UniZ Alerts" <noreplycampusschield@gmail.com>',
       to: adminEmail,
-      subject: `New Outpass Request: ${studentId}`,
+      subject: `New ${label}: ${studentId}`,
       text
     });
     return true;
@@ -215,12 +272,13 @@ Please login to the UniZ Admin Portal to review and take action.${emailFooter()}
   }
 };
 
-export const sendActionConfirmationToAdmin = async (adminEmail: string, action: 'approved' | 'rejected', studentName: string, studentId: string): Promise<boolean> => {
+export const sendActionConfirmationToAdmin = async (adminEmail: string, action: 'approved' | 'rejected', studentName: string, studentId: string, type: 'outing' | 'outpass' = 'outpass'): Promise<boolean> => {
   try {
+    const label = type === 'outing' ? 'Outing' : 'Outpass';
     const actionText = action === 'approved' ? 'Approved' : 'Rejected';
     const text = `Dear Administrator,
 
-You have successfully ${actionText} the outpass request for ${studentName} (${studentId}).
+You have successfully ${actionText} the ${label.toLowerCase()} request for ${studentName} (${studentId}).
 
 This email serves as a confirmation of your action.${emailFooter()}`;
 

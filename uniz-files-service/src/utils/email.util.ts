@@ -147,10 +147,36 @@ You will be notified once your request is reviewed.${emailFooter}`;
   }
 };
 
+export const sendOutingRequestNotification = async (email: string, username: string, reason: string, fromDate: string, toDate: string): Promise<boolean> => {
+  try {
+    const text = `Hello ${username},
+
+Your outing request has been submitted successfully and is pending approval.
+
+Reason: ${reason}
+From: ${new Date(fromDate).toLocaleDateString('en-IN')}
+To: ${new Date(toDate).toLocaleDateString('en-IN')}
+Status: Pending Approval
+
+You will be notified once your request is reviewed.${emailFooter}`;
+
+    await transporter.sendMail({
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
+      to: email,
+      subject: 'UniZ - Outing Request Submitted',
+      text
+    });
+    console.log(`Outing request notification sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to send outing request notification:`, error);
+    return false;
+  }
+};
+
 export const sendOutpassApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected', approver: string, comment?: string): Promise<boolean> => {
   try {
     const isApproved = status === 'approved';
-    const statusColor = isApproved ? '#10b981' : '#dc2626';
     const statusText = isApproved ? 'Approved' : 'Rejected';
     
     const text = `Hello ${username},
@@ -174,6 +200,36 @@ ${isApproved
     return true;
   } catch (error) {
     console.error(`Failed to send outpass ${status} notification:`, error);
+    return false;
+  }
+};
+
+export const sendOutingApprovalNotification = async (email: string, username: string, status: 'approved' | 'rejected', approver: string, comment?: string): Promise<boolean> => {
+  try {
+    const isApproved = status === 'approved';
+    const statusText = isApproved ? 'Approved' : 'Rejected';
+    
+    const text = `Hello ${username},
+
+Your outing request has been ${statusText.toLowerCase()}.
+
+Status: ${statusText}
+Reviewed by: ${approver}
+${comment ? `Comment: ${comment}\n` : ''}
+${isApproved 
+  ? 'You may proceed with your outing. Safe travels!' 
+  : 'Please contact the administrator if you have any questions.'}${emailFooter}`;
+
+    await transporter.sendMail({
+      from: '"UniZ Campus" <noreplycampusschield@gmail.com>',
+      to: email,
+      subject: `UniZ - Outing ${isApproved ? 'Approved' : 'Rejected'}`,
+      text
+    });
+    console.log(`Outing ${status} notification sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to send outing ${status} notification:`, error);
     return false;
   }
 };

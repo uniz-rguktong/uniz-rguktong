@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { sendOtpEmail, sendResultEmail, sendLoginNotification, sendOutpassRequestNotification, sendOutpassApprovalNotification, sendNewRequestAlertToAdmin, sendActionConfirmationToAdmin, sendCheckpointNotification } from '../services/email.service';
+import { sendOtpEmail, sendResultEmail, sendLoginNotification, sendOutpassRequestNotification, sendOutingRequestNotification, sendOutpassApprovalNotification, sendOutingApprovalNotification, sendNewRequestAlertToAdmin, sendActionConfirmationToAdmin, sendCheckpointNotification } from '../services/email.service';
 
 export const sendEmail = async (req: Request, res: Response) => {
     const { type, to, data } = req.body;
@@ -19,14 +19,20 @@ export const sendEmail = async (req: Request, res: Response) => {
             case 'outpass_request':
                 success = await sendOutpassRequestNotification(to, data.username, data.reason, data.fromDate, data.toDate);
                 break;
+            case 'outing_request':
+                success = await sendOutingRequestNotification(to, data.username, data.reason, data.fromDate, data.toDate);
+                break;
             case 'outpass_approval':
                 success = await sendOutpassApprovalNotification(to, data.username, data.status, data.approver, data.comment);
                 break;
+            case 'outing_approval':
+                success = await sendOutingApprovalNotification(to, data.username, data.status, data.approver, data.comment);
+                break;
             case 'admin_alert':
-                success = await sendNewRequestAlertToAdmin(to, data.studentName, data.studentId, data.reason);
+                success = await sendNewRequestAlertToAdmin(to, data.studentName, data.studentId, data.reason, data.type);
                 break;
             case 'admin_action_confirmation':
-                success = await sendActionConfirmationToAdmin(to, data.action, data.studentName, data.studentId);
+                success = await sendActionConfirmationToAdmin(to, data.action, data.studentName, data.studentId, data.type);
                 break;
             case 'checkpoint':
                 success = await sendCheckpointNotification(to, data.username, data.type, data.time);
