@@ -4,13 +4,6 @@ import { sendOtpEmail, sendResultEmail, sendLoginNotification, sendOutpassReques
 export const sendEmail = async (req: Request, res: Response) => {
     const { type, to, data } = req.body;
     
-    // Auth secret check (Internal service call only)
-    const internalSecret = req.headers['x-internal-secret'];
-    if (internalSecret !== process.env.INTERNAL_SECRET && process.env.NODE_ENV === 'production') {
-        // Skipping strict auth for now to allow easier testing, but normally:
-        // return res.status(403).json({ success: false });
-    }
-
     try {
         let success = false;
         switch (type) {
