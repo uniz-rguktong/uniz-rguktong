@@ -97,6 +97,28 @@ async function run() {
 
     try {
         // ==========================================
+        // 0. CLEANUP (Pre-test)
+        // ==========================================
+        log("STEP 0", "Cleanup: Rejecting existing requests to avoid 409");
+        try {
+            const cmRes = await request('POST', '/auth/login', { username: 'caretaker_male', password: 'caretaker_male@uniz' });
+            const token = cmRes.data.token;
+            const existing = await request('GET', `/requests/outing/all?search=O210008`, null, token);
+            const activeReqs = existing.data.outings?.filter(r => !r.is_rejected && !r.is_expired && !r.checked_in_time) || [];
+            
+            for (const req of activeReqs) {
+                 console.log(`   Deleting stuck request: ${req.id || req._id}`);
+                 await request('POST', `/requests/${req.id || req._id}/approve`, { action: 'reject', comments: 'Auto-cleanup' }, token, false);
+            }
+            
+            // Force reset profile flag via Admin
+            const webRes = await request('POST', '/auth/login', { username: 'webmaster', password: 'webmaster@uniz' });
+            await request('PUT', '/profile/admin/student/O210008', { has_pending_requests: false }, webRes.data.token);
+            console.log("   ✅ Profile pending flag force-reset.");
+
+        } catch (e) { console.log("   Cleanup warning:", e.message); }
+
+        // ==========================================
         // 1. STUDENT FLOW: Login, Profile, Update, Apply
         // ==========================================
         log("STEP 1", "Student Login (O210008)");
@@ -107,18 +129,27 @@ async function run() {
         await request('GET', '/profile/student/me', null, studentToken);
 
         log("STEP 1", "Update Profile");
-        await request('PUT', '/profile/student/me', { mobile: '9876543210' }, studentToken);
+        await request('PUT', '/profile/student/update', { phone: '9876543210' }, studentToken);
 
         log("STEP 1", "Apply for Outing Request");
+        const fromDate = new Date(Date.now() + 86400000);
+        const toDate = new Date(Date.now() + 86400000 + 14400000);
         const outingPayload = {
             reason: "Buying Essentials",
             destination: "Ongole Market",
             contact: "9876543210",
-            fromDay: new Date(Date.now() + 86400000).toISOString(),
-            toDay: new Date(Date.now() + 86400000 + 14400000).toISOString() // 4 hours later
+            fromDay: fromDate.toISOString(),
+            toDay: toDate.toISOString(),
+            fromTime: fromDate.toISOString(),  // ISO format
+            toTime: toDate.toISOString()       // ISO format
         };
         const applyRes = await request('POST', '/requests/outing', outingPayload, studentToken);
-        requestId = applyRes.data.requestId || applyRes.data.id; // Adjust based on actual API
+        console.log("DEBUG: Outing Response:", JSON.stringify(applyRes.data, null, 2));
+        requestId = applyRes.data.requestId || applyRes.data.id || applyRes.data.request?.id || applyRes.data.outpass?.id; 
+        
+        if (!requestId) {
+            throw new Error("Failed to extract Request ID from response");
+        }
         console.log(`   📝 Created Request ID: ${requestId}`);
 
 
