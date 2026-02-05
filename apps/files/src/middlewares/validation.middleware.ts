@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodSchema } from 'zod';
-import { ErrorCode } from '../shared/error-codes';
+import { ErrorCode } from '@uniz/shared';
 
 export const validateRequest = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
   try {
