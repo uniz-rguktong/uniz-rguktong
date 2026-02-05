@@ -3,15 +3,17 @@
   "version": "1.0.1",
   "description": "UniZ Microservices Production Ecosystem",
   "scripts": {
-    "dev": "bash scripts/start_services.sh",
-    "db:push": "bash scripts/reset-dbs.sh",
-    "db:seed": "node scripts/seed.js && bash scripts/seed-admins.sh",
-    "deploy": "bash scripts/vercel_update.sh",
-    "test": "node scripts/comprehensive_test.js",
-    "clean": "rm -rf logs/ *.log",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules",
+    "lint": "turbo lint",
+    "db:push": "turbo db:push",
+    "db:seed": "turbo db:seed",
+    "test:e2e": "node scripts/comprehensive_test.js",
     "install:all": "npm install",
-    "push:all": "git add . && git commit -m \"Update: Codebase synchronization and restructuring\" && git push origin main",
-    "data-reset": "npm run data-reset --prefix apps/academics && npm run data-reset --prefix apps/user && npm run data-reset --prefix apps/auth && npm run data-reset --prefix apps/outpass"
+    "push:all": "git add . && git commit -m \"Update\" && git push origin main",
+    "data-reset": "turbo data-reset"
   },
   "dependencies": {
     "axios": "^1.13.4",
