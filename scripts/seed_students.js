@@ -6,8 +6,8 @@ const dotenv = require('dotenv');
 // Load environment variables for the gateway URL if needed, defaulting to localhost
 const BASE_URL = 'http://localhost:3000/api/v1';
 
-// Student Default Password pattern: {idnumber}@rguktong
-const getStudentPassword = (id) => `${id.toLowerCase()}@rguktong`;
+// Student Default Password
+const STUDENT_PASSWORD = '123456';
 
 const jsonPath = '/Users/sreecharandesu/Downloads/CSE-1 Attendance_upto_february.json';
 
@@ -20,7 +20,7 @@ const mapStudent = (entry) => {
 
     return {
         username: id,
-        password: getStudentPassword(id),
+        password: STUDENT_PASSWORD,
         role: 'student',
         email: `${id.toLowerCase()}@rguktong.ac.in`, // Construct email
         // We'll update profile with metadata after signup
@@ -116,7 +116,7 @@ async function seedStudents() {
             // Login as Student to get token
             const loginRes = await axios.post(`${BASE_URL}/auth/login`, {
                 username: student.username,
-                password: getStudentPassword(student.username)
+                password: student.password
             });
             const studentToken = loginRes.data.token;
 

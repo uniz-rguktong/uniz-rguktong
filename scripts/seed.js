@@ -333,7 +333,7 @@ async function seedStudents(adminToken) {
              try {
                 await axios.post(`${SERVICES.AUTH}/signup`, {
                     username,
-                    password: `${username.toLowerCase()}@rguktong`,
+                    password: 'password123',
                     role: 'student'
                 });
             } catch (e) {
@@ -343,7 +343,7 @@ async function seedStudents(adminToken) {
             // 2. Login
             const loginRes = await axios.post(`${SERVICES.AUTH}/login`, {
                 username,
-                password: `${username.toLowerCase()}@rguktong`
+                password: 'password123'
             });
             const studentToken = loginRes.data.token;
 
