@@ -20,7 +20,12 @@
     "form-data": "^4.0.5",
     "xlsx": "^0.18.5"
   },
+  "workspaces": [
+    "uniz-*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "turbo": "^1.13.4"
   }
 }

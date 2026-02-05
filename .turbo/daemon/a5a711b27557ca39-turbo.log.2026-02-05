@@ -1,0 +1,41 @@
+2026-02-05T10:29:52.620783Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-02-05T10:29:52.620793Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:29:52.721405Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-02-05T10:29:52.721416Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:31:07.120037Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages"), AnchoredSystemPathBuf("packages/shared/src"), AnchoredSystemPathBuf("packages/shared")}
+2026-02-05T10:31:07.120105Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:31:43.818141Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared"), AnchoredSystemPathBuf("packages/shared/src")}
+2026-02-05T10:31:43.818173Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:31:43.918402Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared"), AnchoredSystemPathBuf("uniz-shared")}
+2026-02-05T10:31:43.918413Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@uniz-org/shared"), path: AnchoredSystemPathBuf("uniz-shared") }, WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:31:58.819745Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared/package.json")}
+2026-02-05T10:31:58.819882Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:32:18.316818Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/package.json")}
+2026-02-05T10:32:18.316832Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:32:42.416836Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-02-05T10:32:42.416855Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:33:16.315875Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/3.cookie"), AnchoredSystemPathBuf("packages/shared/.turbo"), AnchoredSystemPathBuf(".turbo/cookies/2.cookie")}
+2026-02-05T10:33:16.315900Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:33:18.514696Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/4.cookie"), AnchoredSystemPathBuf("packages/shared/dist")}
+2026-02-05T10:33:18.514704Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:37:51.420244Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared/src/auth/roles.enum.ts")}
+2026-02-05T10:37:51.421064Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:38:47.405120Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/src/controllers/auth.controller.ts")}
+2026-02-05T10:38:47.405196Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:39:06.403585Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/src/utils/token.util.ts")}
+2026-02-05T10:39:06.403607Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:39:33.203641Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/src/middlewares/validation.middleware.ts")}
+2026-02-05T10:39:33.203667Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:39:43.803341Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/src/shared/roles.enum.ts"), AnchoredSystemPathBuf("uniz-auth-service/src/shared"), AnchoredSystemPathBuf("uniz-auth-service/src/shared/error-codes.ts"), AnchoredSystemPathBuf("uniz-auth-service/src/shared/jwt.schema.ts")}
+2026-02-05T10:39:43.803361Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:39:59.202076Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/5.cookie")}
+2026-02-05T10:39:59.202096Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:39:59.802853Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/6.cookie")}
+2026-02-05T10:39:59.802868Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:40:00.601947Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/7.cookie")}
+2026-02-05T10:40:00.601960Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:40:00.702738Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-auth-service/.turbo"), AnchoredSystemPathBuf(".turbo/cookies/8.cookie")}
+2026-02-05T10:40:00.702749Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }}))
+2026-02-05T10:40:00.847142Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-02-05T10:40:01.602522Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/9.cookie")}
+2026-02-05T10:40:01.602534Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
