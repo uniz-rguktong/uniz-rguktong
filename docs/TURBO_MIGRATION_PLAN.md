@@ -8,52 +8,40 @@ This plan details the conversion of the current "Meta-Repo" (folder of independe
 
 ---
 
-## Phase 1: Local Orchestration Layer (Safe Mode)
-*Objective: Enable Turbo features locally without breaking the Git structure or Vercel pointers.*
+## Phase 1: Local Orchestration Layer (Done)
+*   **Completed**:
+    *   Initialized Turbo in Root.
+    *   Created `turbo.json`.
+    *   Configured `workspaces` in `package.json`.
+    *   `npm install` verified hoisting working.
 
-1.  **Initialize Turbo in Root**:
-    *   Install `turbo` as a dev dependency in the root.
-    *   Create `turbo.json` to define pipelines (`build`, `dev`, `lint`).
-2.  **Define Workspace Topology**:
-    *   Update root `package.json` to recognize `uniz-*` as workspaces.
-    *   **Crucial Step**: This allows `npm install` at the root to install all dependencies for all services at once (hoisting), saving massive disk space and install time.
-3.  **Local Testing**:
-    *   Verify `npx turbo run dev` starts all services in parallel.
-    *   Verify `npx turbo run build` builds all services.
+## Phase 2: Shared Libraries (Started & Proven)
+*   **Completed**:
+    *   Created `@uniz/shared` workspace in `packages/shared`.
+    *   Synchronized `UserRole` enums to ensure no data loss.
+    *   Refactored `uniz-auth-service` to consume `@uniz/shared`.
+    *   Verified `npx turbo run build` works for Auth + Shared.
 
-**Risk**: Low. This only changes the user's local interaction. Vercel ignores the root repo because it is likely connected to the individual service repos (submodules).
+## Phase 3: The "Grand Unification" (In Progress)
+*   **Completed**:
+    *   De-submoduled `uniz-auth-service` and `uniz-shared`.
+    *   Committed changes to Root Repo (git push pending network).
+*   **Next Steps (For You)**:
+    1.  **De-submodule the rest**: Run `git rm --cached uniz-XXX`, `rm -rf uniz-XXX/.git`, `git add uniz-XXX` for user, cron, etc.
+    2.  **Push**: Ensure the git push completes.
+    3.  **Vercel Migration**:
+        *   Create **New Project** in Vercel.
+        *   Import `uniz-rguktong` (Root Repo).
+        *   **Root Directory**: Set to `uniz-auth-service` (for the Auth project).
+        *   **Framework**: Next.js (or Other).
+        *   Deploy!
+        *   *Repeat for each service.*
 
----
+## Why this is better?
+*   **One Git Repo**: No more `push_all.sh` or confusing submodules.
+*   **Smart Rebuilds**: Changing `@uniz/shared` automatically triggers redeploys for all apps on Vercel.
+*   **Shared Code**: Real type safety across microservices.
 
-## Phase 2: Shared Libraries (The "Don't Repeat Yourself" Fix)
-*Objective: Centralize shared code.*
-
-1.  **Create `packages/` directory**:
-    *   `packages/config`: Shared ESLint, TypeScript, and Prettier configs.
-    *   `packages/types`: Move all shared interfaces/enums from `uniz-shared` here.
-2.  **Refactor Services**:
-    *   Update `uniz-auth-service`, `uniz-user-service`, etc., to import from `@uniz/types` instead of local copies.
-    *   Update `package.json` in services to depend on `"@uniz/types": "*"`.
-
-**Risk**: Moderate. Requires editing service code. 
-**Mitigation**: Done on a feature branch (`chore/monorepo-refactor`). No merge to `main` until tests pass.
-
----
-
-## Phase 3: The "Grand Unification" (Git Consolidation)
-*Objective: Move from Submodules to a Single Git Tree.*
-
-*This is the big shift. Currently, Vercel pulls from individual Git repos. To use Turbo fully on Vercel, we must eventually switch Vercel to pull from the Root Repo.*
-
-**Zero-Deployment Strategy:**
-1.  **De-Submodule**: Remove `.git` folders from `uniz-*` directories. Commit files directly to Root Repo.
-2.  **Vercel Configuration (Shadow Project)**:
-    *   Create *new* Vercel projects (e.g., `uniz-auth-v2`) connected to the **Root Repo**.
-    *   Configure "Root Directory" to `uniz-auth-service`.
-    *   Deploy and test these shadow projects.
-3.  **The Switch**:
-    *   Once Shadow Projects are verified green, swap domains.
-    *   Delete old Vercel projects connected to the old individual repos.
 
 ---
 

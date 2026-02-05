@@ -39,3 +39,5 @@
 2026-02-05T10:40:00.847142Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
 2026-02-05T10:40:01.602522Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/9.cookie")}
 2026-02-05T10:40:01.602534Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:46:10.925303Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/TURBO_MIGRATION_PLAN.md")}
+2026-02-05T10:46:10.925767Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
