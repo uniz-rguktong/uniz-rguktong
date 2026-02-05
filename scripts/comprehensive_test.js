@@ -5,7 +5,7 @@ const readline = require('readline');
 const { performance } = require('perf_hooks');
 const { execSync } = require('child_process');
 
-const BASE_URL = 'https://uniz-production-gateway.vercel.app/api/v1';
+const BASE_URL = 'http://localhost:3000/api/v1';
 
 const rl = readline.createInterface({
     input: process.stdin,
