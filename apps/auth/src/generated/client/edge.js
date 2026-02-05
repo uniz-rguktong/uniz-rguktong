@@ -140,7 +140,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/sreecharandesu/Projects/uniz-rguktong/uniz-auth-service/src/generated/client",
+      "value": "/Users/sreecharandesu/Projects/uniz-rguktong/apps/auth/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -158,7 +158,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/sreecharandesu/Projects/uniz-rguktong/uniz-auth-service/prisma/schema.prisma",
+    "sourceFilePath": "/Users/sreecharandesu/Projects/uniz-rguktong/apps/auth/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -172,6 +172,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "ciName": "Vercel",
   "inlineDatasources": {
     "db": {
