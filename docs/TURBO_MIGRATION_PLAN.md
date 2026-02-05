@@ -15,27 +15,39 @@ This plan details the conversion of the current "Meta-Repo" (folder of independe
     *   Configured `workspaces` in `package.json`.
     *   `npm install` verified hoisting working.
 
-## Phase 2: Shared Libraries (Started & Proven)
+## Phase 2: Shared Libraries (Advanced Status)
 *   **Completed**:
     *   Created `@uniz/shared` workspace in `packages/shared`.
-    *   Synchronized `UserRole` enums to ensure no data loss.
-    *   Refactored `uniz-auth-service` to consume `@uniz/shared`.
-    *   Verified `npx turbo run build` works for Auth + Shared.
+    *   Synchronized `UserRole` enums and `JwtPayload` schema.
+    *   **Refactored Services**:
+        *   `uniz-auth-service`: Fully Migrated.
+        *   `uniz-user-service`: Fully Migrated.
+        *   `uniz-outpass-service`: Fully Migrated.
+    *   rebuilt `@uniz/shared` to ensure types are fresh.
 
-## Phase 3: The "Grand Unification" (In Progress)
+## Phase 3: The "Grand Unification" (Advanced Status)
 *   **Completed**:
-    *   De-submoduled `uniz-auth-service` and `uniz-shared`.
-    *   Committed changes to Root Repo (git push pending network).
-*   **Next Steps (For You)**:
-    1.  **De-submodule the rest**: Run `git rm --cached uniz-XXX`, `rm -rf uniz-XXX/.git`, `git add uniz-XXX` for user, cron, etc.
-    2.  **Push**: Ensure the git push completes.
-    3.  **Vercel Migration**:
-        *   Create **New Project** in Vercel.
-        *   Import `uniz-rguktong` (Root Repo).
-        *   **Root Directory**: Set to `uniz-auth-service` (for the Auth project).
-        *   **Framework**: Next.js (or Other).
-        *   Deploy!
-        *   *Repeat for each service.*
+    *   De-submoduled: `auth`, `user`, `outpass`, `production-gateway`, `infra`, `shared`.
+    *   Committed changes to Root Repo.
+*   **Next Steps (Immediate)**:
+    1.  **Refactor Remaining Services**: `academics`, `mail`, `notification`, `cron`.
+        *   Add `@uniz/shared` dependency.
+        *   Update imports: `import ... from '@uniz/shared'`.
+        *   Delete `src/shared`.
+        *   Remove `.git` folder.
+    2.  **Push**: Execute `git push origin main` (retry if timeout).
+    3.  **Vercel Migration**: Create new projects pointing to Root Repo structure.
+
+## Deployment Guide
+1.  **Vercel Dashboard** -> Add New Project -> Import `uniz-rguktong`.
+2.  **Configuration**:
+    *   Project Name: `uniz-auth-service` (match your old name if swapping).
+    *   **Root Directory**: `uniz-auth-service`.
+    *   Framework Preset: Next.js (or Other).
+    *   Build Command: `cd .. && npx turbo run build --filter=uniz-auth-service` (Vercel automatic detection handles this usually, just select Root Directory).
+3.  **Environment Variables**: Copy from old project.
+4.  **Repeat** for all services.
+
 
 ## Why this is better?
 *   **One Git Repo**: No more `push_all.sh` or confusing submodules.

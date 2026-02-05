@@ -55,3 +55,91 @@
 2026-02-05T10:53:06.178809Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-user-service"), path: AnchoredSystemPathBuf("uniz-user-service") }}))
 2026-02-05T10:53:55.676326Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-user-service/src/controllers/bulk.controller.ts")}
 2026-02-05T10:53:55.676536Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-user-service"), path: AnchoredSystemPathBuf("uniz-user-service") }}))
+2026-02-05T10:54:57.974821Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-user-service/src/shared/error-codes.ts"), AnchoredSystemPathBuf("uniz-user-service/src/shared/roles.enum.ts"), AnchoredSystemPathBuf("uniz-user-service/src/shared/jwt.schema.ts"), AnchoredSystemPathBuf("uniz-user-service/src/shared")}
+2026-02-05T10:54:57.974845Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-user-service"), path: AnchoredSystemPathBuf("uniz-user-service") }}))
+2026-02-05T10:57:59.068921Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared/src/outpass/outpass.schema.ts")}
+2026-02-05T10:57:59.068942Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:58:27.266777Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/package.json")}
+2026-02-05T10:58:27.266804Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T10:58:58.466300Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-02-05T10:58:58.466329Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T10:59:56.271470Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/middlewares/auth.middleware.ts")}
+2026-02-05T10:59:56.272662Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:00:34.763943Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/grievance.controller.ts")}
+2026-02-05T11:00:34.764015Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:00:55.162649Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared/src/auth/jwt.schema.ts")}
+2026-02-05T11:00:55.162683Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:01:54.161227Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/shared/src/outpass/approval-log.schema.ts")}
+2026-02-05T11:01:54.161241Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:02:07.961476Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:02:07.961532Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:02:59.059767Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/shared"), AnchoredSystemPathBuf("uniz-outpass-service/src/shared/error-codes.ts"), AnchoredSystemPathBuf("uniz-outpass-service/src/shared/approval-log.schema.ts"), AnchoredSystemPathBuf("uniz-outpass-service/src/shared/jwt.schema.ts"), AnchoredSystemPathBuf("uniz-outpass-service/src/shared/outpass.schema.ts"), AnchoredSystemPathBuf("uniz-outpass-service/src/shared/roles.enum.ts")}
+2026-02-05T11:02:59.059789Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:04:42.554782Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/10.cookie")}
+2026-02-05T11:04:42.554806Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:05:44.454248Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/12.cookie"), AnchoredSystemPathBuf(".turbo/cookies/11.cookie")}
+2026-02-05T11:05:44.454644Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:05:45.453927Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/13.cookie")}
+2026-02-05T11:05:45.453937Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:06:13.453417Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:13.453442Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:17.253016Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:17.253026Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:20.051814Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:20.051824Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:31.951969Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:31.951995Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:35.052630Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:35.052666Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:38.251778Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:38.251813Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:38.551822Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-outpass-service/src/controllers/request.controller.ts")}
+2026-02-05T11:06:38.551835Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }}))
+2026-02-05T11:06:38.551858Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-02-05T11:07:43.050110Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/TURBO_MIGRATION_PLAN.md")}
+2026-02-05T11:07:43.050171Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:08:25.948421Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service/package.json")}
+2026-02-05T11:08:25.948438Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:08:43.749983Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-02-05T11:08:43.750018Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:09:28.451456Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".gitignore")}
+2026-02-05T11:09:28.451482Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:09:28.947285Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".gitignore")}
+2026-02-05T11:09:28.947294Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:10:24.247939Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service/src/middlewares/auth.middleware.ts")}
+2026-02-05T11:10:24.247957Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:10:54.846247Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service/src/middlewares/validation.middleware.ts")}
+2026-02-05T11:10:54.846268Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:11:19.746331Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service/src/utils/token.util.ts")}
+2026-02-05T11:11:19.746350Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:11:35.445953Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service/src/shared/jwt.schema.ts"), AnchoredSystemPathBuf("uniz-academics-service/src/shared"), AnchoredSystemPathBuf("uniz-academics-service/src/shared/roles.enum.ts"), AnchoredSystemPathBuf("uniz-academics-service/src/shared/error-codes.ts")}
+2026-02-05T11:11:35.445978Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:12:17.145000Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-mail-service/package.json")}
+2026-02-05T11:12:17.145033Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-mail-service"), path: AnchoredSystemPathBuf("uniz-mail-service") }}))
+2026-02-05T11:12:36.245666Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-02-05T11:12:36.245684Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:12:59.445745Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-mail-service/src/middlewares/validation.middleware.ts")}
+2026-02-05T11:12:59.445821Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-mail-service"), path: AnchoredSystemPathBuf("uniz-mail-service") }}))
+2026-02-05T11:13:22.742655Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-mail-service/src/utils/token.util.ts")}
+2026-02-05T11:13:22.742678Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-mail-service"), path: AnchoredSystemPathBuf("uniz-mail-service") }}))
+2026-02-05T11:13:34.742687Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-mail-service/src/shared/error-codes.ts"), AnchoredSystemPathBuf("uniz-mail-service/src/shared/jwt.schema.ts"), AnchoredSystemPathBuf("uniz-mail-service/src/shared/roles.enum.ts"), AnchoredSystemPathBuf("uniz-mail-service/src/shared")}
+2026-02-05T11:13:34.742764Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-mail-service"), path: AnchoredSystemPathBuf("uniz-mail-service") }}))
+2026-02-05T11:17:40.341738Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps")}
+2026-02-05T11:17:40.342267Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:18:38.843635Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web"), AnchoredSystemPathBuf("uniz")}
+2026-02-05T11:18:38.845195Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:18:38.931768Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-user-service"), AnchoredSystemPathBuf("apps/user"), AnchoredSystemPathBuf("apps/auth"), AnchoredSystemPathBuf("uniz-auth-service")}
+2026-02-05T11:18:38.932048Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-auth-service"), path: AnchoredSystemPathBuf("uniz-auth-service") }, WorkspacePackage { name: Other("uniz-user-service"), path: AnchoredSystemPathBuf("uniz-user-service") }}))
+2026-02-05T11:18:39.032684Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-academics-service"), AnchoredSystemPathBuf("apps/academics"), AnchoredSystemPathBuf("apps/outpass"), AnchoredSystemPathBuf("uniz-outpass-service")}
+2026-02-05T11:18:39.032694Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-outpass-service"), path: AnchoredSystemPathBuf("uniz-outpass-service") }, WorkspacePackage { name: Other("uniz-academics-service"), path: AnchoredSystemPathBuf("uniz-academics-service") }}))
+2026-02-05T11:18:39.132365Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-mail-service"), AnchoredSystemPathBuf("apps/mail")}
+2026-02-05T11:18:39.132376Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-mail-service"), path: AnchoredSystemPathBuf("uniz-mail-service") }}))
+2026-02-05T11:18:39.232477Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-notification-service"), AnchoredSystemPathBuf("uniz-cron-service"), AnchoredSystemPathBuf("apps/notification"), AnchoredSystemPathBuf("apps/cron")}
+2026-02-05T11:18:39.232488Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("uniz-cron-service"), path: AnchoredSystemPathBuf("uniz-cron-service") }, WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-notification-service"), path: AnchoredSystemPathBuf("uniz-notification-service") }}))
+2026-02-05T11:18:39.331720Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("uniz-files-service"), AnchoredSystemPathBuf("uniz-production-gateway"), AnchoredSystemPathBuf("apps/gateway"), AnchoredSystemPathBuf("apps/files")}
+2026-02-05T11:18:39.331733Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("uniz-production-gateway"), path: AnchoredSystemPathBuf("uniz-production-gateway") }, WorkspacePackage { name: Other("uniz-files-service"), path: AnchoredSystemPathBuf("uniz-files-service") }}))
+2026-02-05T11:18:39.432106Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/infra"), AnchoredSystemPathBuf("uniz-infra")}
+2026-02-05T11:18:39.432116Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-02-05T11:19:16.441626Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package.json")}
+2026-02-05T11:19:16.442031Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(All)
+2026-02-05T11:19:16.510557Z  WARN build:build_inner: turborepo_repository::package_graph::builder: Unable to calculate transitive closures: Workspace 'apps/web' not found in lockfile
