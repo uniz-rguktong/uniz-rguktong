@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/client';
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -43,10 +43,10 @@ const runMaintenance = async () => {
       ]);
 
       const studentIdsToClear = [...new Set([
-          ...expiringPastOutpasses.map(r => r.studentId),
-          ...expiringPastOutings.map(r => r.studentId),
-          ...expiringApprovedOutpasses.map(r => r.studentId),
-          ...expiringApprovedOutings.map(r => r.studentId)
+          ...expiringPastOutpasses.map((r: any) => r.studentId),
+          ...expiringPastOutings.map((r: any) => r.studentId),
+          ...expiringApprovedOutpasses.map((r: any) => r.studentId),
+          ...expiringApprovedOutings.map((r: any) => r.studentId)
       ])];
 
       // 2. Perform Expiry

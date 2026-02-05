@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/client';
 import * as xlsx from 'xlsx';
 import { v2 as cloudinary } from 'cloudinary';
 

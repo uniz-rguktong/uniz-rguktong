@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/client';
 
 // Generate client for other services using this schema?
 // Actually uniz-cron-service depends on shared logic, usually it needs its own schema copy or imports from another package.
