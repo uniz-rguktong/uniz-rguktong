@@ -195,7 +195,7 @@ async function run() {
             securityToken = secRes.data?.token;
 
             // Login Student (Persist Token)
-            const stuRes = await request('POST', '/auth/login', { username: 'O210008', password: 'password123' });
+            const stuRes = await request('POST', '/auth/login', { username: 'O210008', password: '123456' });
             studentToken = stuRes.data.token;
             if (!studentToken) throw new Error("Student Login Failed");
             
