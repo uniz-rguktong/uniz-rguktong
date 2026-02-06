@@ -22,6 +22,12 @@
     },
     "prisma:generate": {
       "cache": false
+    },
+    "data-reset": {
+      "cache": false
+    },
+    "seed": {
+      "cache": false
     }
   }
 }

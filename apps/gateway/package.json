@@ -2,11 +2,15 @@
   "name": "uniz-production-gateway",
   "version": "1.0.0",
   "scripts": {
-    "build": "echo 'No build step'"
+    "build": "echo 'No build step'",
+    "dev": "node dev-server.js"
   },
   "dependencies": {
     "@vercel/node": "^3.0.0",
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "http-proxy-middleware": "^2.0.9"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

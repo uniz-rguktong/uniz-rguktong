@@ -179,7 +179,7 @@ async function run() {
         
         try {
             logAction("Truncating Academic History Tables");
-            execSync('node uniz-academics-service/scripts/temp_truncate.js', { stdio: 'inherit' });
+            execSync('cd apps/academics && node scripts/temp_truncate.js', { stdio: 'inherit' });
             logComplete("Database Sanitized");
         } catch (truncErr) {
             console.warn(C_YELLOW + "   [!] Truncation script failed or missing. Continuing with existing data." + C_RESET);

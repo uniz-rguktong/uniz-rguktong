@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "UniZ Microservices Production Ecosystem",
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --concurrency 20",
     "build": "turbo build",
     "test": "node scripts/comprehensive_test.js",
     "test:unit": "turbo test",
@@ -14,7 +14,7 @@
     "test:e2e": "node scripts/comprehensive_test.js",
     "install:all": "npm install",
     "push:all": "git add . && git commit -m \"Update\" && git push origin main",
-    "data-reset": "turbo data-reset"
+    "data-reset": "turbo data-reset --concurrency 1"
   },
   "dependencies": {
     "axios": "^1.13.4",
