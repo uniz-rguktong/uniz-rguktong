@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies (Monorepo)
+      - name: Install Dependencies (Monorepo Root)
         run: npm ci
 
       - name: Build Shared Types
@@ -42,21 +42,32 @@ jobs:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # --- RUNNING FROM ROOT ---
-          # We do NOT 'cd' into the app folder.
-          # Vercel CLI will use the 'Root Directory' setting from the Project Dashboard
-          # while maintaining context of the monorepo root (for node_modules).
+          cd apps/${{ matrix.service }}
           
+          # 1. Link Project
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          echo "Pulling Project Settings & Env..."
-          # Pull settings from the cloud (including the Root Directory config)
+          # 2. Pull Env
+          echo "Pulling Env..."
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          echo "Building..."
-          # Build from root. Vercel CLI will use the Root Directory project setting to build the correct sub-app.
-          vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          # 3. Preparation: Solve Monorepo Hoisting for Vercel CLI
+          # We copy the shared package and install local dependencies to make the folder self-contained
+          echo "Preparing self-contained environment..."
+          rm -rf node_modules
           
-          echo "Deploying..."
-          vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          # Install production dependencies locally (this fetches express, axios, etc.)
+          npm install --omit=dev --no-package-lock
+          
+          # Manually inject the built @uniz/shared package from workspace
+          echo "Injecting @uniz/shared..."
+          mkdir -p node_modules/@uniz/shared
+          cp -r ../../packages/shared/dist ./node_modules/@uniz/shared/
+          cp ../../packages/shared/package.json ./node_modules/@uniz/shared/
+          
+          # 4. Build & Deploy
+          echo "Building & Deploying..."
+          # We use simple deploy (which performs build in Vercel or locally)
+          # Since we provided node_modules, Vercel CLI will bundle them correctly.
+          vercel deploy --prod --yes --scope $ORG_ID --token $VERCEL_TOKEN
