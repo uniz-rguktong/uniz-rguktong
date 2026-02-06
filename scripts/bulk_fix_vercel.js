@@ -16,39 +16,34 @@ const services = [
 ];
 
 services.forEach(svc => {
-    // 1. Restore vercel.json for backends
+    // 1. Zero-Config vercel.json (Modern & Stable)
     const vercelPath = path.join(appsDir, svc.id, 'vercel.json');
     const config = {
         version: 2,
         name: svc.name,
         regions: ["sin1"],
-        builds: [
-            {
-                src: "api/index.ts",
-                use: "@vercel/node"
-            }
-        ],
-        routes: [
-            { "src": "/(.*)", "dest": "/api/index.ts" }
+        // No 'builds' property should be here for modern monorepo deployments
+        rewrites: [
+            { "source": "/(.*)", "destination": "/api" }
         ]
     };
     fs.writeFileSync(vercelPath, JSON.stringify(config, null, 2));
-    console.log(`✅ Restored legacy/stable vercel.json for ${svc.id}`);
+    console.log(`✅ Modernized vercel.json (Zero-Config) for ${svc.id}`);
 
-    // 2. Ensure package.json has axios and correct build script
+    // 2. Ensure package.json has dependencies
     const pkgPath = path.join(appsDir, svc.id, 'package.json');
     if (fs.existsSync(pkgPath)) {
         const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
         pkg.dependencies = pkg.dependencies || {};
         pkg.dependencies.axios = "^1.13.4";
-        pkg.scripts = pkg.scripts || {};
-        pkg.scripts.build = "tsc";
+        // Ensure shared package is properly referenced
+        pkg.dependencies["@uniz/shared"] = "*";
         fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
         console.log(`✅ Updated package.json for ${svc.id}`);
     }
 });
 
-// Gateway: Detailed update
+// Gateway Config
 const gatewayVercelPath = path.join(appsDir, 'gateway', 'vercel.json');
 const getProdUrl = (name) => `https://${name}-${SCOPE}.vercel.app`;
 
@@ -68,36 +63,14 @@ const gatewayConfig = {
     { "source": "/api/v1/academics/(.*)", "destination": getProdUrl('uniz-academics-service') + "/$1" },
     { "source": "/(health|status)", "destination": getProdUrl('uniz-auth-service') + "/health" },
     { "source": "/", "destination": getProdUrl('uniz-auth-service') + "/" }
-  ],
-  "headers": [
-    {
-      "source": "/api/v1/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
-      ]
-    }
   ]
 };
 fs.writeFileSync(gatewayVercelPath, JSON.stringify(gatewayConfig, null, 2));
-console.log(`✅ Finalized Gateway settings with PROD URLs`);
+console.log(`✅ Updated Gateway configurations`);
 
-// Web App: Fix build script and vercel.json
+// Web App: Skip type checking for CI speed and stability
 const webPkgPath = path.join(appsDir, 'web', 'package.json');
 const webPkg = JSON.parse(fs.readFileSync(webPkgPath, 'utf8'));
-webPkg.scripts.build = "vite build"; // Skip type check
+webPkg.scripts.build = "vite build"; 
 fs.writeFileSync(webPkgPath, JSON.stringify(webPkg, null, 2));
-
-const webVercelPath = path.join(appsDir, 'web', 'vercel.json');
-const webVercel = {
-    version: 2,
-    name: "uniz-web",
-    regions: ["sin1"],
-    outputDirectory: "dist",
-    rewrites: [
-        { "source": "/(.*)", "destination": "/index.html" }
-    ]
-};
-fs.writeFileSync(webVercelPath, JSON.stringify(webVercel, null, 2));
-console.log(`✅ Finalized Web app settings`);
+console.log(`✅ Relaxed web build script`);
