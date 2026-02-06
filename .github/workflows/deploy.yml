@@ -42,21 +42,20 @@ jobs:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          cd apps/${{ matrix.service }}
-          
-          # Fix Module Resolution: Symlink root node_modules instead of npm install
-          # This allows Vercel build to see hoisted dependencies (Express) and workspace symlinks
-          echo "Symlinking node_modules..."
-          rm -rf node_modules
-          ln -s ../../node_modules node_modules
+          # --- RUNNING FROM ROOT ---
+          # We do NOT 'cd' into the app folder.
+          # Vercel CLI will use the 'Root Directory' setting from the Project Dashboard
+          # while maintaining context of the monorepo root (for node_modules).
           
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          echo "Pulling Env..."
+          echo "Pulling Project Settings & Env..."
+          # Pull settings from the cloud (including the Root Directory config)
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
           echo "Building..."
+          # Build from root. Vercel CLI will use the Root Directory project setting to build the correct sub-app.
           vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
           echo "Deploying..."
