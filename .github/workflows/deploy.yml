@@ -44,9 +44,11 @@ jobs:
         run: |
           cd apps/${{ matrix.service }}
           
-          # Install deps locally to handle monorepo hoisting for Vercel bundling
-          echo "Installing Service Dependencies..."
-          npm install
+          # Fix Module Resolution: Symlink root node_modules instead of npm install
+          # This allows Vercel build to see hoisted dependencies (Express) and workspace symlinks
+          echo "Symlinking node_modules..."
+          rm -rf node_modules
+          ln -s ../../node_modules node_modules
           
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
