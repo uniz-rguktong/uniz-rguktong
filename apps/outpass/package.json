@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
-    "@uniz-rguktong/shared": "^1.0.1",
+    "@uniz-rguktong/shared": "^1.0.2",
     "axios": "^1.13.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

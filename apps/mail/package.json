@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@sparticuz/chromium": "^143.0.4",
-    "@uniz-rguktong/shared": "^1.0.1",
+    "@uniz-rguktong/shared": "^1.0.2",
     "@types/nodemailer": "^7.0.9",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",

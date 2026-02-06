@@ -1,6 +1,6 @@
 {
   "name": "@uniz-rguktong/shared",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Shared contracts, types, and validation schemas for UniZ microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
