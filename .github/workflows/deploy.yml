@@ -55,7 +55,10 @@ jobs:
              # Gateway: Special Entry Point
              echo "Bundling Gateway (system-health.ts)..."
              npx @vercel/ncc build api/system-health.ts -o api
-             # ncc outputs 'index.js', we rename it to match route expectation
+             # Remove source to avoid Vercel conflict
+             rm api/system-health.ts
+             
+             # Rename bundle (ncc outputs index.js)
              mv api/index.js api/system-health.js
              
              vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
@@ -67,7 +70,8 @@ jobs:
              echo "Bundling API (index.ts)..."
              if [ -f "api/index.ts" ]; then
                  npx @vercel/ncc build api/index.ts -o api
-                 # ncc outputs api/index.js, which Vercel picks up
+                 # Remove source to avoid Vercel conflict (JS vs TS)
+                 rm api/index.ts
              else
                  echo "Warning: api/index.ts not found. Skipping bundling."
              fi
