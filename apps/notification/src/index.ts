@@ -74,8 +74,13 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok', service: 'uniz-notification-service' });
 });
 
-app.listen(3007, () => {
+if (!process.env.VERCEL) {
+  app.listen(3007, () => {
     console.log('Notification Service Worker & Health Server Started on 3007');
 });
+}
 
 console.log('Notification Service Worker Started');
+
+
+export default app;

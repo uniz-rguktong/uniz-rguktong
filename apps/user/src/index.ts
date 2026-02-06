@@ -23,6 +23,11 @@ app.get('/health', (req, res) => {
 import profileRoutes from './routes/profile.routes';
 app.use('/', profileRoutes);
 
-app.listen(PORT, () => {
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
   console.log(`User Service running on port ${PORT}`);
 });
+}
+
+
+export default app;

@@ -113,6 +113,11 @@ app.get('/api/cron', async (req, res) => {
     res.json({ success: true, message: 'Maintenance job executed' });
 });
 
-app.listen(3008, () => {
+if (!process.env.VERCEL) {
+  app.listen(3008, () => {
     console.log('Cron Service Health Server Started on 3008');
 });
+}
+
+
+export default app;

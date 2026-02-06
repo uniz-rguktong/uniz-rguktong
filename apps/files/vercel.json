@@ -1,5 +1,9 @@
 {
-  "regions": ["sin1"],
+  "version": 2,
+  "name": "uniz-files-service",
+  "regions": [
+    "sin1"
+  ],
   "builds": [
     {
       "src": "api/index.ts",

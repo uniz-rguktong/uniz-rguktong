@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "name": "uniz-notification-service",
+  "regions": [
+    "sin1"
+  ],
   "builds": [
     {
       "src": "api/index.ts",
@@ -11,8 +15,5 @@
       "src": "/(.*)",
       "dest": "/api/index.ts"
     }
-  ],
-  "env": {
-      "NODE_ENV": "production"
-  }
+  ]
 }

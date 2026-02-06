@@ -28,6 +28,11 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-app.listen(PORT, () => {
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
   console.log(`Mail Service running on port ${PORT}`);
 });
+}
+
+
+export default app;

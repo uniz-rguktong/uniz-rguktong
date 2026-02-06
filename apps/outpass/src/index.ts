@@ -26,6 +26,11 @@ import grievanceRoutes from './routes/grievance.routes';
 app.use('/grievance', grievanceRoutes); // Mount specific routes first
 app.use('/', requestRoutes);
 
-app.listen(PORT, () => {
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
   console.log(`Outpass Service running on port ${PORT}`);
 });
+}
+
+
+export default app;
