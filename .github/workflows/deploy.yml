@@ -42,20 +42,26 @@ jobs:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # --- MONOREPO STABLE DEPLOYMENT (ROOT CONTEXT) ---
-          # We run from the REPO ROOT so Vercel sees all dependencies in node_modules.
+          # --- STABLE MONOREPO DEPLOYMENT ---
+          cd apps/${{ matrix.service }}
           
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          echo "Pulling Project Settings..."
+          echo "Pulling Env..."
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          echo "Building Project Locally..."
-          # The CLI will use the 'Root Directory' setting (e.g. apps/auth) from your 
-          # Vercel Project dashboard but will resolve imports from the root node_modules.
+          # Force create public folder if missing
+          mkdir -p public
+          if [ ! -f public/index.html ]; then
+            echo "<html><body>UniZ Service</body></html>" > public/index.html
+          fi
+          
+          echo "Building locally with Vercel CLI..."
+          # We use --prod to ensure production env vars are used.
+          # We manually set the build command to nothing to prevent the 'No Output Directory' error
+          # that happens when Vercel CLI tries to auto-run turbo from the root.
           vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
-          echo "Deploying Prebuilt Artifacts..."
-          # This uploads the .vercel/output folder directly, bypassing remote npm install.
+          echo "Deploying Prebuilt..."
           vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN

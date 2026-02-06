@@ -15,6 +15,5 @@
       "dest": "/api/index.ts"
     }
   ],
-  "buildCommand": null,
-  "outputDirectory": null
+  "outputDirectory": "public"
 }
