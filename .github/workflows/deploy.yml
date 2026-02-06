@@ -9,10 +9,10 @@ on:
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} # Fallback if needed
 
 jobs:
-  Deploy-Monorepo:
+  # PHASE 1: Build Once (The One True Build)
+  Build-Monorepo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,49 +21,40 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm' # Use npm cache for speed
 
       - name: Install Dependencies
         run: npm ci
 
+      - name: Validate Dependency Graph
+        # Ensure we have a valid turbo graph before proceeding
+        run: npx turbo run build --dry-run
+
       - name: Build All Workspaces
+        # This builds shared libs AND applications completely.
+        # artifacts will be in dist/ or .next/ folders.
         run: npx turbo run build
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monorepo-build-artifacts
+          path: |
+            apps/*/dist
+            apps/*/.next
+            apps/*/public
+            apps/*/package.json
+            apps/*/vercel.json
+            packages/*/dist
+            packages/*/package.json
+            package.json
+            package-lock.json
+            turbo.json
+          retention-days: 1
 
-      - name: Deploy Auth Service
-        env:
-          PROJECT_NAME: uniz-auth-service
-        run: |
-          vercel link --project $PROJECT_NAME --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN --yes
-          vercel deploy --prod --prebuilt --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
-
-      # Note: Vercel CLI currently doesn't support a single command to deploy all monorepo apps at once 
-      # without iterating or using Vercel Git integration.
-      # To keep it "boring" and explicit like the previous loop but without the hacks, 
-      # we will iterate through the services.
-      
-      # However, strictly following the request for "vercel deploy --prod", 
-      # we need to be mindful that running `vercel deploy` at root deploys the ROOT project.
-      # To deploy specific apps, we must target them.
-      
-      # The cleanest way without "cd hacking" is to use the Vercel CLI to target each project 
-      # but let it resolve from the root context or prebuilt artifacts.
-      
-      # Since we ran `turbo run build`, we have artifacts. 
-      # But Vercel CLI needs to map those artifacts to deployments.
-      
-      # Strategy:
-      # We will rely on Vercel's standard monorepo support.
-      # Since we fixed the workspace structure, we can simply loop and deploy.
-      # The critical difference is NO `npm install` or `cp` inside the loop.
-      
-  Deploy-Service:
-    needs: Deploy-Monorepo # Actually, we can just do it in one job or a matrix
-    if: false # Disabling this block to write the cleaner Matrix version below
-
-  # REAL PIPELINE
-  Deploy-Matrix:
+  # PHASE 2: Deploy Many (Using Artifacts)
+  Deploy-Services:
+    needs: Build-Monorepo
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -74,31 +65,50 @@ jobs:
             project_name: uniz-production-gateway
     steps:
       - uses: actions/checkout@v4
+      
+      # We don't need full node install here if we just use Vercel CLI to upload prebuilt artifacts,
+      # but standard Vercel CLI often needs node runtime.
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      
-      - name: Install Dependencies
-        run: npm ci
-        
-      - name: Build Project
-        # We build EVERYTHING first to ensure shared libs are ready
-        run: npx turbo run build --filter=uniz-${{ matrix.service }}-service... --filter=${{ matrix.project_name }}...
-        
+          
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: monorepo-build-artifacts
+          # Download to current directory structure
+          path: .
+          
       - name: Deploy ${{ matrix.service }}
         env:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
-          ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # Link the project
-          npx vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
+          # The artifacts are already downloaded into the correct structure (apps/auth/dist etc)
+          # We just point Vercel to the app folder and say "Go"
           
-          # Pull env vars (needed for some build steps if we weren't prebuilding, but good for safety)
-          npx vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
+          echo "Linking $PROJECT_NAME..."
+          vercel link --project $PROJECT_NAME --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN --yes
           
-          # Deploy using Vercel's build (now that structure is correct) OR prebuilt.
-          # Since we fixed workspaces, "vercel build" from root targetting the app should work.
+          echo "Pulling Env..."
+          vercel pull --yes --environment=production --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
           
-          # We use --prebuilt to skip the remote build queue and use our verified CI build
-          npx vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
-          npx vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          # CRITICAL: We use --prebuilt because we ALREADY built everything in the Build job.
+          # But Vercel CLI "build" command transforms artifacts into .vercel/output.
+          # Since our simple apps (dist/) might not be in Vercel's internal format yet, we have two choices:
+          # A) Let Vercel build remotely (we fixed workspaces so this works now)
+          # B) Run `vercel build` locally here using the artifacts.
+          
+          # Since we want to use the "Build Once" artifacts, strictly speaking we should use them.
+          # However, Vercel's `vercel build` logic is what wires up the serverless functions.
+          # Since we are in a clean state with artifacts, running `vercel build` here is safe 
+          # because it just packages the existing JS files into Cloud Functions.
+          
+          echo "Packaging for Vercel..."
+          # This step converts our 'dist' output into .vercel/output ready for upload
+          vercel build --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
+          
+          echo "Uploading to Vercel..."
+          vercel deploy --prebuilt --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
