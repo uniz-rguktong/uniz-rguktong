@@ -8,18 +8,12 @@ on:
 
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} # Fallback if needed
 
 jobs:
-  Deploy-Service:
+  Deploy-Monorepo:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        service: [auth, user, outpass, academics, files, mail, notification, cron, web]
-        include:
-          - service: gateway
-            project_name: uniz-production-gateway
-    
     steps:
       - uses: actions/checkout@v4
       
@@ -28,60 +22,83 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Monorepo Dependencies
+      - name: Install Dependencies
         run: npm ci
 
-      - name: Build Shared Types
-        run: npx turbo run build --filter=@uniz/shared
+      - name: Build All Workspaces
+        run: npx turbo run build
 
-      - name: Install Vercel CLI & Prisma
-        run: npm install --global vercel@latest prisma@5.22.0
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
 
-      - name: Prepare and Deploy ${{ matrix.service }}
+      - name: Deploy Auth Service
+        env:
+          PROJECT_NAME: uniz-auth-service
+        run: |
+          vercel link --project $PROJECT_NAME --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN --yes
+          vercel deploy --prod --prebuilt --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
+
+      # Note: Vercel CLI currently doesn't support a single command to deploy all monorepo apps at once 
+      # without iterating or using Vercel Git integration.
+      # To keep it "boring" and explicit like the previous loop but without the hacks, 
+      # we will iterate through the services.
+      
+      # However, strictly following the request for "vercel deploy --prod", 
+      # we need to be mindful that running `vercel deploy` at root deploys the ROOT project.
+      # To deploy specific apps, we must target them.
+      
+      # The cleanest way without "cd hacking" is to use the Vercel CLI to target each project 
+      # but let it resolve from the root context or prebuilt artifacts.
+      
+      # Since we ran `turbo run build`, we have artifacts. 
+      # But Vercel CLI needs to map those artifacts to deployments.
+      
+      # Strategy:
+      # We will rely on Vercel's standard monorepo support.
+      # Since we fixed the workspace structure, we can simply loop and deploy.
+      # The critical difference is NO `npm install` or `cp` inside the loop.
+      
+  Deploy-Service:
+    needs: Deploy-Monorepo # Actually, we can just do it in one job or a matrix
+    if: false # Disabling this block to write the cleaner Matrix version below
+
+  # REAL PIPELINE
+  Deploy-Matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [auth, user, outpass, academics, files, mail, notification, cron, web]
+        include:
+          - service: gateway
+            project_name: uniz-production-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Build Project
+        # We build EVERYTHING first to ensure shared libs are ready
+        run: npx turbo run build --filter=uniz-${{ matrix.service }}-service... --filter=${{ matrix.project_name }}...
+        
+      - name: Deploy ${{ matrix.service }}
         env:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # 1. Clean up and link
-          cd apps/${{ matrix.service }}
-          echo "Linking $PROJECT_NAME..."
-          vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
+          # Link the project
+          npx vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          echo "Pulling Env..."
-          vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
+          # Pull env vars (needed for some build steps if we weren't prebuilding, but good for safety)
+          npx vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # 2. CREATE A STANDALONE ENVIRONMENT (The Secret Sauce)
-          # Vercel 500s often happen because of missing node_modules or shared packages.
-          # We will bake them directly into the deployment folder.
+          # Deploy using Vercel's build (now that structure is correct) OR prebuilt.
+          # Since we fixed workspaces, "vercel build" from root targetting the app should work.
           
-          echo "Baking dependencies into standalone environment..."
-          rm -rf node_modules
-          
-          # Install production dependencies directly in this folder.
-          # We use --no-package-lock to avoid workspace conflicts.
-          npm install --omit=dev --no-package-lock
-          
-          # Physically inject the built @uniz/shared into node_modules
-          echo "Injecting @uniz/shared..."
-          mkdir -p node_modules/@uniz/shared
-          cp -r ../../packages/shared/dist/* ./node_modules/@uniz/shared/
-          cp ../../packages/shared/package.json ./node_modules/@uniz/shared/
-          
-          # Handle Prisma if exists
-          if [ -d "prisma" ]; then
-            echo "Generating Prisma Client..."
-            npx prisma generate
-          fi
-          
-          # 3. BUILD LOCALLY (To be sure)
-          echo "Building with Vercel CLI..."
-          # Create a dummy public folder so vercel build doesn't fail
-          mkdir -p public
-          echo "<html><body>${{ matrix.service }}</body></html>" > public/index.html
-          
-          # Run build inside the app folder
-          vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
-          
-          # 4. DEPLOY PREBUILT
-          echo "Deploying prebuilt artifacts..."
-          vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          # We use --prebuilt to skip the remote build queue and use our verified CI build
+          npx vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          npx vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
