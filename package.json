@@ -24,8 +24,7 @@
     "xlsx": "^0.18.5"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ],
   "devDependencies": {
     "concurrently": "^8.2.2",
