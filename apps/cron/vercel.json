@@ -1,13 +1,19 @@
 {
   "version": 2,
-  "name": "uniz-cron-service",
   "regions": [
     "sin1"
   ],
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/api"
+      "src": "api/index.ts",
+      "use": "@vercel/node"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.ts"
+    }
+  ],
+  "outputDirectory": "public"
 }

@@ -49,5 +49,7 @@
       "source": "/",
       "destination": "https://uniz-auth-service-sreecharans-projects-be53fce6.vercel.app/"
     }
-  ]
+  ],
+  "outputDirectory": "public",
+  "builds": []
 }
