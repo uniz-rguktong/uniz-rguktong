@@ -6,67 +6,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/v1/auth/(.*)",
-      "destination": "https://uniz-auth-service-6k7dzz1hf-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/system/health",
-      "destination": "/api/system-health"
-    },
-    {
-      "source": "/api/v1/profile/(.*)",
-      "destination": "https://uniz-user-service-k8at4ure8-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/grievance/(.*)",
-      "destination": "https://uniz-outpass-service-33wgelbfu-sreecharans-projects-be53fce6.vercel.app/grievance/$1"
-    },
-    {
-      "source": "/api/v1/requests/(.*)",
-      "destination": "https://uniz-outpass-service-33wgelbfu-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/cron/(.*)",
-      "destination": "https://uniz-cron-service-knjlecz4e-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/notifications/(.*)",
-      "destination": "https://uniz-notification-service-ki3klmlg8.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/mail/(.*)",
-      "destination": "https://uniz-mail-service-hl8rbpbpa-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/api/v1/academics/(.*)",
-      "destination": "https://uniz-academics-service-32gly2yrc-sreecharans-projects-be53fce6.vercel.app/$1"
-    },
-    {
-      "source": "/(health|status)",
-      "destination": "https://uniz-auth-service-6k7dzz1hf-sreecharans-projects-be53fce6.vercel.app/health"
-    },
-    {
-      "source": "/",
-      "destination": "https://uniz-auth-service-6k7dzz1hf-sreecharans-projects-be53fce6.vercel.app/"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/v1/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
-        }
-      ]
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }

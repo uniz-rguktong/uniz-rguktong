@@ -4,6 +4,7 @@
   "regions": [
     "sin1"
   ],
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/(.*)",
