@@ -48,11 +48,5 @@
       "source": "/",
       "destination": "https://uniz-auth-service-sreecharans-projects-be53fce6.vercel.app/"
     }
-  ],
-  "builds": [
-    {
-      "src": "api/*.ts",
-      "use": "@vercel/node"
-    }
   ]
 }

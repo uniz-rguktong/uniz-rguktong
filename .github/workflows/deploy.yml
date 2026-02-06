@@ -28,10 +28,10 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Dependencies (Root)
+      - name: Install Dependencies
         run: npm ci
 
-      - name: Build Workspaces
+      - name: Build Workspaces (Validate)
         run: npx turbo run build
 
       - name: Install Vercel CLI
@@ -44,24 +44,48 @@ jobs:
         run: |
           cd apps/${{ matrix.service }}
           
-          # HACK: Materialize dependency tree for Vercel bundler.
-          # Vercel's legacy builder (@vercel/node) sometimes struggles with hoisted module resolution.
-          # We copy the root node_modules into the app folder so the bundler can find everything locally.
-          # This works around the 'Cannot find module express' runtime error.
-          if [ ! -d "node_modules" ]; then
-             echo "Materializing dependencies..."
-             cp -r ../../node_modules ./node_modules
-             # Note: This includes @uniz/shared symlink if it was linked properly by npm ci
+          # Logic: Bundle Node APIs, Build Frontend Standardly
+          if [ "${{ matrix.service }}" == "web" ]; then
+             # Frontend (Vite) - Standard Remote Build (Vercel handles Vite well)
+             # Note: We use Remote Build for frontend because it's static/SPA and Vercel optimization is good.
+             vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
+             vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
+             vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+             vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          
+          else
+             # Backend APIs - Use NCC Bundling Strategy
+             echo "Bundling API with NCC..."
+             # We installed @vercel/ncc in root, so use npx from root context or relative path?
+             # npx resolves from local node_modules or downloads.
+             npx @vercel/ncc build api/index.ts -o api
+             
+             # Swap TS for JS in Vercel's eyes (strict cleanup)
+             # (Optional: Our vercel.json already points to api/index.js, so existence is enough)
+
+             # Deploy
+             vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
+             vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
+             
+             # Skip 'vercel build' for APIs because we built it with NCC!
+             # We just ship the prebuilt artifacts (which is the file system basically, plus .vercel/output from pull?)
+             # Wait, --prebuilt REQUIRES .vercel/output.
+             # NCC output is just files.
+             
+             # So we use 'vercel deploy --prod' (Remote Build) BUT...
+             # Remote Build will fail install.
+             
+             # We MUST use 'vercel deploy --prod' (Upload Source) but since we have bundled JS, 
+             # Vercel Runtime just runs it.
+             # We DO NOT use --prebuilt for Backend then?
+             
+             # CORRECT: We upload the 'api/index.js' we just made.
+             # Vercel sees source code. It installs deps? No deps (bundled).
+             # It runs 'api/index.js'.
+             
+             # Important: We must ensure we don't upload the confusing TS files or node_modules.
+             # But 'vercel deploy' respects .vercelignore.
+             
+             echo "Deploying Bundled API..."
+             vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
           fi
-          
-          # 1. Link
-          vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
-          
-          # 2. Pull Env
-          vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
-          
-          # 3. Build (Locally)
-          vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
-          
-          # 4. Deploy Prebuilt
-          vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
