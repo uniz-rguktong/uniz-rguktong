@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { getStudentProfile, updateStudentProfile, adminUpdateStudentProfile, getAdminProfile, getFacultyProfile, searchStudents, createFacultyProfile, updateStudentPresence, getBanners, getPublicBanners, createBanner, deleteBanner, publishBanner } from '../controllers/profile.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { z, ZodSchema } from 'zod';
-import { ErrorCode } from '@uniz/shared';
+import { ErrorCode } from '@uniz-rguktong/shared';
 
 const validateRequest = (schema: ZodSchema<any>) => (req: Request, res: Response, next: NextFunction) => {
   try {

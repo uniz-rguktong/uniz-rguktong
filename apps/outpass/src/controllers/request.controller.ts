@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '../generated/client';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
-import { ErrorCode, OutpassRequestSchema, OutingRequestSchema, ApprovalLogEntrySchema, ApprovalLogEntry, UserRole } from '@uniz/shared';
+import { ErrorCode, OutpassRequestSchema, OutingRequestSchema, ApprovalLogEntrySchema, ApprovalLogEntry, UserRole } from '@uniz-rguktong/shared';
 
 const prisma = new PrismaClient();
 

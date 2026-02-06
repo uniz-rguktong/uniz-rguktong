@@ -16,10 +16,10 @@ apps.forEach(app => {
   const sections = ['dependencies', 'devDependencies', 'peerDependencies'];
 
   sections.forEach(section => {
-    if (pkg[section] && pkg[section]['@uniz/shared']) {
+    if (pkg[section] && pkg[section]['@uniz-rguktong/shared']) {
       // Use "*" instead of "workspace:*" for native npm workspaces support
-      if (pkg[section]['@uniz/shared'] !== '*') {
-        pkg[section]['@uniz/shared'] = '*';
+      if (pkg[section]['@uniz-rguktong/shared'] !== '*') {
+        pkg[section]['@uniz-rguktong/shared'] = '*';
         changed = true;
       }
     }
@@ -29,11 +29,11 @@ apps.forEach(app => {
   const isMicroservice = !['gateway', 'web'].includes(app);
   if (
     isMicroservice &&
-    (!pkg.dependencies || !pkg.dependencies['@uniz/shared']) &&
+    (!pkg.dependencies || !pkg.dependencies['@uniz-rguktong/shared']) &&
     fs.existsSync(path.join(appsDir, app, 'src'))
   ) {
     pkg.dependencies = pkg.dependencies || {};
-    pkg.dependencies['@uniz/shared'] = '*';
+    pkg.dependencies['@uniz-rguktong/shared'] = '*';
     changed = true;
   }
 

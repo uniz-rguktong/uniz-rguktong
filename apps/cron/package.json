@@ -19,7 +19,7 @@
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "axios": "^1.13.4",
-    "@uniz/shared": "*"
+    "@uniz-rguktong/shared": "*"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

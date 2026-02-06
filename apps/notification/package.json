@@ -19,7 +19,7 @@
     "nodemailer": "^6.9.14",
     "zod": "^3.23.8",
     "axios": "^1.13.4",
-    "@uniz/shared": "*"
+    "@uniz-rguktong/shared": "*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

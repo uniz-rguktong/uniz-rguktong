@@ -1,0 +1,44 @@
+name: Publish Shared Package
+
+on:
+  push:
+    paths:
+      - 'packages/shared/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check and Publish
+        working-directory: packages/shared
+        run: |
+          PACKAGE_NAME=$(node -e "console.log(require('./package.json').name)")
+          LOCAL_VERSION=$(node -e "console.log(require('./package.json').version)")
+          
+          if npm view "$PACKAGE_NAME@$LOCAL_VERSION" version > /dev/null 2>&1; then
+            echo "Version $LOCAL_VERSION already exists on NPM. Bumping patch version..."
+            npm version patch --no-git-tag-version
+            NEW_VERSION=$(node -e "console.log(require('./package.json').version)")
+            echo "New version: $NEW_VERSION"
+          else
+            echo "Version $LOCAL_VERSION does not exist on NPM. Proceeding with publish."
+          fi
+          
+          npm run build
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

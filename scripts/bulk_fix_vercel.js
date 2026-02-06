@@ -37,7 +37,7 @@ services.forEach(svc => {
         pkg.dependencies = pkg.dependencies || {};
         pkg.dependencies.axios = "^1.13.4";
         // Ensure shared package is properly referenced
-        pkg.dependencies["@uniz/shared"] = "*";
+        pkg.dependencies["@uniz-rguktong/shared"] = "*";
         fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
         console.log(`✅ Updated package.json for ${svc.id}`);
     }

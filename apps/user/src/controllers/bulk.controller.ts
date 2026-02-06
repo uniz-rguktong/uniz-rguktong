@@ -4,7 +4,7 @@ import { PrismaClient } from '../generated/client';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
-import { UserRole } from '@uniz/shared';
+import { UserRole } from '@uniz-rguktong/shared';
 
 const prisma = new PrismaClient();
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'https://uniz-auth-service.vercel.app';

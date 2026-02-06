@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '../generated/client';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
-import { ErrorCode, UserRole } from '@uniz/shared';
+import { ErrorCode, UserRole } from '@uniz-rguktong/shared';
 import axios from 'axios';
 
 const prisma = new PrismaClient();

@@ -3,7 +3,7 @@ import { PrismaClient } from '../generated/client';
 import { signToken, verifyToken } from '../utils/token.util';
 import { sendOtpEmail, sendLoginNotification, sendPasswordChangeNotification } from '../utils/email.util';
 import { comparePassword, hashPassword } from '../utils/password.util';
-import { ErrorCode, UserRole } from '@uniz/shared';
+import { ErrorCode, UserRole } from '@uniz-rguktong/shared';
 
 const prisma = new PrismaClient({
     datasources: {

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '../generated/client';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
-import { ErrorCode } from '@uniz/shared';
+import { ErrorCode } from '@uniz-rguktong/shared';
 import { z } from 'zod'; // Assuming zod is available as per package.json
 import axios from 'axios';
 

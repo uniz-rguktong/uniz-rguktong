@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '@uniz/shared';
+import { JwtPayload } from '@uniz-rguktong/shared';
 
 const SECRET = process.env.JWT_SECURITY_KEY || 'default_secret_unsafe';
 
