@@ -31,37 +31,45 @@ jobs:
       - name: Install Dependencies (Monorepo Root)
         run: npm ci
 
+      - name: Install Vercel CLI & Prisma
+        run: npm install --global vercel@latest prisma@5.22.0
+
       - name: Build Shared Types
         run: npx turbo run build --filter=@uniz/shared
 
-      - name: Install Vercel CLI & Prisma
-        run: npm install --global vercel@latest prisma@5.22.0
+      - name: Generate Prisma Clients
+        run: |
+          # Generate Prisma for services that use it
+          if [ -d "apps/${{ matrix.service }}/prisma" ]; then
+            echo "Generating Prisma Client for ${{ matrix.service }}..."
+            cd apps/${{ matrix.service }}
+            prisma generate
+            cd ../..
+          fi
 
       - name: Deploy ${{ matrix.service }}
         env:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # --- STABLE MONOREPO DEPLOYMENT ---
-          cd apps/${{ matrix.service }}
+          # --- ROOT-CONTEXT MONOREPO DEPLOYMENT ---
+          # We stay in the root so Vercel CLI sees the whole monorepo.
           
           echo "Linking $PROJECT_NAME..."
+          # We use --yes and provide the project name. 
+          # Note: Even if we are in the root, Vercel will use the 'Root Directory' 
+          # setting from the Project Dashboard to find the actual code.
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
           echo "Pulling Env..."
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # Force create public folder if missing
-          mkdir -p public
-          if [ ! -f public/index.html ]; then
-            echo "<html><body>UniZ Service</body></html>" > public/index.html
-          fi
-          
-          echo "Building locally with Vercel CLI..."
-          # We use --prod to ensure production env vars are used.
-          # We manually set the build command to nothing to prevent the 'No Output Directory' error
-          # that happens when Vercel CLI tries to auto-run turbo from the root.
+          echo "Building locally with Vercel CLI from Root..."
+          # Running from root ensures hoisted dependencies and @uniz/shared are found.
           vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
           echo "Deploying Prebuilt..."
           vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          
+          # Clean up .vercel for the next matrix if any (though runs on separate runners)
+          rm -rf .vercel
