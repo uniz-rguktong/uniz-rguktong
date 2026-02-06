@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "uniz-production-gateway",
   "regions": [
     "sin1"
   ],
@@ -50,6 +49,6 @@
       "destination": "https://uniz-auth-service-sreecharans-projects-be53fce6.vercel.app/"
     }
   ],
-  "outputDirectory": "public",
-  "builds": []
+  "buildCommand": null,
+  "outputDirectory": null
 }
