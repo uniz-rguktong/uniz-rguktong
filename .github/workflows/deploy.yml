@@ -42,36 +42,20 @@ jobs:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          cd apps/${{ matrix.service }}
+          # --- MONOREPO STABLE DEPLOYMENT (ROOT CONTEXT) ---
+          # We run from the REPO ROOT so Vercel sees all dependencies in node_modules.
           
-          # 1. Link Project
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          # 2. Pull Env
-          echo "Pulling Env..."
+          echo "Pulling Project Settings..."
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # 3. Preparation: Solve Monorepo Hoisting for Vercel CLI
-          echo "Preparing self-contained environment..."
-          rm -rf node_modules
-          
-          # Install production dependencies locally
-          # This ensures that when we build locally, it has everything
-          npm install --omit=dev --no-package-lock
-          
-          # Inject the built @uniz/shared package
-          echo "Injecting @uniz/shared..."
-          mkdir -p node_modules/@uniz/shared
-          cp -r ../../packages/shared/dist ./node_modules/@uniz/shared/
-          cp ../../packages/shared/package.json ./node_modules/@uniz/shared/
-          
-          # 4. Local Build (The Prebuilt Step)
-          # This generates the .vercel/output directory locally in the runner
-          echo "Building locally with Vercel CLI..."
+          echo "Building Project Locally..."
+          # The CLI will use the 'Root Directory' setting (e.g. apps/auth) from your 
+          # Vercel Project dashboard but will resolve imports from the root node_modules.
           vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # 5. Deploy Prebuilt
-          # This uploads the already-built artifacts, skipping Vercel's remote npm install
-          echo "Deploying prebuilt artifacts..."
+          echo "Deploying Prebuilt Artifacts..."
+          # This uploads the .vercel/output folder directly, bypassing remote npm install.
           vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
