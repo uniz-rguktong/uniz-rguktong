@@ -4,11 +4,11 @@
     "noImplicitAny": false,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
