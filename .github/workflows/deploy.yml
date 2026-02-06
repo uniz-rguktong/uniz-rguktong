@@ -8,10 +8,10 @@ on:
 
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  # REMOVED GLOBAL VERCEL_ORG_ID to avoid "missing PROJECT_ID" error.
+  # We will pass the Org ID explicitly via arguments where needed.
 
 jobs:
-  # PHASE 1: Build Once (The One True Build)
   Build-Monorepo:
     runs-on: ubuntu-latest
     steps:
@@ -21,18 +21,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm' # Use npm cache for speed
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Validate Dependency Graph
-        # Ensure we have a valid turbo graph before proceeding
-        run: npx turbo run build --dry-run
-
       - name: Build All Workspaces
-        # This builds shared libs AND applications completely.
-        # artifacts will be in dist/ or .next/ folders.
         run: npx turbo run build
 
       - name: Archive Build Artifacts
@@ -52,7 +46,6 @@ jobs:
             turbo.json
           retention-days: 1
 
-  # PHASE 2: Deploy Many (Using Artifacts)
   Deploy-Services:
     needs: Build-Monorepo
     runs-on: ubuntu-latest
@@ -66,8 +59,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # We don't need full node install here if we just use Vercel CLI to upload prebuilt artifacts,
-      # but standard Vercel CLI often needs node runtime.
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -79,36 +70,29 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: monorepo-build-artifacts
-          # Download to current directory structure
           path: .
           
       - name: Deploy ${{ matrix.service }}
         env:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
+          ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # The artifacts are already downloaded into the correct structure (apps/auth/dist etc)
-          # We just point Vercel to the app folder and say "Go"
-          
+          # 1. Link Project (Creates .vercel/project.json)
+          # We pass --scope explicitly to auth correctly against the team
           echo "Linking $PROJECT_NAME..."
-          vercel link --project $PROJECT_NAME --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN --yes
+          vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
+          # 2. Pull Env Vars
           echo "Pulling Env..."
-          vercel pull --yes --environment=production --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
+          vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # CRITICAL: We use --prebuilt because we ALREADY built everything in the Build job.
-          # But Vercel CLI "build" command transforms artifacts into .vercel/output.
-          # Since our simple apps (dist/) might not be in Vercel's internal format yet, we have two choices:
-          # A) Let Vercel build remotely (we fixed workspaces so this works now)
-          # B) Run `vercel build` locally here using the artifacts.
-          
-          # Since we want to use the "Build Once" artifacts, strictly speaking we should use them.
-          # However, Vercel's `vercel build` logic is what wires up the serverless functions.
-          # Since we are in a clean state with artifacts, running `vercel build` here is safe 
-          # because it just packages the existing JS files into Cloud Functions.
-          
+          # 3. Package (Build) for Vercel
+          # This converts the 'dist' we downloaded into '.vercel/output'
+          # It uses the settings in vercel.json that we configured earlier
           echo "Packaging for Vercel..."
-          # This step converts our 'dist' output into .vercel/output ready for upload
-          vercel build --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
+          vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
+          # 4. Deploy Prebuilt
+          # This uploads the '.vercel/output' folder directly
           echo "Uploading to Vercel..."
-          vercel deploy --prebuilt --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
+          vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
