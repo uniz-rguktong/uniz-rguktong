@@ -44,48 +44,35 @@ jobs:
         run: |
           cd apps/${{ matrix.service }}
           
-          # Logic: Bundle Node APIs, Build Frontend Standardly
           if [ "${{ matrix.service }}" == "web" ]; then
-             # Frontend (Vite) - Standard Remote Build (Vercel handles Vite well)
-             # Note: We use Remote Build for frontend because it's static/SPA and Vercel optimization is good.
+             # Frontend: Standard Deployment
              vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
              vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
              vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
              vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
-          else
-             # Backend APIs - Use NCC Bundling Strategy
-             echo "Bundling API with NCC..."
-             # We installed @vercel/ncc in root, so use npx from root context or relative path?
-             # npx resolves from local node_modules or downloads.
-             npx @vercel/ncc build api/index.ts -o api
+          elif [ "${{ matrix.service }}" == "gateway" ]; then
+             # Gateway: Special Entry Point
+             echo "Bundling Gateway (system-health.ts)..."
+             npx @vercel/ncc build api/system-health.ts -o api
+             # ncc outputs 'index.js', we rename it to match route expectation
+             mv api/index.js api/system-health.js
              
-             # Swap TS for JS in Vercel's eyes (strict cleanup)
-             # (Optional: Our vercel.json already points to api/index.js, so existence is enough)
-
-             # Deploy
              vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
              vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
+             vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          
+          else
+             # Standard Backend API: Bundle api/index.ts
+             echo "Bundling API (index.ts)..."
+             if [ -f "api/index.ts" ]; then
+                 npx @vercel/ncc build api/index.ts -o api
+                 # ncc outputs api/index.js, which Vercel picks up
+             else
+                 echo "Warning: api/index.ts not found. Skipping bundling."
+             fi
              
-             # Skip 'vercel build' for APIs because we built it with NCC!
-             # We just ship the prebuilt artifacts (which is the file system basically, plus .vercel/output from pull?)
-             # Wait, --prebuilt REQUIRES .vercel/output.
-             # NCC output is just files.
-             
-             # So we use 'vercel deploy --prod' (Remote Build) BUT...
-             # Remote Build will fail install.
-             
-             # We MUST use 'vercel deploy --prod' (Upload Source) but since we have bundled JS, 
-             # Vercel Runtime just runs it.
-             # We DO NOT use --prebuilt for Backend then?
-             
-             # CORRECT: We upload the 'api/index.js' we just made.
-             # Vercel sees source code. It installs deps? No deps (bundled).
-             # It runs 'api/index.js'.
-             
-             # Important: We must ensure we don't upload the confusing TS files or node_modules.
-             # But 'vercel deploy' respects .vercelignore.
-             
-             echo "Deploying Bundled API..."
+             vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
+             vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
              vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
           fi
