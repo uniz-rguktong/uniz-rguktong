@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 jobs:
@@ -38,17 +37,18 @@ jobs:
       - name: Deploy ${{ matrix.service }}
         env:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           cd apps/${{ matrix.service }}
           
           echo "Linking $PROJECT_NAME..."
-          vercel link --project $PROJECT_NAME --token $VERCEL_TOKEN --yes
+          vercel link --project $PROJECT_NAME --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN --yes
           
           echo "Pulling Env..."
-          vercel pull --yes --environment=production --token $VERCEL_TOKEN
+          vercel pull --yes --environment=production --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
           
           echo "Building..."
-          vercel build --prod --token $VERCEL_TOKEN
+          vercel build --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
           
           echo "Deploying..."
-          vercel deploy --prebuilt --prod --token $VERCEL_TOKEN
+          vercel deploy --prebuilt --prod --scope $VERCEL_ORG_ID --token $VERCEL_TOKEN
