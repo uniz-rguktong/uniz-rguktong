@@ -10,30 +10,7 @@ env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 jobs:
-  # CI VALIDATION
-  # We still build in CI to ensure the commit is good before asking Vercel to deploy.
-  Validate-Monorepo:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Verify Build
-        # This confirms that our workspaces and dependencies are correct.
-        run: npx turbo run build
-
-  # DEPLOYMENT
-  # We rely on Vercel's robust remote build system now that our repo is standards-compliant.
   Deploy-Services:
-    needs: Validate-Monorepo
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -44,7 +21,19 @@ jobs:
             project_name: uniz-production-gateway
     steps:
       - uses: actions/checkout@v4
-          
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies (Root)
+        run: npm ci
+
+      - name: Build Workspaces
+        run: npx turbo run build
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
@@ -53,14 +42,26 @@ jobs:
           PROJECT_NAME: ${{ matrix.project_name || format('uniz-{0}-service', matrix.service) }}
           ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          # 1. Link Project
+          cd apps/${{ matrix.service }}
+          
+          # HACK: Materialize dependency tree for Vercel bundler.
+          # Vercel's legacy builder (@vercel/node) sometimes struggles with hoisted module resolution.
+          # We copy the root node_modules into the app folder so the bundler can find everything locally.
+          # This works around the 'Cannot find module express' runtime error.
+          if [ ! -d "node_modules" ]; then
+             echo "Materializing dependencies..."
+             cp -r ../../node_modules ./node_modules
+             # Note: This includes @uniz/shared symlink if it was linked properly by npm ci
+          fi
+          
+          # 1. Link
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
-          # 2. Pull Env (Optional but good practice)
+          # 2. Pull Env
           vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
           
-          # 3. Deploy (Remote Build)
-          # We removed --prebuilt. We removed local 'vercel build'.
-          # We just hand the code to Vercel and say "Do your standard thing".
-          # Since we fixed workspaces, this will now succeed remotely.
-          vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          # 3. Build (Locally)
+          vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+          
+          # 4. Deploy Prebuilt
+          vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
