@@ -44,6 +44,10 @@ jobs:
         run: |
           cd apps/${{ matrix.service }}
           
+          # Install deps locally to handle monorepo hoisting for Vercel bundling
+          echo "Installing Service Dependencies..."
+          npm install
+          
           echo "Linking $PROJECT_NAME..."
           vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
           
