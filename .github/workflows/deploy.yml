@@ -34,8 +34,8 @@ jobs:
       - name: Build Shared Types
         run: npx turbo run build --filter=@uniz/shared
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Install Vercel CLI & Prisma
+        run: npm install --global vercel@latest prisma
 
       - name: Deploy ${{ matrix.service }}
         env:
