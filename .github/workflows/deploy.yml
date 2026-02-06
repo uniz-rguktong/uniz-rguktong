@@ -57,13 +57,16 @@ jobs:
              npx @vercel/ncc build api/system-health.ts -o api
              # Remove source to avoid Vercel conflict
              rm api/system-health.ts
-             
-             # Rename bundle (ncc outputs index.js)
+             # Rename bundle
              mv api/index.js api/system-health.js
              
              vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
              vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
-             vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
+             
+             # IMPORTANT: Run Local Build to package the bundled file into .vercel/output
+             # This skips the Remote Install (which fails on private deps)
+             vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+             vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
           
           else
              # Standard Backend API: Bundle api/index.ts
@@ -78,5 +81,8 @@ jobs:
              
              vercel link --project $PROJECT_NAME --scope $ORG_ID --token $VERCEL_TOKEN --yes
              vercel pull --yes --environment=production --scope $ORG_ID --token $VERCEL_TOKEN
-             vercel deploy --prod --scope $ORG_ID --token $VERCEL_TOKEN
+             
+             # IMPORTANT: Run Local Build to package the bundled file into .vercel/output
+             vercel build --prod --scope $ORG_ID --token $VERCEL_TOKEN
+             vercel deploy --prebuilt --prod --scope $ORG_ID --token $VERCEL_TOKEN
           fi
